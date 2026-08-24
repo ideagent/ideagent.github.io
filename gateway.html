@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LangAgent Gateway — IDEAgent</title>
+  <meta name="description" content="LangAgent is the self-hosted gateway that runs the IDEAgent coding agent: a FastAPI + LangGraph deep agent that streams turns to the PyCharm plugin over WebSocket, enforces human-in-the-loop, redacts secrets, and coordinates multiple agents via ACP." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Nav -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">IDE<span class="logo-accent">Agent</span></a>
+      <nav class="nav-links">
+        <a href="index.html#packages">Why IDEAgent</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="plugin.html">Plugin</a>
+        <a href="mcp.html">MCP</a>
+        <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Doc hero -->
+  <section class="doc-hero">
+    <div class="container">
+      <a href="index.html#docs" class="back-link">← Back to overview</a>
+      <div class="badge">Component 02 · The Gateway</div>
+      <h1>LangAgent — the LangGraph Gateway</h1>
+      <p class="doc-lede">
+        LangAgent is the brain that sits between your IDE and the AI provider. It is a self-hosted
+        <strong>FastAPI</strong> service wrapping a <strong>LangGraph</strong> deep agent. The
+        <a href="plugin.html">PyCharm plugin</a> never talks to an LLM directly — it talks to LangAgent,
+        which runs the agent turn, uses <a href="mcp.html">MCP tools</a>, calls the model provider you
+        configured, and streams every step back to the IDE in real time.
+      </p>
+    </div>
+  </section>
+
+  <!-- Doc body -->
+  <section class="doc-body">
+    <div class="container">
+
+      <div class="doc-section">
+        <h2>At a glance</h2>
+        <div class="spec-list">
+          <div class="spec-item"><div class="spec-k">Type</div><div class="spec-v">Self-hosted FastAPI service</div></div>
+          <div class="spec-item"><div class="spec-k">Engine</div><div class="spec-v">LangGraph deep agent (tool-calling loop)</div></div>
+          <div class="spec-item"><div class="spec-k">Transport</div><div class="spec-v">WebSocket streaming to the plugin</div></div>
+          <div class="spec-item"><div class="spec-k">Providers</div><div class="spec-v">OpenAI · Anthropic · Google · Ollama (any endpoint)</div></div>
+          <div class="spec-item"><div class="spec-k">Key storage</div><div class="spec-v">OS keystore on your machine (IntelliJ PasswordSafe)</div></div>
+          <div class="spec-item"><div class="spec-k">Local model host</div><div class="spec-v">Ollama — GPU recommended (more VRAM = bigger models)</div></div>
+          <div class="spec-item"><div class="spec-k">Deploy</div><div class="spec-v">Docker Compose (gateway · agent · RAG)</div></div>
+          <div class="spec-item"><div class="spec-k">Tracing</div><div class="spec-v">Langfuse (optional)</div></div>
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>How a turn works</h2>
+        <p>
+          Each message from the IDE becomes one <em>turn</em> on the graph. The gateway drains the
+          LangGraph event stream and forwards frames to the plugin as they happen, so you watch the
+          agent think, call tools and write code live:
+        </p>
+        <div class="flow">
+          <div class="flow-step"><div class="flow-n">STEP 1</div><div class="flow-t">Receive</div><div class="flow-d">A <code>user_message</code> frame arrives on the thread's WebSocket.</div></div>
+          <div class="flow-step"><div class="flow-n">STEP 2</div><div class="flow-t">Run graph</div><div class="flow-d">The deep agent runs its tool-calling loop; a title node generates the thread title in parallel.</div></div>
+          <div class="flow-step"><div class="flow-n">STEP 3</div><div class="flow-t">Stream</div><div class="flow-d">Model tokens, tool calls and edits are streamed to the plugin as frames.</div></div>
+          <div class="flow-step"><div class="flow-n">STEP 4</div><div class="flow-t">Pause / finish</div><div class="flow-d">If HITL fires it emits an interrupt and waits for <code>resume</code>; otherwise it sends the final frame.</div></div>
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>Human-in-the-loop, server side</h2>
+        <p>
+          HITL is implemented as a real LangGraph <strong>interrupt</strong>. When the agent is about to
+          take an action that needs approval, the gateway pauses the graph, sends an
+          <code>interrupt</code> frame (with a preview of what it wants to do) and holds the turn. The
+          plugin shows the prompt; your decision returns as a <code>resume</code> frame carrying a
+          <code>Command(resume=…)</code>, which continues the <em>same</em> turn from exactly where it
+          paused — no replay, no lost context.
+        </p>
+        <p>
+          Whether HITL is active is decided per thread by the <strong>Auto</strong> toggle the plugin
+          sends. The gateway stores that (and the redaction preference) on the thread's record, applied
+          on every frame.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>Threads &amp; identity</h2>
+        <p>
+          The gateway keeps an in-memory <strong>ThreadRegistry</strong>: one record per conversation
+          holding its message history, HITL/redaction settings and the machine identity
+          (<code>machine_id</code>, OS, arch, hostname) the plugin sent in its <code>hello</code> frame.
+          Because state lives on the record and not in a request-scoped variable, threads survive across
+          turns and can be rehydrated after a reconnect.
+        </p>
+        <p>
+          Routing is purely by <code>thread_id</code> against a single gateway hub, which is what makes
+          multi-user and multi-machine setups work: two agents on different machines are just two
+          threads on the same hub.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>Secret redaction</h2>
+        <div class="callout">
+          The gateway can redact secrets out of tool and terminal output before it is streamed to the
+          IDE or handed back to the model. Detected IPs, emails and credentials are replaced with
+          distinctive <code>&lt;&lt;REDACTED_*&gt;&gt;</code> tokens (for example
+          <code>&lt;&lt;REDACTED_IP_ADDRESS&gt;&gt;</code>). Redaction is a per-thread setting driven by
+          the same hello-frame mechanism as HITL, so you turn it on or off from the plugin.
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>Multi-agent coordination (ACP)</h2>
+        <p>
+          Real work often spans several projects — a backend and the library it consumes, for instance.
+          LangAgent includes an <strong>Agent Coordination Protocol (ACP)</strong> so one agent can ask
+          the agent working on another project to make a change, then continue once it reports back.
+        </p>
+        <ul>
+          <li><strong>Turn-based, not blocking.</strong> <code>acp_request</code> delivers a masked request that starts a fresh, independent turn on the peer agent; the requesting agent's turn simply ends.</li>
+          <li><strong>Report on completion.</strong> The peer's <code>acp_report</code> is delivered as a new turn on the original agent, which then resumes and finishes the task.</li>
+          <li><strong>Cache-until-idle.</strong> If the target is busy or offline, the request/report waits and is redelivered when it next goes idle or reconnects — even across machines.</li>
+        </ul>
+        <p>
+          This design deliberately avoids graph-level suspension, so no node is ever replayed and each
+          side runs one clean turn.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>Bring your own provider</h2>
+        <p>
+          The gateway builds its LLM through a single multi-provider factory, so the very same agent can
+          run on OpenAI, Anthropic, Google or a fully local Ollama server just by changing configuration.
+          With Ollama the whole stack is offline.
+        </p>
+        <h3>Where your keys live — the OS keystore</h3>
+        <p>
+          Your provider API keys are never baked into the plugin jar or persisted on the gateway. The
+          PyCharm plugin stores each key (Anthropic · OpenAI · Google) in the
+          <strong>operating system's keystore</strong> via IntelliJ's <code>PasswordSafe</code> — that
+          means the native credential store on your own machine (macOS Keychain, Windows Credential
+          Manager, or the Linux Secret Service / KeePass fallback).
+        </p>
+        <ul>
+          <li><strong>Stored on your machine.</strong> Keys sit in the OS keystore under your user account — not in plaintext config, not in the plugin binary.</li>
+          <li><strong>Provided per turn.</strong> When you send a message, the plugin reads the key from the keystore and hands it to the gateway inside that request; the gateway uses it to build the model client for that turn and does not store it.</li>
+          <li><strong>Only the provider you chose ever sees it.</strong> With a local Ollama endpoint no key leaves your infrastructure at all.</li>
+        </ul>
+        <div class="callout">
+          You own the credentials end to end: they live in <em>your</em> OS keystore, travel only from
+          your machine to the gateway you run, and are only ever presented to the provider you selected.
+        </div>
+
+        <h3>Local models need a GPU too — VRAM &amp; RAM matter</h3>
+        <p>
+          Running fully offline with <strong>Ollama</strong> means the model itself runs on your host,
+          and that is GPU work. Like the RAG's embedding phase, Ollama is far more capable with a
+          <strong>GPU</strong> behind it — NVIDIA hardware is the recommended and tested path.
+        </p>
+        <ul>
+          <li><strong>Bigger VRAM = bigger / better models.</strong> The amount of GPU VRAM on the Ollama host directly caps which models you can load and how fast they run — more VRAM lets you run larger, more capable local models fully offline.</li>
+          <li><strong>System RAM helps too.</strong> Ample host RAM lets larger models and longer contexts stay resident, especially when layers spill from VRAM.</li>
+          <li><strong>Sharing a host.</strong> If Ollama and the <a href="mcp.html">RAG</a> run on the same machine, size the GPU/VRAM and RAM for both — the more headroom, the better the fully-local experience.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h2>Where it fits</h2>
+        <div class="arch-layer"><span class="arch-badge">IDE</span><span class="arch-text"><a href="plugin.html">PyCharm IDEAgent plugin</a> — your window into the agent</span></div>
+        <div class="arch-arrow">↕ &nbsp;WebSocket frames + streamed events</div>
+        <div class="arch-layer"><span class="arch-badge">GW</span><span class="arch-text"><strong>LangAgent gateway</strong> — FastAPI + LangGraph deep agent, HITL, redaction, ACP</span></div>
+        <div class="arch-arrow">↕ &nbsp;MCP tools · RAG retrieval &nbsp;·&nbsp; ↕ your AI provider</div>
+        <div class="arch-layer"><span class="arch-badge">MCP</span><span class="arch-text"><a href="mcp.html">MCP server + context engine + RAG</a> — the project's knowledge</span></div>
+        <p style="margin-top:24px"><a href="architecture.html" class="btn btn-secondary">See the full architecture →</a></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="index.html" class="logo">IDE<span class="logo-accent">Agent</span></a>
+      <p class="footer-note">Each package carries its own license. Please refer to individual package documentation for details.</p>
+      <div class="footer-links">
+        <a href="index.html">Overview</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="plugin.html">Plugin</a>
+        <a href="mcp.html">MCP</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

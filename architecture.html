@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture — IDEAgent</title>
+  <meta name="description" content="How the IDEAgent components fit together: the PyCharm plugin, the LangAgent gateway, the MCP context engine and the RAG, plus the file watcher — a fully self-hosted, privacy-first agentic coding stack." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Nav -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">IDE<span class="logo-accent">Agent</span></a>
+      <nav class="nav-links">
+        <a href="index.html#packages">Why IDEAgent</a>
+        <a href="plugin.html">Plugin</a>
+        <a href="gateway.html">Gateway</a>
+        <a href="mcp.html">MCP</a>
+        <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Doc hero -->
+  <section class="doc-hero">
+    <div class="container">
+      <a href="index.html#docs" class="back-link">← Back to overview</a>
+      <div class="badge">System Overview</div>
+      <h1>How IDEAgent Fits Together</h1>
+      <p class="doc-lede">
+        IDEAgent is a small stack of focused, self-hosted components. Each one does a single job well,
+        and they connect over clean protocols — WebSocket, MCP and REST — so you can run the whole thing
+        on your own machine or your own servers, with your own model keys.
+      </p>
+    </div>
+  </section>
+
+  <!-- Doc body -->
+  <section class="doc-body">
+    <div class="container">
+
+      <div class="doc-section">
+        <h2>The stack, top to bottom</h2>
+        <p>A request flows down this stack and the results stream back up:</p>
+
+        <div class="arch-layer"><span class="arch-badge">01</span><span class="arch-text"><strong><a href="plugin.html">PyCharm IDEAgent plugin</a></strong> — the tool window in your IDE (Chat · Threads · Tasks · Edits), human-in-the-loop, local voice.</span></div>
+        <div class="arch-arrow">↕ &nbsp;WebSocket — hello / user_message / resume / goodbye, streamed events</div>
+        <div class="arch-layer"><span class="arch-badge">02</span><span class="arch-text"><strong><a href="gateway.html">LangAgent gateway</a></strong> — FastAPI + LangGraph deep agent. Runs the turn, enforces HITL, redacts secrets, coordinates peers (ACP), calls your model provider.</span></div>
+        <div class="arch-arrow">↕ &nbsp;MCP (HTTP / SSE) &nbsp;·&nbsp; ↕ your AI provider (OpenAI · Anthropic · Ollama)</div>
+        <div class="arch-layer"><span class="arch-badge">03</span><span class="arch-text"><strong><a href="mcp.html">MCP server + context engine</a></strong> — find_symbol / get_context / sync_rag over an indexed model of your project.</span></div>
+        <div class="arch-arrow">↕ &nbsp;REST (port 5810)</div>
+        <div class="arch-layer"><span class="arch-badge">04</span><span class="arch-text"><strong>RAG server</strong> — ChromaDB + local embeddings; stores code, learnings, snapshots and docs.</span></div>
+        <div class="arch-arrow">↕ &nbsp;/upload re-index</div>
+        <div class="arch-layer"><span class="arch-badge">05</span><span class="arch-text"><strong>File watcher plugin</strong> — watches your files per machine and keeps the RAG index fresh.</span></div>
+      </div>
+
+      <div class="doc-section">
+        <h2>A request, end to end</h2>
+        <div class="flow">
+          <div class="flow-step"><div class="flow-n">1</div><div class="flow-t">You ask</div><div class="flow-d">You type in the plugin; it sends a <code>user_message</code> to the gateway.</div></div>
+          <div class="flow-step"><div class="flow-n">2</div><div class="flow-t">Agent gathers context</div><div class="flow-d">The gateway's agent calls the MCP context engine, which retrieves the right code from the RAG.</div></div>
+          <div class="flow-step"><div class="flow-n">3</div><div class="flow-t">Agent acts</div><div class="flow-d">It plans, calls tools, and proposes or makes edits — pausing for your approval if HITL is on.</div></div>
+          <div class="flow-step"><div class="flow-n">4</div><div class="flow-t">Index updates</div><div class="flow-d"><code>record_change</code> triggers the file watcher to re-index, so the next request sees the change.</div></div>
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>Why it's built this way</h2>
+        <ul>
+          <li><strong>Separation of concerns.</strong> The IDE plugin does UI; the gateway does reasoning; the MCP/RAG does memory. Each can evolve — or be replaced — without touching the others.</li>
+          <li><strong>Privacy by construction.</strong> Embeddings and retrieval are local, your keys live only on the gateway, and only the context window you assemble is ever sent to a provider. With Ollama, nothing leaves your machine.</li>
+          <li><strong>You stay in control.</strong> Per-thread human-in-the-loop, plus optional redaction of secrets from tool output, mean the agent never acts — or leaks — behind your back.</li>
+          <li><strong>Scales across machines.</strong> Threads route by id on a single hub, and file watchers register themselves, so multiple agents and hosts coordinate cleanly (including cross-project ACP).</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h2>Deployment</h2>
+        <p>
+          The three backend services — <strong>gateway</strong>, <strong>agent</strong> and
+          <strong>RAG</strong> — ship as containers and come up together with Docker Compose on an
+          internal network. The two IDE-side pieces, the <a href="plugin.html">IDEAgent plugin</a> and
+          the file watcher, install into PyCharm / IntelliJ. Point the plugin at your gateway URL and
+          you're running.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>Read the component docs</h2>
+        <div class="docs-grid">
+          <a href="plugin.html" class="doc-card">
+            <div class="doc-card-icon">🧩</div>
+            <h3>PyCharm Plugin</h3>
+            <div class="doc-card-sub">In-IDE agent surface</div>
+            <p>Tool window, HITL, WebSocket protocol, MCP settings and local voice.</p>
+            <span class="doc-card-more">Read →</span>
+          </a>
+          <a href="gateway.html" class="doc-card">
+            <div class="doc-card-icon">🧠</div>
+            <h3>LangAgent Gateway</h3>
+            <div class="doc-card-sub">The reasoning engine</div>
+            <p>FastAPI + LangGraph deep agent, turn streaming, HITL, redaction and ACP.</p>
+            <span class="doc-card-more">Read →</span>
+          </a>
+          <a href="mcp.html" class="doc-card">
+            <div class="doc-card-icon">📚</div>
+            <h3>MCP &amp; RAG</h3>
+            <div class="doc-card-sub">Context engine + retrieval</div>
+            <p>find_symbol / get_context / sync_rag over a self-hosted RAG, kept fresh by the watcher.</p>
+            <span class="doc-card-more">Read →</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="index.html" class="logo">IDE<span class="logo-accent">Agent</span></a>
+      <p class="footer-note">Each package carries its own license. Please refer to individual package documentation for details.</p>
+      <div class="footer-links">
+        <a href="index.html">Overview</a>
+        <a href="plugin.html">Plugin</a>
+        <a href="gateway.html">Gateway</a>
+        <a href="mcp.html">MCP</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

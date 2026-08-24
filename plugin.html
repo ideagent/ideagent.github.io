@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyCharm IDEAgent Plugin — IDEAgent</title>
+  <meta name="description" content="The IDEAgent PyCharm plugin: an in-IDE coding agent tool window (Chat / Threads / Tasks / Edits) that streams from the LangGraph gateway over WebSocket, with human-in-the-loop, MCP tools and local voice." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Nav -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">IDE<span class="logo-accent">Agent</span></a>
+      <nav class="nav-links">
+        <a href="index.html#packages">Why IDEAgent</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="gateway.html">Gateway</a>
+        <a href="mcp.html">MCP</a>
+        <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Doc hero -->
+  <section class="doc-hero">
+    <div class="container">
+      <a href="index.html#docs" class="back-link">← Back to overview</a>
+      <div class="badge">Component 01 · JetBrains IDE Integration</div>
+      <h1>The PyCharm IDEAgent Plugin</h1>
+      <p class="doc-lede">
+        The plugin is the face of the whole system — a native PyCharm / IntelliJ tool window that
+        turns your IDE into a full agentic coding surface. It does not talk to any LLM itself: it
+        connects to your own <a href="gateway.html">LangGraph gateway</a> over a WebSocket, streams
+        the agent's reasoning and edits back into the editor, and keeps you in control with a
+        per-thread human-in-the-loop switch.
+      </p>
+    </div>
+  </section>
+
+  <!-- Doc body -->
+  <section class="doc-body">
+    <div class="container">
+
+      <div class="doc-section">
+        <h2>At a glance</h2>
+        <div class="spec-list">
+          <div class="spec-item"><div class="spec-k">Platform</div><div class="spec-v">PyCharm / IntelliJ (IntelliJ Platform 2.x)</div></div>
+          <div class="spec-item"><div class="spec-k">Language</div><div class="spec-v">Kotlin · Gradle IntelliJ Platform</div></div>
+          <div class="spec-item"><div class="spec-k">Package</div><div class="spec-v"><code>com.sca075.ideagent</code></div></div>
+          <div class="spec-item"><div class="spec-k">Talks to</div><div class="spec-v">LangGraph gateway (WebSocket)</div></div>
+          <div class="spec-item"><div class="spec-k">Interface</div><div class="spec-v">Tool window: Chat · Threads · Tasks · Edits</div></div>
+          <div class="spec-item"><div class="spec-k">Voice</div><div class="spec-v">Piper TTS · whisper.cpp STT (local)</div></div>
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>What it does in your IDE</h2>
+        <p>
+          IDEAgent installs as a tool window with four tabs, styled after modern agentic assistants
+          but running entirely against infrastructure you own:
+        </p>
+        <ul>
+          <li><strong>Chat</strong> — project-aware conversation with the agent. Responses stream token-by-token as the gateway produces them, with a live title generated for each thread.</li>
+          <li><strong>Threads</strong> — every conversation is a persistent thread. You can start a new thread, switch between them, and resume an earlier one; the gateway keeps the state so history survives restarts.</li>
+          <li><strong>Tasks</strong> — the agent's planned steps for a request, so you can see what it intends to do before it does it.</li>
+          <li><strong>Edits</strong> — the concrete file changes the agent proposes or applies, surfaced inside the IDE rather than buried in chat text.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h2>Human-in-the-loop (Auto toggle)</h2>
+        <p>
+          Each thread carries an <strong>Auto</strong> switch that turns human-in-the-loop (HITL) on or
+          off. With HITL enabled, the gateway pauses before consequential tool actions and the plugin
+          shows an approval prompt in the tool window; you approve or reject, and only then does the
+          agent continue. With Auto on, the agent proceeds without asking.
+        </p>
+        <div class="callout">
+          <strong>You are always the gate.</strong> The HITL preference travels with the thread and is
+          re-sent to the gateway on every relevant frame, so a resumed or reconnected thread keeps the
+          exact approval behaviour you chose.
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>How it connects to the gateway</h2>
+        <p>
+          The plugin speaks a small WebSocket frame protocol to the gateway. Identity and preferences
+          ride along so the gateway always knows who is asking and how to behave:
+        </p>
+        <div class="flow">
+          <div class="flow-step"><div class="flow-n">FRAME 1</div><div class="flow-t">hello</div><div class="flow-d">Opens the connection and sends stable machine identity (machine_id, OS, arch, hostname) plus per-thread config.</div></div>
+          <div class="flow-step"><div class="flow-n">FRAME 2</div><div class="flow-t">user_message</div><div class="flow-d">Your prompt. The gateway runs a turn and streams events back.</div></div>
+          <div class="flow-step"><div class="flow-n">FRAME 3</div><div class="flow-t">resume</div><div class="flow-d">Your HITL decision (approve / reject), which lets a paused turn continue.</div></div>
+          <div class="flow-step"><div class="flow-n">FRAME 4</div><div class="flow-t">goodbye</div><div class="flow-d">Cleanly closes the thread connection.</div></div>
+        </div>
+        <p>
+          Live preferences — the <strong>Auto</strong> (HITL) switch and <strong>tools-result redaction</strong> —
+          are attached to the hello, user_message, resume and goodbye frames, so a change takes effect
+          immediately without reconnecting. The machine identity is sent once in <code>hello</code>
+          (it is stable per connection) and is what enables multi-machine coordination between agents.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>MCP tools &amp; settings</h2>
+        <p>
+          Through the gateway, the agent can use <a href="mcp.html">MCP</a> tools — the context engine,
+          RAG search, project memory and more. The plugin's Settings page lets you configure this
+          without editing files:
+        </p>
+        <ul>
+          <li><strong>Gateway URL</strong> — where your LangGraph gateway is reachable, plus a one-click <em>Test connection</em>.</li>
+          <li><strong>MCP Servers</strong> — a dedicated sub-page to add and manage the MCP servers the agent may call.</li>
+          <li><strong>Default Auto</strong> — the starting HITL mode for new threads.</li>
+          <li><strong>Editor behaviour</strong> — auto-open edited files and auto-close editor tabs on a new thread.</li>
+          <li><strong>Tools results &amp; terminal redacted</strong> — strip secrets (IPs, emails, credentials) from tool output before it is shown or sent onward.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h2>Local voice</h2>
+        <p>
+          IDEAgent ships optional, fully local voice: <strong>Piper</strong> for text-to-speech and
+          <strong>whisper.cpp</strong> for speech-to-text. You can talk to the agent and hear its
+          replies without any cloud speech service — the audio never leaves your machine.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>Privacy &amp; trust — what you should know</h2>
+        <div class="callout warn">
+          <strong>The plugin is powerful because you trust your own gateway.</strong> Driven by the
+          gateway, the agent can execute shell commands on your machine and read/write your project
+          files. It also sends code and context to the gateway over the WebSocket, which then calls the
+          AI provider <em>you</em> configured with <em>your</em> keys. Everything runs on infrastructure
+          you own — but the plugin is only as safe as the gateway you point it at. Optional tool-output
+          redaction reduces the risk of leaking secrets in tool results.
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>Where it fits</h2>
+        <div class="arch-layer"><span class="arch-badge">YOU</span><span class="arch-text"><strong>PyCharm IDEAgent plugin</strong> — tool window, HITL, voice, settings</span></div>
+        <div class="arch-arrow">↕ &nbsp;WebSocket (hello / user_message / resume / goodbye)</div>
+        <div class="arch-layer"><span class="arch-badge">GW</span><span class="arch-text"><a href="gateway.html">LangGraph gateway</a> — runs the agent, streams events, holds thread state</span></div>
+        <div class="arch-arrow">↕ &nbsp;MCP tools · RAG retrieval</div>
+        <div class="arch-layer"><span class="arch-badge">MCP</span><span class="arch-text"><a href="mcp.html">MCP server + context engine + RAG</a> — project knowledge</span></div>
+        <p style="margin-top:24px"><a href="architecture.html" class="btn btn-secondary">See the full architecture →</a></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="index.html" class="logo">IDE<span class="logo-accent">Agent</span></a>
+      <p class="footer-note">Each package carries its own license. Please refer to individual package documentation for details.</p>
+      <div class="footer-links">
+        <a href="index.html">Overview</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="gateway.html">Gateway</a>
+        <a href="mcp.html">MCP</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

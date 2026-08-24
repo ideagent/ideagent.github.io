@@ -15,9 +15,10 @@
   <!-- Nav -->
   <header class="nav">
     <div class="container nav-inner">
-      <span class="logo">IDE<span class="logo-accent">Agent</span></span>
+      <a href="index.html" class="logo">IDE<span class="logo-accent">Agent</span></a>
       <nav class="nav-links">
-        <a href="#packages">Packages</a>
+        <a href="#packages">Why IDEAgent</a>
+        <a href="architecture.html">Architecture</a>
         <a href="#compare">Compare</a>
         <a href="#issues">Support</a>
         <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
@@ -36,8 +37,8 @@
         No third-party data retention — ever.
       </p>
       <div class="hero-cta">
-        <a href="https://github.com/ideagent/IDEAgent" target="_blank" rel="noopener" class="btn btn-primary">View on GitHub</a>
-        <a href="#packages" class="btn btn-secondary">Learn more ↓</a>
+        <a href="architecture.html" class="btn btn-primary">Explore the architecture</a>
+        <a href="#packages" class="btn btn-secondary">Why IDEAgent? ↓</a>
       </div>
       <div class="hero-notice">
         <span class="notice-icon">⚠️</span>
@@ -73,47 +74,53 @@
     </div>
   </section>
 
-  <!-- Packages -->
-  <section class="packages" id="packages">
+  <!-- Why IDEAgent / Packages + Docs (merged) -->
+  <section class="docs" id="packages">
+    <a id="docs" class="anchor-alias" aria-hidden="true"></a>
     <div class="container">
-      <h2 class="section-title">The Five Packages</h2>
-      <p class="section-sub">Five focused components that work together to give you a complete, self-hosted AI coding environment.</p>
-      <div class="packages-grid">
+      <h2 class="section-title">Why IDEAgent, not another AI assistant</h2>
+      <p class="section-sub">Most assistants ship your code to someone else's cloud. IDEAgent is a set of components you run yourself — each one focused, and built to work as a single system. Below is what's included, what each part does, and where to read how it works.</p>
 
-        <div class="package-card">
-          <div class="package-num">01</div>
-          <h3>mcp-server</h3>
-          <p class="package-subtitle">Model Context Protocol Server</p>
-          <p>The core server implementing the <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol</a>. Exposes a well-defined API surface for IDE plugins and external tools to query the context engine, manage tools, and orchestrate AI calls. Runs fully locally.</p>
+      <div class="callout notice-private">
+        <span class="notice-icon">🔒</span>
+        <div>
+          <strong>The source stays private.</strong> We don't disclose the code — it's part of our security policy. You still get full documentation of what each component does, and you can <a href="#issues">open an issue or request new functionality</a> at any time.
         </div>
+      </div>
 
-        <div class="package-card">
-          <div class="package-num">02</div>
-          <h3>rag-server</h3>
-          <p class="package-subtitle">Retrieval-Augmented Generation Server</p>
-          <p>A self-hosted RAG engine that indexes your codebase, documentation, and additional knowledge sources. Retrieves the most relevant context snippets for every AI request — without ever transmitting your full codebase to any third party.</p>
-        </div>
+      <div class="docs-grid">
 
-        <div class="package-card">
-          <div class="package-num">03</div>
-          <h3>gateway</h3>
-          <p class="package-subtitle">Secure API Gateway</p>
-          <p>A lightweight proxy between IDE plugins and your AI provider. Enforces local authentication, rate limiting, and request shaping. Your API keys are stored here — never exposed to IDE plugins, never sent anywhere except the AI provider you configure.</p>
-        </div>
+        <a href="architecture.html" class="doc-card">
+          <div class="doc-card-icon">🗺️</div>
+          <h3>Architecture</h3>
+          <div class="doc-card-sub">The big picture — start here</div>
+          <p>How the plugin, gateway, context engine and RAG fit together into one self-hosted, privacy-first agentic stack — with an end-to-end request walkthrough.</p>
+          <span class="doc-card-more">Start here →</span>
+        </a>
 
-        <div class="package-card">
-          <div class="package-num">04</div>
+        <a href="plugin.html" class="doc-card">
+          <div class="doc-card-icon">🧩</div>
           <h3>PyCharm IDEAgent Plugin</h3>
-          <p class="package-subtitle">JetBrains IDE Integration</p>
-          <p>The PyCharm plugin that surfaces all IDEAgent capabilities directly in the IDE. Connects to the local MCP server, streams AI responses inline, and provides code completion, refactoring suggestions, and project-aware chat — zero cloud dependency.</p>
-        </div>
+          <div class="doc-card-sub">Your window into the agent</div>
+          <p>The in-IDE tool window — Chat, Threads, Tasks and Edits — with per-thread human-in-the-loop, the WebSocket protocol to the gateway, MCP settings and local voice. Runs the work on your machine; no code leaves except the window you construct.</p>
+          <span class="doc-card-more">Read →</span>
+        </a>
 
-        <div class="package-card">
-          <div class="package-num">05</div>
-          <h3>PyCharm RAG File Watcher Plugin</h3>
-          <p class="package-subtitle">Real-Time Index Maintenance</p>
-          <p>A companion PyCharm plugin that watches your project files and keeps the RAG index up to date in the background. When you save a file, rename a class, or add a module, the index updates immediately so the AI always has the freshest view.</p>
-        </div>
+        <a href="gateway.html" class="doc-card">
+          <div class="doc-card-icon">🧠</div>
+          <h3>LangAgent Gateway</h3>
+          <div class="doc-card-sub">The reasoning engine</div>
+          <p>The FastAPI + LangGraph deep agent that runs each turn, streams it to your IDE, enforces HITL, redacts secrets, coordinates peer agents (ACP) and calls the model provider <em>you</em> configure — OpenAI, Anthropic or fully offline Ollama.</p>
+          <span class="doc-card-more">Read →</span>
+        </a>
+
+        <a href="mcp.html" class="doc-card">
+          <div class="doc-card-icon">📚</div>
+          <h3>Context Engine — MCP ↔ RAG + File Watcher</h3>
+          <div class="doc-card-sub">Where the agent's knowledge lives</div>
+          <p>The context engine is the relationship between the <strong>MCP server</strong> and the self-hosted <strong>RAG</strong>: symbol-aware retrieval (find_symbol / get_context / sync_rag) over local embeddings. It stays accurate because the <strong>file watcher</strong> re-syncs your files into the index on every <span class="code">record_change</span>. Web UI in progress.</p>
+          <span class="doc-card-more">Read →</span>
+        </a>
 
       </div>
     </div>
@@ -179,7 +186,7 @@
   <section class="issues" id="issues">
     <div class="container">
       <h2 class="section-title">Issues &amp; Feature Requests</h2>
-      <p class="section-sub">All five packages live in private repositories to protect implementation details. Use the templates below — they route your report to the correct team.</p>
+      <p class="section-sub">The source isn't public — that's part of our security policy — but the door is open: use the templates below to report a bug, request functionality, or ask a question. They route your report to the correct team.</p>
       <div class="issues-grid">
         <a href="https://github.com/ideagent/.github/issues/new?template=bug_report.yml" class="issue-card" target="_blank" rel="noopener">
           <span class="issue-icon">🐛</span>
