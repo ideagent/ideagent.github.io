@@ -41,6 +41,20 @@
         Your code stays on your machine. Your API keys stay on your infrastructure.
         No third-party data retention — ever.
       </p>
+      <div class="hero-showcase">
+        <div class="showcase-stage">
+          <img src="assets/chat.png" alt="IDEAgent chat view" class="showcase-img is-active" data-view="chat" />
+          <img src="assets/threads.png" alt="IDEAgent threads view" class="showcase-img" data-view="threads" />
+          <img src="assets/tasks.png" alt="IDEAgent tasks view" class="showcase-img" data-view="tasks" />
+          <img src="assets/edits.png" alt="IDEAgent edits view" class="showcase-img" data-view="edits" />
+        </div>
+        <div class="showcase-dots" role="tablist" aria-label="Product screenshots">
+          <button type="button" class="showcase-dot is-active" data-target="chat" aria-label="Chat" aria-selected="true"></button>
+          <button type="button" class="showcase-dot" data-target="threads" aria-label="Threads" aria-selected="false"></button>
+          <button type="button" class="showcase-dot" data-target="tasks" aria-label="Tasks" aria-selected="false"></button>
+          <button type="button" class="showcase-dot" data-target="edits" aria-label="Edits" aria-selected="false"></button>
+        </div>
+      </div>
       <div class="hero-cta">
         <a href="architecture.html" class="btn btn-primary">Explore the architecture</a>
         <a href="#packages" class="btn btn-secondary">Why IDEAgent? ↓</a>
@@ -224,6 +238,26 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      var dots = document.querySelectorAll('.showcase-dot');
+      var imgs = document.querySelectorAll('.showcase-img');
+      dots.forEach(function (dot) {
+        dot.addEventListener('click', function () {
+          var target = dot.getAttribute('data-target');
+          dots.forEach(function (d) {
+            var active = d === dot;
+            d.classList.toggle('is-active', active);
+            d.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          imgs.forEach(function (img) {
+            img.classList.toggle('is-active', img.getAttribute('data-view') === target);
+          });
+        });
+      });
+    })();
+  </script>
 
 </body>
 </html>
