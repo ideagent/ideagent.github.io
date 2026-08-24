@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IDEAgent — Privacy-First, Self-Hosted AI for PyCharm</title>
+  <meta name="description" content="IDEAgent is the first fully self-hosted, privacy-first AI agent system tightly integrated with PyCharm. Your data never leaves your machine." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Nav -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <span class="logo">IDE<span class="logo-accent">Agent</span></span>
+      <nav class="nav-links">
+        <a href="#packages">Packages</a>
+        <a href="#compare">Compare</a>
+        <a href="#issues">Support</a>
+        <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="badge">Privacy-First · Self-Hosted · Open APIs</div>
+      <h1>AI-powered coding,<br /><span class="gradient-text">without giving up your data.</span></h1>
+      <p class="hero-sub">
+        IDEAgent is the first fully self-hosted AI agent system tightly integrated with PyCharm.
+        Your code stays on your machine. Your API keys stay on your infrastructure.
+        No third-party data retention — ever.
+      </p>
+      <div class="hero-cta">
+        <a href="https://github.com/ideagent/IDEAgent" target="_blank" rel="noopener" class="btn btn-primary">View on GitHub</a>
+        <a href="#packages" class="btn btn-secondary">Learn more ↓</a>
+      </div>
+      <div class="hero-notice">
+        <span class="notice-icon">⚠️</span>
+        This is the official commercial platform for IDEAgent (<a href="https://github.com/ideagent/IDEAgent" target="_blank" rel="noopener">ideagent/IDEAgent</a>).
+        We are not affiliated with the academic research paper or the repository hosted by declare-lab.
+      </div>
+    </div>
+  </section>
+
+  <!-- Privacy pillars -->
+  <section class="pillars">
+    <div class="container pillars-grid">
+      <div class="pillar">
+        <div class="pillar-icon">🔑</div>
+        <h3>Your APIs</h3>
+        <p>Bring your own API keys. They are stored locally and never leave your infrastructure.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🖥️</div>
+        <h3>Your Machine</h3>
+        <p>Context is assembled on-device. Only the window you construct is sent to your chosen AI provider.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">📜</div>
+        <h3>Your Agreement</h3>
+        <p>Data retention is between you and your AI provider. IDEAgent is simply the delivery mechanism — transparent and auditable.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🌐</div>
+        <h3>Any Provider</h3>
+        <p>Works with OpenAI, Anthropic, Ollama, and any LLM endpoint you configure. Fully offline with Ollama.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Packages -->
+  <section class="packages" id="packages">
+    <div class="container">
+      <h2 class="section-title">The Five Packages</h2>
+      <p class="section-sub">Five focused components that work together to give you a complete, self-hosted AI coding environment.</p>
+      <div class="packages-grid">
+
+        <div class="package-card">
+          <div class="package-num">01</div>
+          <h3>mcp-server</h3>
+          <p class="package-subtitle">Model Context Protocol Server</p>
+          <p>The core server implementing the <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol</a>. Exposes a well-defined API surface for IDE plugins and external tools to query the context engine, manage tools, and orchestrate AI calls. Runs fully locally.</p>
+        </div>
+
+        <div class="package-card">
+          <div class="package-num">02</div>
+          <h3>rag-server</h3>
+          <p class="package-subtitle">Retrieval-Augmented Generation Server</p>
+          <p>A self-hosted RAG engine that indexes your codebase, documentation, and additional knowledge sources. Retrieves the most relevant context snippets for every AI request — without ever transmitting your full codebase to any third party.</p>
+        </div>
+
+        <div class="package-card">
+          <div class="package-num">03</div>
+          <h3>gateway</h3>
+          <p class="package-subtitle">Secure API Gateway</p>
+          <p>A lightweight proxy between IDE plugins and your AI provider. Enforces local authentication, rate limiting, and request shaping. Your API keys are stored here — never exposed to IDE plugins, never sent anywhere except the AI provider you configure.</p>
+        </div>
+
+        <div class="package-card">
+          <div class="package-num">04</div>
+          <h3>PyCharm IDEAgent Plugin</h3>
+          <p class="package-subtitle">JetBrains IDE Integration</p>
+          <p>The PyCharm plugin that surfaces all IDEAgent capabilities directly in the IDE. Connects to the local MCP server, streams AI responses inline, and provides code completion, refactoring suggestions, and project-aware chat — zero cloud dependency.</p>
+        </div>
+
+        <div class="package-card">
+          <div class="package-num">05</div>
+          <h3>PyCharm RAG File Watcher Plugin</h3>
+          <p class="package-subtitle">Real-Time Index Maintenance</p>
+          <p>A companion PyCharm plugin that watches your project files and keeps the RAG index up to date in the background. When you save a file, rename a class, or add a module, the index updates immediately so the AI always has the freshest view.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Compare -->
+  <section class="compare" id="compare">
+    <div class="container">
+      <h2 class="section-title">How IDEAgent Compares</h2>
+      <p class="section-sub">No trade-offs between privacy and capability.</p>
+      <div class="table-wrapper">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="col-ideagent">IDEAgent</th>
+              <th>Cloud-only assistants</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>API keys stored locally</td>
+              <td class="col-ideagent check">✅</td>
+              <td class="cross">❌</td>
+            </tr>
+            <tr>
+              <td>Codebase stays on-device</td>
+              <td class="col-ideagent check">✅</td>
+              <td class="cross">❌</td>
+            </tr>
+            <tr>
+              <td>Self-hosted RAG</td>
+              <td class="col-ideagent check">✅</td>
+              <td class="cross">❌</td>
+            </tr>
+            <tr>
+              <td>Works with any LLM provider</td>
+              <td class="col-ideagent check">✅</td>
+              <td class="partial">Limited</td>
+            </tr>
+            <tr>
+              <td>Fully offline (Ollama)</td>
+              <td class="col-ideagent check">✅</td>
+              <td class="cross">❌</td>
+            </tr>
+            <tr>
+              <td>No vendor data retention</td>
+              <td class="col-ideagent check">✅</td>
+              <td class="partial">Varies</td>
+            </tr>
+            <tr>
+              <td>PyCharm-native integration</td>
+              <td class="col-ideagent check">✅</td>
+              <td class="partial">Partial</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Issues / Support -->
+  <section class="issues" id="issues">
+    <div class="container">
+      <h2 class="section-title">Issues &amp; Feature Requests</h2>
+      <p class="section-sub">All five packages live in private repositories to protect implementation details. Use the templates below — they route your report to the correct team.</p>
+      <div class="issues-grid">
+        <a href="https://github.com/ideagent/.github/issues/new?template=bug_report.yml" class="issue-card" target="_blank" rel="noopener">
+          <span class="issue-icon">🐛</span>
+          <span class="issue-label">Bug Report</span>
+          <span class="issue-arrow">→</span>
+        </a>
+        <a href="https://github.com/ideagent/.github/issues/new?template=feature_request.yml" class="issue-card" target="_blank" rel="noopener">
+          <span class="issue-icon">💡</span>
+          <span class="issue-label">Feature Request</span>
+          <span class="issue-arrow">→</span>
+        </a>
+        <a href="https://github.com/ideagent/.github/issues/new?template=question.yml" class="issue-card" target="_blank" rel="noopener">
+          <span class="issue-icon">❓</span>
+          <span class="issue-label">Question / Support</span>
+          <span class="issue-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="logo">IDE<span class="logo-accent">Agent</span></span>
+      <p class="footer-note">Each package carries its own license. Please refer to individual package documentation for details.</p>
+      <div class="footer-links">
+        <a href="https://github.com/ideagent" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/ideagent/.github/issues" target="_blank" rel="noopener">Issues</a>
+        <a href="https://github.com/ideagent/IDEAgent" target="_blank" rel="noopener">IDEAgent Repo</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
