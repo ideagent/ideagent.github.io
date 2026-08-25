@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IDEAgent — Privacy-First, Self-Hosted AI for PyCharm</title>
-  <meta name="description" content="IDEAgent is the first fully self-hosted, privacy-first AI agent system tightly integrated with PyCharm. Your data never leaves your machine." />
+  <meta name="description" content="IDEAgent is a fully self-hosted, privacy-first AI context and project management system for PyCharm. Use APIs (data retention is your agreement with the provider) or run fully local with Ollama." />
   <link rel="icon" type="image/png" href="ideagent_logo.png" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -38,8 +38,9 @@
       <h1>AI-powered coding,<br /><span class="gradient-text">without giving up your data.</span></h1>
       <p class="hero-sub">
         IDEAgent is the first fully self-hosted AI agent system tightly integrated with PyCharm.
-        Your code stays on your machine. Your API keys stay on your infrastructure.
-        No third-party data retention — ever.
+        Your code and API keys stay on your own infrastructure. Go fully local with Ollama
+        for zero data leaving your machine — or connect any API provider, where data retention
+        is governed solely by your agreement with them. No middleman, no hidden retention.
       </p>
       <div class="hero-showcase">
         <div class="showcase-stage">
@@ -73,7 +74,7 @@
       <div class="pillar">
         <div class="pillar-icon">🔑</div>
         <h3>Your APIs</h3>
-        <p>Bring your own API keys. They are stored locally and never leave your infrastructure.</p>
+        <p>Bring your own API keys and data retention plan. They are stored locally and never leave your infrastructure.</p>
       </div>
       <div class="pillar">
         <div class="pillar-icon">🖥️</div>
@@ -98,14 +99,7 @@
     <a id="docs" class="anchor-alias" aria-hidden="true"></a>
     <div class="container">
       <h2 class="section-title">Why IDEAgent, not another AI assistant</h2>
-      <p class="section-sub">Most assistants ship your code to someone else's cloud. IDEAgent is a set of components you run yourself — each one focused, and built to work as a single system. Below is what's included, what each part does, and where to read how it works.</p>
-
-      <div class="callout notice-private">
-        <span class="notice-icon">🔒</span>
-        <div>
-          <strong>The source stays private.</strong> We don't disclose the code — it's part of our security policy. You still get full documentation of what each component does, and you can <a href="#issues">open an issue or request new functionality</a> at any time.
-        </div>
-      </div>
+      <p class="section-sub">Most assistants ship your code to someone else's cloud to build the context their agents need. IDEAgent is a set of components you run in your own environment — each one focused, and built to work as a single system. Below is what's included, what each part does, and where to read how it works. Fully local works too: run Ollama for zero data egress, though matching API-level models takes high-end hardware.</p>
 
       <div class="docs-grid">
 
@@ -205,7 +199,7 @@
   <section class="issues" id="issues">
     <div class="container">
       <h2 class="section-title">Issues &amp; Feature Requests</h2>
-      <p class="section-sub">The source isn't public — that's part of our security policy — but the door is open: use the templates below to report a bug, request functionality, or ask a question. They route your report to the correct team.</p>
+      <p class="section-sub">The IDEAgent source isn't public — that's part of our security policy — but the door is open: use the templates below to report a bug, request functionality, or ask a question. They route your report to the correct team.</p>
       <div class="issues-grid">
         <a href="https://github.com/ideagent/.github/issues/new?template=bug_report.yml" class="issue-card" target="_blank" rel="noopener">
           <span class="issue-icon">🐛</span>
