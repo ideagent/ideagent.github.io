@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IDEAgent — AI coding for code that legally can't leave the machine</title>
-  <meta name="description" content="IDEAgent is the AI coding agent for developers under legal or contractual bans on code egress. Secrets are redacted at the gateway before the model ever sees them, context is assembled on-device, and you can run the whole stack offline with Ollama." />
+  <meta name="description" content="IDEAgent is the AI coding agent for developers under legal or contractual bans on code egress. Context is assembled on-device, optional gateway redaction strips secrets before the model ever sees them, and you can run the whole stack offline with Ollama." />
   <link rel="icon" type="image/png" href="ideagent_logo.png" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -40,7 +40,7 @@
       <p class="hero-sub">
         IDEAgent is built for developers under a legal or contractual ban on code egress — regulated
         industries, client NDAs, defense, classified and air-gapped work. The context that would reach
-        a model is assembled <strong>on your own machine</strong>, secrets are
+        a model is assembled <strong>on your own machine</strong>, and when you enable it, secrets are
         <a href="#redaction">redacted at the gateway before the model ever sees them</a>, and with
         <a href="server_config.html">Ollama</a> nothing leaves your infrastructure at all.
       </p>
@@ -75,15 +75,16 @@
     <div class="container redaction-inner">
       <div class="redaction-copy">
         <div class="badge">The guarantee</div>
-        <h2 class="redaction-title">Secrets are stripped <span class="gradient-text">before the model ever sees them.</span></h2>
+        <h2 class="redaction-title">Turn it on, and secrets are stripped <span class="gradient-text">before the model ever sees them.</span></h2>
         <p class="redaction-lede">
-          Redaction runs at the <strong>gateway</strong>, on your machine, on the path <em>out</em>.
-          Tool output and terminal results are scanned and rewritten before a single token is streamed
-          to the agent or sent to any provider. The model reasons over
-          <code>&lt;&lt;REDACTED_*&gt;&gt;</code> placeholders — never the real value.
+          Redaction is a per-thread setting you enable from the plugin. With it on, it runs at the
+          <strong>gateway</strong>, on your machine, on the path <em>out</em>: tool output and terminal
+          results are scanned and rewritten before a single token is streamed to the agent or sent to
+          any provider, so the model reasons over <code>&lt;&lt;REDACTED_*&gt;&gt;</code> placeholders —
+          never the real value.
         </p>
         <ul class="redaction-points">
-          <li><strong>Egress-side, not trust-side.</strong> The secret is removed before it can be reasoned over, logged, cached by a provider, or leaked — not merely promised to be discarded later.</li>
+          <li><strong>Egress-side, not trust-side.</strong> When enabled, the secret is removed before it can be reasoned over, logged, cached by a provider, or leaked — not merely promised to be discarded later.</li>
           <li><strong>IPs, emails, API keys, tokens</strong> are detected and replaced with distinctive tokens like <code>&lt;&lt;REDACTED_IP_ADDRESS&gt;&gt;</code>.</li>
           <li><strong>Enforced by the agent, too.</strong> IDEAgent will not write a redacted token back into a file verbatim, so a redacted value can't silently re-enter your codebase through an edit.</li>
         </ul>
@@ -113,7 +114,7 @@
       <div class="pillar">
         <div class="pillar-icon">🛡️</div>
         <h3>Redacted before egress</h3>
-        <p>Secrets are stripped at the gateway on the way out — the model receives placeholders, never the real values.</p>
+        <p>Enable redaction and secrets are stripped at the gateway on the way out — the model receives placeholders, never the real values.</p>
       </div>
       <div class="pillar">
         <div class="pillar-icon">🖥️</div>
@@ -142,7 +143,7 @@
 
         <div class="whynot-card">
           <h3>Why not Copilot / Cursor / Windsurf?</h3>
-          <p>They send your code — or the context they build from it — to a vendor cloud to do the work. For a codebase under an egress ban, that transfer is the exact thing you're not allowed to do, no matter how good the retention policy is. IDEAgent does the retrieval on your machine and redacts what's left before anything leaves.</p>
+          <p>They send your code — or the context they build from it — to a vendor cloud to do the work. For a codebase under an egress ban, that transfer is the exact thing you're not allowed to do, no matter how good the retention policy is. IDEAgent does the retrieval on your machine and, with redaction enabled, strips what's left before anything leaves.</p>
         </div>
 
         <div class="whynot-card">
@@ -152,7 +153,7 @@
 
         <div class="whynot-card">
           <h3>Why not paste into ChatGPT?</h3>
-          <p>Manual pasting is exactly the uncontrolled, unaudited egress your policy exists to stop — secrets and client identifiers go out with the snippet, and nothing enforces what you paste. IDEAgent keeps a human in the loop but strips secrets automatically and mechanically.</p>
+          <p>Manual pasting is exactly the uncontrolled, unaudited egress your policy exists to stop — secrets and client identifiers go out with the snippet, and nothing enforces what you paste. IDEAgent keeps a human in the loop and, with redaction enabled, strips secrets automatically and mechanically.</p>
         </div>
 
         <div class="whynot-card">
@@ -193,7 +194,7 @@
           <div class="doc-card-icon">🧠</div>
           <h3>LangAgent Gateway</h3>
           <div class="doc-card-sub">The reasoning engine</div>
-          <p>The FastAPI + LangGraph deep agent that runs each turn, streams it to your IDE, enforces HITL, redacts secrets, coordinates peer agents (ACP) and calls the model provider <em>you</em> configure — OpenAI, Anthropic or fully offline Ollama.</p>
+          <p>The FastAPI + LangGraph deep agent that runs each turn, streams it to your IDE, enforces HITL, redacts secrets, coordinates peer agents (ACP) and calls the model provider <em>you</em> configure — OpenAI, Anthropic, Google or fully offline Ollama.</p>
           <span class="doc-card-more">Read →</span>
         </a>
 
@@ -201,7 +202,7 @@
           <div class="doc-card-icon">📚</div>
           <h3>Context Engine — MCP ↔ RAG + File Watcher</h3>
           <div class="doc-card-sub">Where the agent's knowledge lives</div>
-          <p>The context engine is the relationship between the <strong>MCP server</strong> and the self-hosted <strong>RAG</strong>: symbol-aware retrieval (find_symbol / get_context / sync_rag) over local embeddings. It stays accurate because the <strong>file watcher</strong> re-syncs your files into the index on every <span class="code">record_change</span>. Web UI in progress.</p>
+          <p>The context engine is the relationship between the <strong>MCP server</strong> and the self-hosted <strong>RAG</strong>: symbol-aware retrieval (find_symbol / get_context / sync_rag) over local embeddings. It stays accurate because the <strong>file watcher</strong> re-syncs your files into the index on every <span class="code">record_change</span>. Includes a local web GUI.</p>
           <span class="doc-card-more">Read →</span>
         </a>
 
