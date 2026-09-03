@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MCP Server, Context Engine &amp; RAG — IDEAgent</title>
-  <meta name="description" content="The IDEAgent MCP server exposes a context engine (find_symbol / get_context / sync_rag) backed by a self-hosted RAG (ChromaDB + local embeddings). A file watcher keeps the index fresh. A web UI is in progress." />
+  <meta name="description" content="The IDEAgent MCP server ships a local web GUI — open it at the container's address (for example http://localhost/ui) to browse your projects, settings, tools, context engine, RAG collections and logs. Everything stays on your machine." />
   <link rel="icon" type="image/png" href="ideagent_logo.png" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,14 +31,13 @@
   <section class="doc-hero">
     <div class="container">
       <a href="index.html#docs" class="back-link">← Back to overview</a>
-      <div class="badge">Component 03 · Context Engine &amp; Retrieval</div>
-      <h1>MCP Server, Context Engine &amp; RAG</h1>
+      <div class="badge">Component 03 · Project Context</div>
+      <h1>Project Context — the web GUI</h1>
       <p class="doc-lede">
-        This is the memory of the system. The MCP server implements the
-        <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol</a>
-        and exposes a <strong>context engine</strong> over a self-hosted <strong>RAG</strong> backend, so
-        the <a href="gateway.html">gateway's</a> agent can find exactly the right code and project
-        knowledge for each request — without ever shipping your whole codebase to a third party.
+        This is the memory of the system, and it comes with its own <strong>web GUI</strong>. It runs as
+        a container and serves a browser interface at the container's address — for example
+        <code>http://localhost/ui</code>. From there you manage the projects the agent knows about,
+        inspect what it has indexed, and watch what it is doing — all on your own machine.
       </p>
     </div>
   </section>
@@ -48,121 +47,122 @@
     <div class="container">
 
       <div class="doc-section">
-        <h2>At a glance</h2>
-        <div class="spec-list">
-          <div class="spec-item"><div class="spec-k">Protocol</div><div class="spec-v">Model Context Protocol (HTTP &amp; SSE)</div></div>
-          <div class="spec-item"><div class="spec-k">Vector DB</div><div class="spec-v">ChromaDB (self-hosted)</div></div>
-          <div class="spec-item"><div class="spec-k">Embeddings</div><div class="spec-v">Local sentence-transformers (all-MiniLM-L6-v2, 384-dim)</div></div>
-          <div class="spec-item"><div class="spec-k">Embedding hardware</div><div class="spec-v">GPU-accelerated — NVIDIA (CUDA) recommended &amp; tested</div></div>
-          <div class="spec-item"><div class="spec-k">RAG port</div><div class="spec-v">5810 (REST)</div></div>
-          <div class="spec-item"><div class="spec-k">Engine actions</div><div class="spec-v"><code>find_symbol</code> · <code>get_context</code> · <code>sync_rag</code></div></div>
-          <div class="spec-item"><div class="spec-k">Web UI</div><div class="spec-v">In progress</div></div>
-        </div>
+        <h2>Open the GUI</h2>
+        <p>
+          The Project Context runs as a container. Once it is up, open a browser on the same machine and
+          go to its address — the GUI is served under <code>/ui</code>:
+        </p>
+        <ol class="setup-steps">
+          <li>Point your browser at the container, for example <code>http://localhost/ui</code>.</li>
+          <li>You land on <strong>Projects</strong> — the list of everything the agent knows about.</li>
+          <li>The tabs across the top take you to the rest: Settings, Tools, Context Engine, RAG Collections and Logs.</li>
+        </ol>
+        <figure class="setup-shot">
+          <img src="assets/MCP_WEB_GUI.png" alt="Project Context web GUI showing the Projects list with registered projects" loading="lazy" />
+          <figcaption><strong>The web GUI.</strong> Each project card shows its path, type and when it was registered. From a card you can open its <em>Learnings</em>, review <em>Changes</em>, <em>Edit</em> its details or remove it — and <em>Refresh</em> re-reads the list.</figcaption>
+        </figure>
       </div>
 
       <div class="doc-section">
-        <h2>What the context engine does</h2>
+        <h2>Projects</h2>
         <p>
-          The context engine is the agent's first move on any task: instead of blindly reading files, it
-          queries a real, indexed model of the project. It exposes three focused actions:
+          A project is a folder the agent is allowed to understand and work in. The <strong>Projects</strong>
+          tab is where you register them and keep them tidy:
         </p>
         <ul>
-          <li><strong>find_symbol</strong> — locate a named symbol (function, class, method) or search semantically with a natural-language query, and see its definition, source and neighbours.</li>
-          <li><strong>get_context</strong> — assemble a rich answer for a query: relevant entry-point files, recorded project learnings, full file context and recent changes, in one call.</li>
-          <li><strong>sync_rag</strong> — push the latest state of a file into the index so the next query reflects reality.</li>
+          <li><strong>Register</strong> a folder so it becomes part of the agent's memory.</li>
+          <li><strong>Edit</strong> a project's details, or <strong>Delete</strong> it when you no longer want it indexed.</li>
+          <li><strong>Learnings</strong> shows the notes the agent has saved about that project over time.</li>
+          <li><strong>Changes</strong> lists the file changes recorded for it, so you can see its recent history.</li>
         </ul>
+      </div>
+
+      <div class="doc-section">
+        <h2>Context Engine</h2>
+        <p>
+          The <strong>Context Engine</strong> tab lets you look at, and try, what the agent uses on every
+          task — an indexed model of the project rather than a blind file read. From here you can browse a
+          project's symbols and run a retrieval query yourself to see exactly what the agent would get back.
+        </p>
         <div class="callout">
-          The context engine is the <strong>source of truth</strong> for the project's structure. It is
-          how the agent understands how pieces fit together <em>before</em> it edits anything — which is
-          what keeps changes grounded in the real codebase rather than guesses.
+          The context engine is the <strong>source of truth</strong> for a project's structure. It is how
+          the agent understands how pieces fit together <em>before</em> it edits anything — which keeps its
+          changes grounded in the real codebase rather than guesses.
         </div>
       </div>
 
       <div class="doc-section">
-        <h2>The connection to the RAG</h2>
+        <h2>RAG Collections</h2>
         <p>
-          The context engine is backed by the self-hosted <strong>RAG server</strong> (port 5810). The
-          RAG is where retrieval actually happens:
+          Retrieval is backed by a self-hosted store, and the <strong>RAG Collections</strong> tab is your
+          window into it. Each project's indexed code and knowledge lives in its own collection, and it
+          holds more than source:
         </p>
         <ul>
-          <li><strong>Local embeddings.</strong> Source code and knowledge are embedded with a local sentence-transformers model — no embedding API call leaves your machine.</li>
-          <li><strong>Symbol-aware chunking.</strong> Code is chunked around top-level symbols, so a retrieved snippet is a meaningful unit (a whole function or class) rather than an arbitrary line range.</li>
-          <li><strong>ChromaDB vector store.</strong> Chunks live in a local ChromaDB collection; a query returns the most similar snippets by cosine similarity.</li>
-          <li><strong>More than code.</strong> The RAG also stores project learnings, file snapshots (before/after versions of changes) and scraped documentation, so <code>get_context</code> can weave history and docs into its answer.</li>
+          <li><strong>Code</strong>, chunked around whole symbols so a result is a meaningful unit — a full function or class, not an arbitrary line range.</li>
+          <li><strong>Learnings</strong> the agent has saved about the project.</li>
+          <li><strong>Change history</strong> — before/after snapshots of edits.</li>
+          <li><strong>Documentation</strong> that has been ingested for the project.</li>
         </ul>
         <p>
-          The MCP tools call the RAG over REST with short timeouts and graceful degradation: if the RAG
-          is briefly unavailable, the rest of the MCP server keeps working.
+          Everything here is computed and stored on your machine — the full codebase is never sent anywhere.
         </p>
       </div>
 
       <div class="doc-section">
-        <h2>Hardware — the embedding phase wants a GPU</h2>
+        <h2>Tools &amp; Settings</h2>
         <p>
-          Embedding is the compute-heavy part of the RAG. Every indexed file and every query has to be
-          turned into vectors by the local sentence-transformers model, and that step runs fastest on a
-          <strong>GPU</strong>. It will run on CPU, but on a large codebase re-indexing and query latency
-          are noticeably slower.
+          The <strong>Tools</strong> tab lists the actions the Project Context makes available to the agent
+          through the <a href="gateway.html">Gateway</a> — searching the context engine, reading a project's
+          learnings and history, recording changes. The <strong>Settings</strong> tab holds the
+          server's own configuration.
         </p>
-        <ul>
-          <li><strong>NVIDIA is recommended and tested.</strong> The embedding phase has been validated on NVIDIA (CUDA) hardware, so an NVIDIA GPU is the recommended configuration for the RAG host.</li>
-          <li><strong>CPU still works.</strong> No GPU is required to run — embeddings simply fall back to CPU, at a performance cost that grows with project size.</li>
-          <li><strong>More VRAM + RAM = more headroom.</strong> A GPU with more VRAM (and a host with more system RAM) lets the RAG index larger projects and keep more in memory, which matters most when the RAG and a local Ollama model share the same machine.</li>
-        </ul>
-        <div class="callout">
-          Everything stays on-device: putting an NVIDIA GPU on the RAG host keeps embeddings fully local
-          <em>and</em> fast — you get the privacy of local retrieval without paying for it in latency.
-        </div>
       </div>
 
       <div class="doc-section">
         <h2>Keeping the index honest — the file watcher</h2>
         <p>
-          An index is only useful if it matches the code on disk. IDEAgent keeps them in sync with a
-          companion <strong>file watcher</strong> plugin and a <code>record_change</code> flow:
+          An index is only useful if it matches the code on disk. The Project Context stays in sync with a
+          companion <strong>file watcher</strong> that runs on each of your machines:
         </p>
-        <div class="flow">
-          <div class="flow-step"><div class="flow-n">STEP 1</div><div class="flow-t">Edit</div><div class="flow-d">The agent (or you) changes a file and records it via <code>record_change</code>.</div></div>
-          <div class="flow-step"><div class="flow-n">STEP 2</div><div class="flow-t">Resolve</div><div class="flow-d">The MCP server finds the right machine's watcher from a live registry the RAG keeps.</div></div>
-          <div class="flow-step"><div class="flow-n">STEP 3</div><div class="flow-t">Upload</div><div class="flow-d">That machine's watcher uploads the exact local file to the RAG.</div></div>
-          <div class="flow-step"><div class="flow-n">STEP 4</div><div class="flow-t">Re-index</div><div class="flow-d">The RAG re-embeds it, so the next <code>get_context</code> reflects the change.</div></div>
-        </div>
+        <ul>
+          <li>When a file changes and the change is recorded, the watcher on that machine uploads the exact local file.</li>
+          <li>The store re-indexes it, so the next query reflects the change.</li>
+          <li>Because each watcher reports its own address, this works even when the editing machine and the server are different hosts.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h2>Logs</h2>
         <p>
-          Because the watcher runs on each machine and reports its address to the RAG, this works even
-          when the editing machine and the server are different hosts — no hardcoded IPs, and stale
-          watchers are ignored.
+          The <strong>Logs</strong> tab shows what the server is doing in real time — registrations,
+          indexing activity and queries — so when something looks off, you can see why without leaving the
+          browser.
         </p>
       </div>
 
       <div class="doc-section">
-        <h2>The web UI</h2>
-        <div class="callout warn">
-          <strong>In progress.</strong> A web UI for the MCP server is under active development. It will
-          make the context engine and RAG inspectable outside the IDE — browsing indexed projects,
-          symbols, learnings and recent changes, and running retrieval queries directly. Until it ships,
-          the engine is used through the MCP tools driven by the <a href="gateway.html">gateway</a>.
-        </div>
+        <h2>Hardware — indexing quality follows the GPU</h2>
+        <p>
+          Turning code into a searchable index is the compute-heavy part, and it runs best with a
+          <strong>GPU</strong>. IDEAgent runs on CUDA-capable NVIDIA machines and on boxes with shared-memory
+          GPUs — laptops and Macs — but the two are not equal:
+        </p>
+        <ul>
+          <li><strong>NVIDIA (CUDA)</strong> is the recommended and tested configuration, and gives the best indexing quality.</li>
+          <li><strong>Shared-memory GPUs</strong> (Dell laptops, Macs) work, but indexing quality degrades compared to CUDA hardware.</li>
+          <li>More VRAM and system RAM give more headroom for larger projects, especially when a local Ollama model shares the same machine.</li>
+        </ul>
       </div>
 
       <div class="doc-section">
         <h2>Privacy by construction</h2>
         <p>
-          Everything here is local: embeddings are computed on-device, vectors live in a ChromaDB you
-          host, and retrieval returns only the small, relevant slices the agent needs. The full codebase
-          is never transmitted anywhere. When paired with an Ollama provider on the gateway, no code or
-          context leaves your infrastructure at all.
+          Everything here is local: indexing runs on-device, the collections live in a store you host, and
+          retrieval returns only the small, relevant slices the agent needs. The full codebase is never
+          transmitted anywhere. Paired with a local Ollama provider on the <a href="gateway.html">Gateway</a>,
+          no code or context leaves your machine at all.
         </p>
-      </div>
-
-      <div class="doc-section">
-        <h2>Where it fits</h2>
-        <div class="arch-layer"><span class="arch-badge">IDE</span><span class="arch-text"><a href="plugin.html">PyCharm IDEAgent plugin</a></span></div>
-        <div class="arch-arrow">↕</div>
-        <div class="arch-layer"><span class="arch-badge">GW</span><span class="arch-text"><a href="gateway.html">LangAgent gateway</a> — calls MCP tools during a turn</span></div>
-        <div class="arch-arrow">↕ &nbsp;MCP (HTTP / SSE)</div>
-        <div class="arch-layer"><span class="arch-badge">MCP</span><span class="arch-text"><strong>MCP server + context engine</strong> — find_symbol / get_context / sync_rag</span></div>
-        <div class="arch-arrow">↕ &nbsp;REST (port 5810)</div>
-        <div class="arch-layer"><span class="arch-badge">RAG</span><span class="arch-text"><strong>RAG server</strong> — ChromaDB + local embeddings, fed by the file watcher</span></div>
         <p style="margin-top:24px"><a href="architecture.html" class="btn btn-secondary">See the full architecture →</a></p>
       </div>
 

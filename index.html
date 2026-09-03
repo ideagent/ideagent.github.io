@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IDEAgent — Privacy-First, Self-Hosted AI for PyCharm</title>
-  <meta name="description" content="IDEAgent is a fully self-hosted, privacy-first AI context and project management system for PyCharm. Use APIs (data retention is your agreement with the provider) or run fully local with Ollama." />
+  <title>IDEAgent — AI coding for code that legally can't leave the machine</title>
+  <meta name="description" content="IDEAgent is the AI coding agent for developers under legal or contractual bans on code egress. Secrets are redacted at the gateway before the model ever sees them, context is assembled on-device, and you can run the whole stack offline with Ollama." />
   <link rel="icon" type="image/png" href="ideagent_logo.png" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -18,7 +18,8 @@
     <div class="container nav-inner">
       <a href="index.html" class="logo"><img src="ideagent_logo.png" alt="" class="logo-mark" />IDE<span class="logo-accent">Agent</span></a>
       <nav class="nav-links">
-        <a href="#packages">Why IDEAgent</a>
+        <a href="#redaction">Redaction</a>
+        <a href="#why-not">Why not X</a>
         <a href="architecture.html">Architecture</a>
         <a href="#compare">Compare</a>
         <a href="#issues">Support</a>
@@ -34,13 +35,14 @@
         <img src="ideagent_logo.png" alt="" class="hero-logo" width="56" height="56" />
         <span class="hero-wordmark">IDE<span class="logo-accent">Agent</span></span>
       </div>
-      <div class="badge">Privacy-First · Self-Hosted · Open APIs</div>
-      <h1>AI-powered coding,<br /><span class="gradient-text">without giving up your data.</span></h1>
+      <div class="badge">For code that legally can't leave the machine</div>
+      <h1>When your contract says<br /><span class="gradient-text">the code cannot leave,</span><br />you still get an AI agent.</h1>
       <p class="hero-sub">
-        IDEAgent is the first fully self-hosted AI agent system tightly integrated with PyCharm.
-        Your code and API keys stay on your own infrastructure. Go fully local with Ollama
-        for zero data leaving your machine — or connect any API provider, where data retention
-        is governed solely by your agreement with them. No middleman, no hidden retention.
+        IDEAgent is built for developers under a legal or contractual ban on code egress — regulated
+        industries, client NDAs, defense, classified and air-gapped work. The context that would reach
+        a model is assembled <strong>on your own machine</strong>, secrets are
+        <a href="#redaction">redacted at the gateway before the model ever sees them</a>, and with
+        <a href="server_config.html">Ollama</a> nothing leaves your infrastructure at all.
       </p>
       <div class="hero-showcase">
         <div class="showcase-stage">
@@ -57,8 +59,8 @@
         </div>
       </div>
       <div class="hero-cta">
-        <a href="architecture.html" class="btn btn-primary">Explore the architecture</a>
-        <a href="#packages" class="btn btn-secondary">Why IDEAgent? ↓</a>
+        <a href="#redaction" class="btn btn-primary">See the redaction guarantee ↓</a>
+        <a href="#why-not" class="btn btn-secondary">Why not Copilot / Cursor? ↓</a>
       </div>
       <div class="hero-notice">
         <span class="notice-icon">⚠️</span>
@@ -68,28 +70,96 @@
     </div>
   </section>
 
+  <!-- Redaction guarantee — the hero of the product -->
+  <section class="redaction" id="redaction">
+    <div class="container redaction-inner">
+      <div class="redaction-copy">
+        <div class="badge">The guarantee</div>
+        <h2 class="redaction-title">Secrets are stripped <span class="gradient-text">before the model ever sees them.</span></h2>
+        <p class="redaction-lede">
+          Redaction runs at the <strong>gateway</strong>, on your machine, on the path <em>out</em>.
+          Tool output and terminal results are scanned and rewritten before a single token is streamed
+          to the agent or sent to any provider. The model reasons over
+          <code>&lt;&lt;REDACTED_*&gt;&gt;</code> placeholders — never the real value.
+        </p>
+        <ul class="redaction-points">
+          <li><strong>Egress-side, not trust-side.</strong> The secret is removed before it can be reasoned over, logged, cached by a provider, or leaked — not merely promised to be discarded later.</li>
+          <li><strong>IPs, emails, API keys, tokens</strong> are detected and replaced with distinctive tokens like <code>&lt;&lt;REDACTED_IP_ADDRESS&gt;&gt;</code>.</li>
+          <li><strong>Enforced by the agent, too.</strong> IDEAgent will not write a redacted token back into a file verbatim, so a redacted value can't silently re-enter your codebase through an edit.</li>
+        </ul>
+        <a href="gateway.html#redaction" class="btn btn-primary">How redaction works →</a>
+      </div>
+      <div class="redaction-demo" aria-hidden="true">
+        <div class="redaction-pane">
+          <div class="redaction-pane-head"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span><span class="pane-label">tool output · on your machine</span></div>
+          <pre class="redaction-code before"><span class="c-key">host</span>   = <span class="c-val">10.4.19.2</span>
+<span class="c-key">email</span>  = <span class="c-val">j.chen@acme-defense.com</span>
+<span class="c-key">apikey</span> = <span class="c-val">sk-live-3f9c8a1b7e</span></pre>
+        </div>
+        <div class="redaction-arrow">redacted at the gateway ↓</div>
+        <div class="redaction-pane">
+          <div class="redaction-pane-head"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span><span class="pane-label">what the model receives</span></div>
+          <pre class="redaction-code after"><span class="c-key">host</span>   = <span class="c-red">&lt;&lt;REDACTED_IP_ADDRESS&gt;&gt;</span>
+<span class="c-key">email</span>  = <span class="c-red">&lt;&lt;REDACTED_EMAIL&gt;&gt;</span>
+<span class="c-key">apikey</span> = <span class="c-red">&lt;&lt;REDACTED_SECRET&gt;&gt;</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Privacy pillars -->
   <section class="pillars">
     <div class="container pillars-grid">
       <div class="pillar">
-        <div class="pillar-icon">🔑</div>
-        <h3>Your APIs</h3>
-        <p>Bring your own API keys and data retention plan. They are stored locally and never leave your infrastructure.</p>
+        <div class="pillar-icon">🛡️</div>
+        <h3>Redacted before egress</h3>
+        <p>Secrets are stripped at the gateway on the way out — the model receives placeholders, never the real values.</p>
       </div>
       <div class="pillar">
         <div class="pillar-icon">🖥️</div>
-        <h3>Your Machine</h3>
-        <p>Context is assembled on-device. Only the window you construct is sent to your chosen AI provider.</p>
+        <h3>Context stays on-device</h3>
+        <p>Retrieval, indexing and context assembly run on your machine. Only the window you construct — after redaction — leaves it.</p>
       </div>
       <div class="pillar">
-        <div class="pillar-icon">📜</div>
-        <h3>Your Agreement</h3>
-        <p>Data retention is between you and your AI provider. IDEAgent is simply the delivery mechanism — transparent and auditable.</p>
+        <div class="pillar-icon">✈️</div>
+        <h3>Fully air-gappable</h3>
+        <p>Point it at Ollama and nothing leaves your infrastructure at all. Provable zero egress for the strictest contracts.</p>
       </div>
       <div class="pillar">
-        <div class="pillar-icon">🌐</div>
-        <h3>Any Provider</h3>
-        <p>Works with OpenAI, Anthropic, Ollama, and any LLM endpoint you configure. Fully offline with Ollama.</p>
+        <div class="pillar-icon">🔑</div>
+        <h3>Keys in your OS keystore</h3>
+        <p>Provider API keys live in your machine's native keystore — not in config, not in the plugin binary, never persisted by the gateway.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why not X -->
+  <section class="whynot" id="why-not">
+    <div class="container">
+      <h2 class="section-title">"Why not just use X?"</h2>
+      <p class="section-sub">If your code is allowed to leave the machine, plenty of great tools exist. IDEAgent is for when it isn't.</p>
+      <div class="whynot-grid">
+
+        <div class="whynot-card">
+          <h3>Why not Copilot / Cursor / Windsurf?</h3>
+          <p>They send your code — or the context they build from it — to a vendor cloud to do the work. For a codebase under an egress ban, that transfer is the exact thing you're not allowed to do, no matter how good the retention policy is. IDEAgent does the retrieval on your machine and redacts what's left before anything leaves.</p>
+        </div>
+
+        <div class="whynot-card">
+          <h3>Why not "zero-retention" enterprise plans?</h3>
+          <p>Zero-retention is a promise about what a provider does <em>after</em> receiving your data — your code still crossed the boundary. Many contracts and regulations prohibit the transfer itself, not just the storage. Redaction-before-egress and local-only mode remove the transfer, so there's nothing to retain.</p>
+        </div>
+
+        <div class="whynot-card">
+          <h3>Why not paste into ChatGPT?</h3>
+          <p>Manual pasting is exactly the uncontrolled, unaudited egress your policy exists to stop — secrets and client identifiers go out with the snippet, and nothing enforces what you paste. IDEAgent keeps a human in the loop but strips secrets automatically and mechanically.</p>
+        </div>
+
+        <div class="whynot-card">
+          <h3>Why not a local model in a generic IDE?</h3>
+          <p>Nothing wrong with it — a truly local model keeps context on the machine, which is exactly what we enforce. But a bare local model gives you no on-device retrieval and no safety net the day you're allowed to reach for a stronger remote model like Claude or GPT. IDEAgent is the whole path: local retrieval, egress-side redaction when you do reach out, HITL, and free choice of provider — so "local" is the default, not the ceiling.</p>
+        </div>
+
       </div>
     </div>
   </section>
@@ -98,8 +168,8 @@
   <section class="docs" id="packages">
     <a id="docs" class="anchor-alias" aria-hidden="true"></a>
     <div class="container">
-      <h2 class="section-title">Why IDEAgent, not another AI assistant</h2>
-      <p class="section-sub">Most assistants ship your code to someone else's cloud to build the context their agents need. IDEAgent is a set of components you run in your own environment — each one focused, and built to work as a single system. Below is what's included, what each part does, and where to read how it works. Fully local works too: run Ollama for zero data egress, though matching API-level models takes high-end hardware.</p>
+      <h2 class="section-title">The components that keep it on your machine</h2>
+      <p class="section-sub">The redaction guarantee isn't a feature bolted onto a cloud tool — it falls out of running the whole stack in your own environment. These are the parts that make on-device context and egress-side redaction possible, and where to read how each works. Fully local works too: run Ollama for provable zero egress, though matching API-level models takes high-end hardware.</p>
 
       <div class="docs-grid">
 
@@ -142,8 +212,8 @@
   <!-- Compare -->
   <section class="compare" id="compare">
     <div class="container">
-      <h2 class="section-title">How IDEAgent Compares</h2>
-      <p class="section-sub">No trade-offs between privacy and capability.</p>
+      <h2 class="section-title">Measured against the one question that matters</h2>
+      <p class="section-sub">Does your code — or context built from it — leave the machine? For a regulated or contractual egress ban, that's the only column that counts.</p>
       <div class="table-wrapper">
         <table class="compare-table">
           <thead>
@@ -155,39 +225,39 @@
           </thead>
           <tbody>
             <tr>
-              <td>API keys stored locally</td>
+              <td>Secrets redacted <strong>before</strong> the model sees them</td>
               <td class="col-ideagent check">✅</td>
               <td class="cross">❌</td>
             </tr>
             <tr>
-              <td>Codebase stays on-device</td>
+              <td>Code / context never crosses the boundary</td>
               <td class="col-ideagent check">✅</td>
               <td class="cross">❌</td>
             </tr>
             <tr>
-              <td>Self-hosted RAG</td>
+              <td>Context assembled on-device (self-hosted RAG)</td>
               <td class="col-ideagent check">✅</td>
               <td class="cross">❌</td>
             </tr>
             <tr>
-              <td>Works with any LLM provider</td>
+              <td>Provable zero egress (fully offline via Ollama)</td>
+              <td class="col-ideagent check">✅</td>
+              <td class="cross">❌</td>
+            </tr>
+            <tr>
+              <td>Safe under a contractual / regulatory egress ban</td>
+              <td class="col-ideagent check">✅</td>
+              <td class="cross">❌</td>
+            </tr>
+            <tr>
+              <td>No dependence on vendor retention promises</td>
+              <td class="col-ideagent check">✅</td>
+              <td class="partial">Trust required</td>
+            </tr>
+            <tr>
+              <td>Works with any LLM provider you're allowed to use</td>
               <td class="col-ideagent check">✅</td>
               <td class="partial">Limited</td>
-            </tr>
-            <tr>
-              <td>Fully offline (Ollama)</td>
-              <td class="col-ideagent check">✅</td>
-              <td class="cross">❌</td>
-            </tr>
-            <tr>
-              <td>No vendor data retention</td>
-              <td class="col-ideagent check">✅</td>
-              <td class="partial">Varies</td>
-            </tr>
-            <tr>
-              <td>PyCharm-native integration</td>
-              <td class="col-ideagent check">✅</td>
-              <td class="partial">Partial</td>
             </tr>
           </tbody>
         </table>

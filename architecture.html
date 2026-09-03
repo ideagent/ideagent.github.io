@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Architecture — IDEAgent</title>
-  <meta name="description" content="How the IDEAgent components fit together: the PyCharm plugin, the LangAgent gateway, the MCP context engine and the RAG, plus the file watcher — a fully self-hosted, privacy-first agentic coding stack." />
+  <meta name="description" content="A graph of how IDEAgent fits together — the IDE Gateway Plugin, the Gateway, the Project Context (MCP + RAG) and the file watchers across your machines. Privacy-first, self-hosted, single-user today with an enterprise version coming." />
   <link rel="icon" type="image/png" href="ideagent_logo.png" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,9 +34,10 @@
       <div class="badge">System Overview</div>
       <h1>How IDEAgent Fits Together</h1>
       <p class="doc-lede">
-        IDEAgent is a small stack of focused, self-hosted components. Each one does a single job well,
-        and they connect over clean protocols — WebSocket, MCP and REST — so you can run the whole thing
-        on your own machine or your own servers, with your own model keys.
+        Think of IDEAgent as a small graph, not a pile of boxes. A few focused components sit as
+        nodes, connected by clean edges: the plugin lives inside PyCharm, the backend runs as Docker
+        containers, and file watchers reach out to each machine you work on. Follow any node to read
+        its details.
       </p>
     </div>
   </section>
@@ -46,75 +47,110 @@
     <div class="container">
 
       <div class="doc-section">
-        <h2>The stack, top to bottom</h2>
-        <p>A request flows down this stack and the results stream back up:</p>
+        <h2>The graph</h2>
+        <p>Each node is a component. Follow the arrows to see how a request travels — and click any node to read its details.</p>
 
-        <div class="arch-layer"><span class="arch-badge">01</span><span class="arch-text"><strong><a href="plugin.html">PyCharm IDEAgent plugin</a></strong> — the tool window in your IDE (Chat · Threads · Tasks · Edits), human-in-the-loop, local voice.</span></div>
-        <div class="arch-arrow">↕ &nbsp;WebSocket — hello / user_message / resume / goodbye, streamed events</div>
-        <div class="arch-layer"><span class="arch-badge">02</span><span class="arch-text"><strong><a href="gateway.html">LangAgent gateway</a></strong> — FastAPI + LangGraph deep agent. Runs the turn, enforces HITL, redacts secrets, coordinates peers (ACP), calls your model provider.</span></div>
-        <div class="arch-arrow">↕ &nbsp;MCP (HTTP / SSE) &nbsp;·&nbsp; ↕ your AI provider (OpenAI · Anthropic · Ollama)</div>
-        <div class="arch-layer"><span class="arch-badge">03</span><span class="arch-text"><strong><a href="mcp.html">MCP server + context engine</a></strong> — find_symbol / get_context / sync_rag over an indexed model of your project.</span></div>
-        <div class="arch-arrow">↕ &nbsp;REST (port 5810)</div>
-        <div class="arch-layer"><span class="arch-badge">04</span><span class="arch-text"><strong>RAG server</strong> — ChromaDB + local embeddings; stores code, learnings, snapshots and docs.</span></div>
-        <div class="arch-arrow">↕ &nbsp;/upload re-index</div>
-        <div class="arch-layer"><span class="arch-badge">05</span><span class="arch-text"><strong>File watcher plugin</strong> — watches your files per machine and keeps the RAG index fresh.</span></div>
+        <div class="graph">
+
+          <div class="graph-tier">
+            <span class="graph-tier-label">In PyCharm · IDE level</span>
+            <div class="graph-row">
+              <a href="plugin.html" class="node">
+                <span class="node-dot"></span>
+                <span class="node-title">IDE Gateway Plugin</span>
+                <span class="node-sub">The GUI in your IDE — chat, tasks, edits, local voice</span>
+                <span class="node-more">Open →</span>
+              </a>
+              <a href="plugin.html" class="node">
+                <span class="node-dot"></span>
+                <span class="node-title">RAG File Watcher</span>
+                <span class="node-sub">Also a plugin — watches your files, keeps the index current</span>
+                <span class="node-more">Open →</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="edge">↕<span class="edge-label">talks to the gateway</span></div>
+
+          <div class="graph-tier">
+            <span class="graph-tier-label">In Docker · containers</span>
+            <a href="gateway.html" class="node">
+              <span class="node-dot"></span>
+              <span class="node-title">Gateway</span>
+              <span class="node-sub">Runs the agent, keeps you in the loop, calls your model</span>
+              <span class="node-more">Open →</span>
+            </a>
+
+            <div class="edge">↕<span class="edge-label">reads your project context</span></div>
+
+            <div class="node-group">
+              <span class="node-group-label">Project Context</span>
+              <div class="graph-row">
+                <a href="mcp.html" class="node">
+                  <span class="node-dot"></span>
+                  <span class="node-title">MCP Server</span>
+                  <span class="node-sub">Finds and assembles the right code for the agent</span>
+                  <span class="node-more">Open →</span>
+                </a>
+                <a href="mcp.html" class="node">
+                  <span class="node-dot"></span>
+                  <span class="node-title">RAG Server</span>
+                  <span class="node-sub">Local index of your code, learnings and docs</span>
+                  <span class="node-more">Open →</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <p class="node-sub" style="text-align:center">The plugin (with its file watcher) runs in each teammate's IDE — two machines in the demo, and they register themselves, so more can join.</p>
       </div>
 
       <div class="doc-section">
         <h2>A request, end to end</h2>
         <div class="flow">
-          <div class="flow-step"><div class="flow-n">1</div><div class="flow-t">You ask</div><div class="flow-d">You type in the plugin; it sends a <code>user_message</code> to the gateway.</div></div>
-          <div class="flow-step"><div class="flow-n">2</div><div class="flow-t">Agent gathers context</div><div class="flow-d">The gateway's agent calls the MCP context engine, which retrieves the right code from the RAG.</div></div>
-          <div class="flow-step"><div class="flow-n">3</div><div class="flow-t">Agent acts</div><div class="flow-d">It plans, calls tools, and proposes or makes edits — pausing for your approval if HITL is on.</div></div>
-          <div class="flow-step"><div class="flow-n">4</div><div class="flow-t">Index updates</div><div class="flow-d"><code>record_change</code> triggers the file watcher to re-index, so the next request sees the change.</div></div>
+          <div class="flow-step"><div class="flow-n">1</div><div class="flow-t">You ask</div><div class="flow-d">You type in the plugin; it hands your message to the gateway.</div></div>
+          <div class="flow-step"><div class="flow-n">2</div><div class="flow-t">Agent gathers context</div><div class="flow-d">The gateway's agent asks the project context for the right code.</div></div>
+          <div class="flow-step"><div class="flow-n">3</div><div class="flow-t">Agent acts</div><div class="flow-d">It plans, uses its tools, and proposes or makes edits — pausing for your approval when you ask it to.</div></div>
+          <div class="flow-step"><div class="flow-n">4</div><div class="flow-t">Index updates</div><div class="flow-d">The file watcher notices the change and refreshes the index, so the next request sees it.</div></div>
         </div>
       </div>
 
       <div class="doc-section">
-        <h2>Why it's built this way</h2>
-        <ul>
-          <li><strong>Separation of concerns.</strong> The IDE plugin does UI; the gateway does reasoning; the MCP/RAG does memory. Each can evolve — or be replaced — without touching the others.</li>
-          <li><strong>Privacy by construction.</strong> Embeddings and retrieval are local, your keys live only on the gateway, and only the context window you assemble is ever sent to a provider. With Ollama, nothing leaves your machine.</li>
-          <li><strong>You stay in control.</strong> Per-thread human-in-the-loop, plus optional redaction of secrets from tool output, mean the agent never acts — or leaks — behind your back.</li>
-          <li><strong>Scales across machines.</strong> Threads route by id on a single hub, and file watchers register themselves, so multiple agents and hosts coordinate cleanly (including cross-project ACP).</li>
-        </ul>
-      </div>
-
-      <div class="doc-section">
-        <h2>Deployment</h2>
+        <h2>Privacy is the whole point</h2>
         <p>
-          The three backend services — <strong>gateway</strong>, <strong>agent</strong> and
-          <strong>RAG</strong> — ship as containers and come up together with Docker Compose on an
-          internal network. The two IDE-side pieces, the <a href="plugin.html">IDEAgent plugin</a> and
-          the file watcher, install into PyCharm / IntelliJ. Point the plugin at your gateway URL and
-          you're running.
+          Going local is the only real way to keep your code private, so that's the path we build for.
+          IDEAgent is single-user today; an enterprise version is on the way. To run entirely offline
+          you point it at <strong>Ollama</strong> and nothing leaves your machine — see the
+          <a href="server_config.html">local hardware setup</a> for what that takes.
         </p>
+        <div class="callout">
+          <strong>Redaction, before the agent ever sees it.</strong> You can optionally redact tool
+          results: IP addresses, emails, API keys and tokens are stripped out and never reach the
+          agent — so sensitive values can't be reasoned over, logged, or leaked.
+        </div>
       </div>
 
       <div class="doc-section">
-        <h2>Read the component docs</h2>
-        <div class="docs-grid">
-          <a href="plugin.html" class="doc-card">
-            <div class="doc-card-icon">🧩</div>
-            <h3>PyCharm Plugin</h3>
-            <div class="doc-card-sub">In-IDE agent surface</div>
-            <p>Tool window, HITL, WebSocket protocol, MCP settings and local voice.</p>
-            <span class="doc-card-more">Read →</span>
-          </a>
-          <a href="gateway.html" class="doc-card">
-            <div class="doc-card-icon">🧠</div>
-            <h3>LangAgent Gateway</h3>
-            <div class="doc-card-sub">The reasoning engine</div>
-            <p>FastAPI + LangGraph deep agent, turn streaming, HITL, redaction and ACP.</p>
-            <span class="doc-card-more">Read →</span>
-          </a>
-          <a href="mcp.html" class="doc-card">
-            <div class="doc-card-icon">📚</div>
-            <h3>MCP &amp; RAG</h3>
-            <div class="doc-card-sub">Context engine + retrieval</div>
-            <p>find_symbol / get_context / sync_rag over a self-hosted RAG, kept fresh by the watcher.</p>
-            <span class="doc-card-more">Read →</span>
-          </a>
+        <h2>What it needs to run</h2>
+        <div class="spec-list">
+          <div class="spec-item">
+            <div class="spec-k">Containers</div>
+            <div class="spec-v">Docker Compose — the backend nodes come up together.</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-k">Local model</div>
+            <div class="spec-v">Ollama (only provider supported today). We can ship a self-contained Ollama if it isn't already installed as a service.</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-k">Hardware</div>
+            <div class="spec-v">Runs on CUDA GPUs, and on shared-memory boxes like Dell laptops or Macs. On non-CUDA machines, RAG indexing quality degrades.</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-k">Voice (optional)</div>
+            <div class="spec-v">The plugin offers speech-to-text (Whisper) and text-to-speech (Piper). Pre-install them and the plugin detects them on its machine.</div>
+          </div>
         </div>
       </div>
 

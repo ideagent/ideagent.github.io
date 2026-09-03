@@ -656,7 +656,306 @@ code, .kbd {
 .arch-layer .arch-text strong { color: var(--text); }
 .arch-arrow { text-align: center; color: var(--accent-2); font-size: 1.1rem; margin: 2px 0; }
 
+/* ── Topology graph (node/edge diagram) ── */
+.graph {
+  margin: 28px 0 8px;
+}
+/* One horizontal tier of the graph (a run-context lane) */
+.graph-tier {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.graph-tier-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.22);
+  border-radius: 100px;
+  padding: 3px 12px;
+  margin-bottom: 14px;
+}
+/* Row of sibling nodes */
+.graph-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 16px;
+  width: 100%;
+}
+/* A node is a clickable graph vertex linking to a component page */
+.node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  min-width: 190px;
+  max-width: 260px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+a.node:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(108, 99, 255, 0.15);
+  text-decoration: none;
+  color: var(--text);
+}
+.node-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.15);
+}
+.node-title {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.node-sub { font-size: 0.78rem; color: var(--text-muted); }
+.node-more { font-size: 0.74rem; font-weight: 600; color: var(--accent-2); margin-top: 2px; }
+/* Non-link node (e.g. grouped machines) */
+.node.is-static { cursor: default; }
+.node.is-static .node-dot { background: var(--accent-2); }
+
+/* A group wraps sibling nodes that form one logical unit (e.g. Project Context) */
+.node-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.015);
+}
+.node-group-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: var(--accent-2);
+  font-weight: 600;
+}
+.node-group .graph-row { gap: 12px; }
+
+/* Edges: connectors drawn between tiers/rows */
+.edge {
+  color: var(--accent-2);
+  font-size: 1.3rem;
+  line-height: 1;
+  margin: 12px 0;
+  text-align: center;
+}
+.edge-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── Setup screenshots ── */
+.setup-shot {
+  margin: 20px 0 8px;
+}
+.setup-shot img {
+  display: block;
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+}
+.setup-shot figcaption {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  max-width: 720px;
+}
+.setup-shot figcaption strong {
+  color: var(--text);
+}
+/* Simple ordered setup steps */
+.setup-steps {
+  margin: 12px 0 0;
+  padding-left: 20px;
+}
+.setup-steps li {
+  margin: 6px 0;
+  line-height: 1.55;
+}
+.setup-steps code {
+  font-family: var(--mono);
+  font-size: 0.82em;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+
+/* ── Redaction hero ── */
+.redaction {
+  padding: 80px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background:
+    radial-gradient(120% 100% at 80% 0%, rgba(108, 99, 255, 0.12), transparent 60%),
+    var(--bg-card);
+}
+.redaction-inner {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 48px;
+  align-items: center;
+}
+.redaction-copy .badge { margin-bottom: 20px; }
+.redaction-title {
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin-bottom: 18px;
+}
+.redaction-lede {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  margin-bottom: 22px;
+}
+.redaction-points {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: grid;
+  gap: 12px;
+}
+.redaction-points li {
+  position: relative;
+  padding-left: 26px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+.redaction-points li::before {
+  content: "🛡️";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 0.95rem;
+}
+.redaction-points strong { color: var(--text); }
+.redaction code, .whynot code {
+  font-family: var(--mono);
+  font-size: 0.82em;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1px 6px;
+  color: var(--accent-2);
+}
+
+/* Redaction before/after demo */
+.redaction-demo { display: grid; gap: 10px; }
+.redaction-pane {
+  background: #0d1016;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+}
+.redaction-pane-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  background: var(--bg-card2);
+  border-bottom: 1px solid var(--border);
+}
+.redaction-pane-head .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dot-r { background: var(--red); }
+.dot-y { background: var(--yellow); }
+.dot-g { background: var(--green); }
+.pane-label {
+  margin-left: 8px;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  font-family: var(--mono);
+}
+.redaction-code {
+  margin: 0;
+  padding: 16px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  white-space: pre;
+  overflow-x: auto;
+  color: var(--text);
+}
+.redaction-code .c-key { color: var(--text-muted); }
+.redaction-code .c-val { color: var(--yellow); }
+.redaction-code .c-red {
+  color: var(--red);
+  background: rgba(248, 113, 113, 0.12);
+  border-radius: 4px;
+  padding: 0 4px;
+}
+.redaction-arrow {
+  text-align: center;
+  font-size: 0.78rem;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--accent-2);
+}
+
+/* ── Why not X ── */
+.whynot {
+  padding: 88px 0;
+}
+.whynot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+.whynot-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.whynot-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.whynot-card h3 {
+  font-size: 1.02rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+.whynot-card p {
+  font-size: 0.93rem;
+  color: var(--text-muted);
+}
+
 /* ── Responsive ── */
+@media (max-width: 860px) {
+  .redaction-inner { grid-template-columns: 1fr; gap: 36px; }
+}
 @media (max-width: 640px) {
   .nav-links a:not(.btn-ghost) { display: none; }
   .hero { padding: 64px 0 56px; }
@@ -664,5 +963,8 @@ code, .kbd {
   .packages-grid { grid-template-columns: 1fr; }
   .issues-grid { grid-template-columns: 1fr; }
   .docs-grid { grid-template-columns: 1fr; }
+  .whynot-grid { grid-template-columns: 1fr; }
   .flow-step { min-width: 100%; }
+  .graph-row { flex-direction: column; align-items: stretch; }
+  .node { max-width: 100%; min-width: 0; }
 }

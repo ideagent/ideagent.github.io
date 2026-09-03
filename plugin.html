@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PyCharm IDEAgent Plugin — IDEAgent</title>
-  <meta name="description" content="The IDEAgent PyCharm plugin: an in-IDE coding agent tool window (Chat / Threads / Tasks / Edits) that streams from the LangGraph gateway over WebSocket, with human-in-the-loop, MCP tools and local voice." />
+  <meta name="description" content="Set up the IDEAgent PyCharm plugin: an in-IDE coding agent tool window (Chat / Threads / Tasks / Edits) with local models via Ollama, MCP tools, RAG file watcher, human-in-the-loop, redaction and local voice (Whisper / Piper)." />
   <link rel="icon" type="image/png" href="ideagent_logo.png" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,14 +31,13 @@
   <section class="doc-hero">
     <div class="container">
       <a href="index.html#docs" class="back-link">← Back to overview</a>
-      <div class="badge">Component 01 · JetBrains IDE Integration</div>
+      <div class="badge">IDE Gateway Plugin · Setup</div>
       <h1>The PyCharm IDEAgent Plugin</h1>
       <p class="doc-lede">
         The plugin is the face of the whole system — a native PyCharm / IntelliJ tool window that
-        turns your IDE into a full agentic coding surface. It does not talk to any LLM itself: it
-        connects to your own <a href="gateway.html">LangGraph gateway</a> over a WebSocket, streams
-        the agent's reasoning and edits back into the editor, and keeps you in control with a
-        per-thread human-in-the-loop switch.
+        turns your IDE into an agentic coding surface. It runs no model itself: it connects to your
+        own <a href="gateway.html">Gateway</a>, streams the agent's work back into the editor, and
+        keeps you in control. This page walks through how to set it up from its Settings panels.
       </p>
     </div>
   </section>
@@ -48,110 +47,123 @@
     <div class="container">
 
       <div class="doc-section">
-        <h2>At a glance</h2>
-        <div class="spec-list">
-          <div class="spec-item"><div class="spec-k">Platform</div><div class="spec-v">PyCharm / IntelliJ (IntelliJ Platform 2.x)</div></div>
-          <div class="spec-item"><div class="spec-k">Language</div><div class="spec-v">Kotlin · Gradle IntelliJ Platform</div></div>
-          <div class="spec-item"><div class="spec-k">Package</div><div class="spec-v"><code>com.sca075.ideagent</code></div></div>
-          <div class="spec-item"><div class="spec-k">Talks to</div><div class="spec-v">LangGraph gateway (WebSocket)</div></div>
-          <div class="spec-item"><div class="spec-k">Interface</div><div class="spec-v">Tool window: Chat · Threads · Tasks · Edits</div></div>
-          <div class="spec-item"><div class="spec-k">Voice</div><div class="spec-v">Piper TTS · whisper.cpp STT (local)</div></div>
-        </div>
-      </div>
-
-      <div class="doc-section">
         <h2>What it does in your IDE</h2>
         <p>
-          IDEAgent installs as a tool window with four tabs, styled after modern agentic assistants
-          but running entirely against infrastructure you own:
+          IDEAgent installs as a tool window with four tabs — running entirely against
+          infrastructure you own:
         </p>
         <ul>
-          <li><strong>Chat</strong> — project-aware conversation with the agent. Responses stream token-by-token as the gateway produces them, with a live title generated for each thread.</li>
-          <li><strong>Threads</strong> — every conversation is a persistent thread. You can start a new thread, switch between them, and resume an earlier one; the gateway keeps the state so history survives restarts.</li>
-          <li><strong>Tasks</strong> — the agent's planned steps for a request, so you can see what it intends to do before it does it.</li>
-          <li><strong>Edits</strong> — the concrete file changes the agent proposes or applies, surfaced inside the IDE rather than buried in chat text.</li>
+          <li><strong>Chat</strong> — project-aware conversation with the agent, streamed live into the tool window.</li>
+          <li><strong>Threads</strong> — every conversation is a persistent thread you can switch between and resume.</li>
+          <li><strong>Tasks</strong> — the agent's planned steps for a request, so you see what it intends to do before it does it.</li>
+          <li><strong>Edits</strong> — the file changes the agent proposes or applies, surfaced inside the IDE.</li>
         </ul>
-      </div>
-
-      <div class="doc-section">
-        <h2>Human-in-the-loop (Auto toggle)</h2>
         <p>
-          Each thread carries an <strong>Auto</strong> switch that turns human-in-the-loop (HITL) on or
-          off. With HITL enabled, the gateway pauses before consequential tool actions and the plugin
-          shows an approval prompt in the tool window; you approve or reject, and only then does the
-          agent continue. With Auto on, the agent proceeds without asking.
-        </p>
-        <div class="callout">
-          <strong>You are always the gate.</strong> The HITL preference travels with the thread and is
-          re-sent to the gateway on every relevant frame, so a resumed or reconnected thread keeps the
-          exact approval behaviour you chose.
-        </div>
-      </div>
-
-      <div class="doc-section">
-        <h2>How it connects to the gateway</h2>
-        <p>
-          The plugin speaks a small WebSocket frame protocol to the gateway. Identity and preferences
-          ride along so the gateway always knows who is asking and how to behave:
-        </p>
-        <div class="flow">
-          <div class="flow-step"><div class="flow-n">FRAME 1</div><div class="flow-t">hello</div><div class="flow-d">Opens the connection and sends stable machine identity (machine_id, OS, arch, hostname) plus per-thread config.</div></div>
-          <div class="flow-step"><div class="flow-n">FRAME 2</div><div class="flow-t">user_message</div><div class="flow-d">Your prompt. The gateway runs a turn and streams events back.</div></div>
-          <div class="flow-step"><div class="flow-n">FRAME 3</div><div class="flow-t">resume</div><div class="flow-d">Your HITL decision (approve / reject), which lets a paused turn continue.</div></div>
-          <div class="flow-step"><div class="flow-n">FRAME 4</div><div class="flow-t">goodbye</div><div class="flow-d">Cleanly closes the thread connection.</div></div>
-        </div>
-        <p>
-          Live preferences — the <strong>Auto</strong> (HITL) switch and <strong>tools-result redaction</strong> —
-          are attached to the hello, user_message, resume and goodbye frames, so a change takes effect
-          immediately without reconnecting. The machine identity is sent once in <code>hello</code>
-          (it is stable per connection) and is what enables multi-machine coordination between agents.
+          Each thread carries an <strong>Auto</strong> switch for human-in-the-loop: with it off, the
+          agent pauses for your approval before consequential actions. With Auto on, it proceeds on
+          its own. You are always the gate.
         </p>
       </div>
 
       <div class="doc-section">
-        <h2>MCP tools &amp; settings</h2>
+        <h2>Open the settings</h2>
         <p>
-          Through the gateway, the agent can use <a href="mcp.html">MCP</a> tools — the context engine,
-          RAG search, project memory and more. The plugin's Settings page lets you configure this
-          without editing files:
+          Everything below lives under the plugin's <strong>Settings</strong> panel — no files to edit.
+          Each section maps to one screen you fill in once.
         </p>
-        <ul>
-          <li><strong>Gateway URL</strong> — where your LangGraph gateway is reachable, plus a one-click <em>Test connection</em>.</li>
-          <li><strong>MCP Servers</strong> — a dedicated sub-page to add and manage the MCP servers the agent may call.</li>
-          <li><strong>Default Auto</strong> — the starting HITL mode for new threads.</li>
-          <li><strong>Editor behaviour</strong> — auto-open edited files and auto-close editor tabs on a new thread.</li>
-          <li><strong>Tools results &amp; terminal redacted</strong> — strip secrets (IPs, emails, credentials) from tool output before it is shown or sent onward.</li>
-        </ul>
+        <figure class="setup-shot">
+          <img src="assets/Plugin_Main_Settings.png" alt="IDEAgent plugin main settings panel" loading="lazy" />
+          <figcaption><strong>Main settings.</strong> Point the plugin at your Gateway and set the defaults for new threads (starting Auto mode, editor behaviour). Use <em>Test connection</em> to confirm the Gateway is reachable before you start.</figcaption>
+        </figure>
+        <figure class="setup-shot">
+          <img src="assets/Plugin_all_settings.png" alt="IDEAgent plugin settings overview with all sub-pages" loading="lazy" />
+          <figcaption><strong>All settings at a glance.</strong> The sub-pages — MCP Servers, Models, RAG, Speech-to-text and Text-to-speech — are reached from here. Set them up in the order below.</figcaption>
+        </figure>
       </div>
 
       <div class="doc-section">
-        <h2>Local voice</h2>
+        <h2>MCP Servers</h2>
         <p>
-          IDEAgent ships optional, fully local voice: <strong>Piper</strong> for text-to-speech and
-          <strong>whisper.cpp</strong> for speech-to-text. You can talk to the agent and hear its
-          replies without any cloud speech service — the audio never leaves your machine.
+          MCP servers are the tools the agent may call through the Gateway — the
+          <a href="mcp.html">context engine</a>, RAG search and project memory. Add your local
+          server, toggle it on, and refresh to confirm it is reachable.
         </p>
+        <figure class="setup-shot">
+          <img src="assets/MCP_Servers.png" alt="MCP Servers settings page" loading="lazy" />
+          <figcaption><strong>MCP Servers.</strong> Add each server, enable it, and use the refresh/status control to verify the connection. Disabled servers are simply not offered to the agent.</figcaption>
+        </figure>
       </div>
 
       <div class="doc-section">
-        <h2>Privacy &amp; trust — what you should know</h2>
+        <h2>Models</h2>
+        <p>
+          IDEAgent runs fully local through <strong>Ollama</strong>. Beyond the main coding model, a
+          couple of small helper models keep the experience smooth — auto-generating thread titles and
+          powering RAG retrieval.
+        </p>
+        <figure class="setup-shot">
+          <img src="assets/Dedicated_Models.png" alt="Dedicated models settings — auto-titles and RAG model" loading="lazy" />
+          <figcaption><strong>Dedicated models.</strong> Enable auto-titles and pick a small model for it, and choose the model used for RAG. A compact local model (served by Ollama) is enough for both.</figcaption>
+        </figure>
+      </div>
+
+      <div class="doc-section">
+        <h2>RAG &amp; the file watcher</h2>
+        <p>
+          The RAG file watcher lives inside the plugin. It keeps your project index in sync with the
+          <a href="mcp.html">RAG server</a> so the agent always retrieves the current state of your code.
+          Connect it to your machines, then let it index.
+        </p>
+        <figure class="setup-shot">
+          <img src="assets/RAG_Setting1.png" alt="RAG file watcher settings — connection" loading="lazy" />
+          <figcaption><strong>Connection.</strong> Point the watcher at your RAG server and confirm it links to the machine(s) you want indexed.</figcaption>
+        </figure>
+        <figure class="setup-shot">
+          <img src="assets/RAG_Settings2.png" alt="RAG file watcher settings — indexing and status" loading="lazy" />
+          <figcaption><strong>Indexing &amp; status.</strong> Watch the index build and stay current as you edit. Indexing quality is highest on CUDA GPUs; it still works on shared-memory GPUs (Dell / Mac), just with reduced quality.</figcaption>
+        </figure>
+      </div>
+
+      <div class="doc-section">
+        <h2>Speech-to-text (Whisper)</h2>
+        <p>
+          Voice input is optional and fully local. It uses <strong>Whisper</strong>, which must be
+          installed on the machine running the plugin — the plugin then detects the binary.
+        </p>
+        <ol class="setup-steps">
+          <li>Install Whisper on this machine (for example <code>brew install whisper-cpp</code>).</li>
+          <li>Open the Speech-to-text settings and enable it.</li>
+          <li>Use <strong>Detect</strong> to locate the installed binary, then select a model to download.</li>
+        </ol>
+        <figure class="setup-shot">
+          <img src="assets/Speech-to-text.png" alt="Speech-to-text (Whisper) settings" loading="lazy" />
+          <figcaption><strong>Speech-to-text.</strong> Once detected and a model is downloaded, you can dictate to the agent. The audio never leaves your machine.</figcaption>
+        </figure>
+      </div>
+
+      <div class="doc-section">
+        <h2>Text-to-speech (Piper)</h2>
+        <p>
+          Voice output uses <strong>Piper</strong>, also installed locally and detected by the plugin.
+        </p>
+        <ol class="setup-steps">
+          <li>Install Piper on this machine (for example <code>pip3 install piper-tts</code>).</li>
+          <li>Open the Text-to-speech settings and enable it.</li>
+          <li>Use <strong>Detect</strong> to locate the binary, then download a voice.</li>
+        </ol>
+        <figure class="setup-shot">
+          <img src="assets/Text_to_Speach.png" alt="Text-to-speech (Piper) settings" loading="lazy" />
+          <figcaption><strong>Text-to-speech.</strong> With a voice downloaded, the agent can read its replies aloud — no cloud speech service involved.</figcaption>
+        </figure>
+      </div>
+
+      <div class="doc-section">
+        <h2>Privacy — redaction</h2>
         <div class="callout warn">
-          <strong>The plugin is powerful because you trust your own gateway.</strong> Driven by the
-          gateway, the agent can execute shell commands on your machine and read/write your project
-          files. It also sends code and context to the gateway over the WebSocket, which then calls the
-          AI provider <em>you</em> configured with <em>your</em> keys. Everything runs on infrastructure
-          you own — but the plugin is only as safe as the gateway you point it at. Optional tool-output
-          redaction reduces the risk of leaking secrets in tool results.
+          <strong>Sensitive values never reach the agent.</strong> Optional redaction strips secrets —
+          IP addresses, emails, API keys and tokens — from tool and terminal results before they are
+          shown or sent onward. Privacy is core: everything runs locally, and going local is the point.
         </div>
-      </div>
-
-      <div class="doc-section">
-        <h2>Where it fits</h2>
-        <div class="arch-layer"><span class="arch-badge">YOU</span><span class="arch-text"><strong>PyCharm IDEAgent plugin</strong> — tool window, HITL, voice, settings</span></div>
-        <div class="arch-arrow">↕ &nbsp;WebSocket (hello / user_message / resume / goodbye)</div>
-        <div class="arch-layer"><span class="arch-badge">GW</span><span class="arch-text"><a href="gateway.html">LangGraph gateway</a> — runs the agent, streams events, holds thread state</span></div>
-        <div class="arch-arrow">↕ &nbsp;MCP tools · RAG retrieval</div>
-        <div class="arch-layer"><span class="arch-badge">MCP</span><span class="arch-text"><a href="mcp.html">MCP server + context engine + RAG</a> — project knowledge</span></div>
         <p style="margin-top:24px"><a href="architecture.html" class="btn btn-secondary">See the full architecture →</a></p>
       </div>
 

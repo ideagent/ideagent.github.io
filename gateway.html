@@ -109,7 +109,7 @@
         </p>
       </div>
 
-      <div class="doc-section">
+      <div class="doc-section" id="redaction">
         <h2>Secret redaction</h2>
         <div class="callout">
           The gateway can redact secrets out of tool and terminal output before it is streamed to the
@@ -170,7 +170,7 @@
           <strong>GPU</strong> behind it — NVIDIA hardware is the recommended and tested path.
         </p>
         <ul>
-          <li><strong>Bigger VRAM = bigger / better models.</strong> The amount of GPU VRAM on the Ollama host directly caps which models you can load and how fast they run — more VRAM lets you run larger, more capable local models fully offline.</li>
+          <li><strong>Bigger VRAM = bigger / better models.</strong> The amount of GPU VRAM on the Ollama host directly caps which models you can load and how fast they run — more VRAM lets you run larger, more capable local models fully offline. See <a href="server_config.html">server configuration</a> for details.</li>
           <li><strong>System RAM helps too.</strong> Ample host RAM lets larger models and longer contexts stay resident, especially when layers spill from VRAM.</li>
           <li><strong>Sharing a host.</strong> If Ollama and the <a href="mcp.html">RAG</a> run on the same machine, size the GPU/VRAM and RAM for both — the more headroom, the better the fully-local experience.</li>
         </ul>

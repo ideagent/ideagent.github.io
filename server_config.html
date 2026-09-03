@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IDEAgent Enterprise Node — Pre-Configured Private AI Hardware</title>
+  <meta name="description" content="The IDEAgent Enterprise Node: a pre-configured, turnkey server appliance built to run IDEAgent fully local with Ollama. 192 GB VRAM across 4x NVIDIA RTX 6000 Ada, Threadripper PRO, ECC RAM and redundant power — private AI infrastructure you own, not rent." />
+  <link rel="icon" type="image/png" href="ideagent_logo.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Nav -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><img src="ideagent_logo.png" alt="" class="logo-mark" />IDE<span class="logo-accent">Agent</span></a>
+      <nav class="nav-links">
+        <a href="index.html#packages">Why IDEAgent</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="plugin.html">Plugin</a>
+        <a href="mcp.html">MCP</a>
+        <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Doc hero -->
+  <section class="doc-hero">
+    <div class="container">
+      <a href="index.html" class="back-link">← Back to overview</a>
+      <div class="badge">Hardware · The IDEAgent Enterprise Node</div>
+      <h1>Private AI you own — not rent</h1>
+      <p class="doc-lede">
+        IDEAgent is privacy-first by construction: with <strong>Ollama</strong> as the model host,
+        no code, no prompt and no key ever leaves your infrastructure. But running a flagship
+        enterprise coding model fully local is real GPU work — it needs serious, correctly-built
+        hardware. So we build it for you. The <strong>IDEAgent Enterprise Node</strong> ships in
+        two matched configurations — a 4-GPU flagship running <strong>Qwen3.5-397B-A17B</strong>
+        unquantized (in the class of <strong>Claude Opus 4.5</strong>), and a 2-GPU tier running
+        quantized models for mid-market teams. Both are pre-configured, turnkey server appliances
+        engineered to run the whole IDEAgent stack — gateway, RAG embeddings and a local Ollama
+        model — completely offline, out of the box.
+        We are not just handing you software and wishing you luck; we ship you the machine,
+        assembled, validated and ready to serve your developers.
+      </p>
+    </div>
+  </section>
+
+  <!-- Doc body -->
+  <section class="doc-body">
+    <div class="container">
+
+      <!-- Why hardware -->
+      <div class="doc-section">
+        <h2>Why we build the box, not just the software</h2>
+        <p>
+          Fully-local AI is only as private as the machine it runs on — and only as fast as that
+          machine is correctly specced. The difference between "Ollama technically runs" and
+          "Ollama serves a whole engineering team without stalling" is entirely in the hardware:
+          VRAM to hold the model, PCIe lanes to feed the GPUs, memory channels to load massive
+          contexts, redundant power to stay up. Getting that wrong is expensive and slow to
+          diagnose. We remove that risk by delivering a single, validated appliance so your
+          fully-local IDEAgent deployment works on day one.
+        </p>
+      </div>
+
+      <!-- How it was developed: RTX 3060 dev box -->
+      <div class="doc-section">
+        <h2>Where it started: a single RTX 3060</h2>
+        <p>
+          We are not guessing at these requirements. IDEAgent's RAG software was developed and runs
+          today on a deliberately modest workstation — a single <strong>NVIDIA GeForce RTX 3060</strong>
+          on an <strong>AMD Ryzen 5 2600X</strong> six-core CPU, under <strong>Ubuntu 24.04.4 LTS</strong>
+          (x86_64), hosting both an <strong>Ollama</strong> instance and a <strong>Docker</strong> stack.
+          That box is proof the software is honest about its footprint: the framework itself runs on
+          hardware most teams already own.
+        </p>
+        <p>
+          But that same experience is exactly why the appliance exists. A single RTX 3060 is fine for
+          developing and running the RAG and embedding side — it is <em>not</em> enough VRAM to serve
+          a flagship coding model to a whole team fully offline. Going to real, unquantized offline
+          mode is where you need the correctly-built hardware below: the VRAM, the PCIe lanes and the
+          redundant power that a development workstation simply does not have.
+        </p>
+      </div>
+
+      <!-- At a glance: flagship 4-GPU -->
+      <div class="doc-section">
+        <h2>At a glance — Flagship 4-GPU Node</h2>
+        <div class="spec-list">
+          <div class="spec-item"><div class="spec-k">Product</div><div class="spec-v">IDEAgent Unquantized 192GB Enterprise Node</div></div>
+          <div class="spec-item"><div class="spec-k">Model</div><div class="spec-v">Qwen3.5-397B-A17B, unquantized — in the class of Claude Opus 4.5</div></div>
+          <div class="spec-item"><div class="spec-k">GPU / VRAM</div><div class="spec-v">4x NVIDIA RTX 6000 Ada (48GB each) — 192 GB total VRAM</div></div>
+          <div class="spec-item"><div class="spec-k">CPU</div><div class="spec-v">AMD Ryzen Threadripper PRO 7975WX — 32C / 64T</div></div>
+          <div class="spec-item"><div class="spec-k">Memory</div><div class="spec-v">256GB (8x32GB) DDR5-4800 Registered ECC</div></div>
+          <div class="spec-item"><div class="spec-k">Storage</div><div class="spec-v">2x 4TB Samsung 990 Pro NVMe — hardware RAID 1</div></div>
+          <div class="spec-item"><div class="spec-k">Chassis</div><div class="spec-v">Supermicro SuperChassis 747BTQ-R2K04B</div></div>
+          <div class="spec-item"><div class="spec-k">Power</div><div class="spec-v">2x 2000W redundant Titanium hot-swap (1+1) — 230V required</div></div>
+          <div class="spec-item"><div class="spec-k">Price</div><div class="spec-v">€53,287 turnkey (ex-VAT)</div></div>
+        </div>
+      </div>
+
+      <!-- At a glance: 2-GPU small tier -->
+      <div class="doc-section">
+        <h2>At a glance — 2-GPU Team Node</h2>
+        <div class="spec-list">
+          <div class="spec-item"><div class="spec-k">Product</div><div class="spec-v">IDEAgent Quantized 96GB Team Node</div></div>
+          <div class="spec-item"><div class="spec-k">Model</div><div class="spec-v">Qwen3.5, quantized — for mid-market development teams</div></div>
+          <div class="spec-item"><div class="spec-k">GPU / VRAM</div><div class="spec-v">2x NVIDIA RTX 6000 Ada (48GB each) — 96 GB total VRAM</div></div>
+          <div class="spec-item"><div class="spec-k">CPU</div><div class="spec-v">AMD Ryzen Threadripper PRO 7975WX — 32C / 64T</div></div>
+          <div class="spec-item"><div class="spec-k">Memory</div><div class="spec-v">256GB (8x32GB) DDR5-4800 Registered ECC</div></div>
+          <div class="spec-item"><div class="spec-k">Storage</div><div class="spec-v">2x 4TB Samsung 990 Pro NVMe — hardware RAID 1</div></div>
+          <div class="spec-item"><div class="spec-k">Chassis</div><div class="spec-v">Supermicro SuperChassis 747BTQ-R2K04B</div></div>
+          <div class="spec-item"><div class="spec-k">Power</div><div class="spec-v">2x 2000W redundant Titanium hot-swap (1+1) — 230V required</div></div>
+          <div class="spec-item"><div class="spec-k">Price</div><div class="spec-v">€32,175 turnkey (ex-VAT)</div></div>
+        </div>
+      </div>
+
+      <!-- Bill of materials: flagship 4-GPU -->
+      <div class="doc-section">
+        <h2>Bill of materials — Flagship 4-GPU Node</h2>
+        <p>
+          Finalized commercial specification, verified against the official Supermicro SuperChassis
+          747BTQ-R2K04B technical blueprint. Turnkey price: <strong>€53,287 (ex-VAT)</strong>.
+        </p>
+        <div class="table-wrapper">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Component group</th>
+                <th>Component selected for enterprise appliance</th>
+                <th>Operational engineering justification</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>🚀 Computation</td>
+                <td>4x PNY NVIDIA RTX 6000 Ada Generation (48GB GDDR6)</td>
+                <td>Yields 192 GB VRAM. Natively hosts unquantized Qwen3.5-397B-A17B. Features rear-exhaust blower coolers.</td>
+              </tr>
+              <tr>
+                <td>🧠 Processing</td>
+                <td>1x AMD Ryzen Threadripper PRO 7975WX (32 Cores / 64 Threads)</td>
+                <td>Provides 128 native PCIe Gen 5.0 lanes to prevent GPU data starvation during multi-user requests.</td>
+              </tr>
+              <tr>
+                <td>🔌 Motherboard</td>
+                <td>1x ASUS Pro WS WRX90E-SAGE SE (SSI-EEB Form Factor)</td>
+                <td>Server-grade PCIe lane allocation. Double-width slot spacing perfectly fits 4 flush-stacked GPUs without risers.</td>
+              </tr>
+              <tr>
+                <td>📈 System RAM</td>
+                <td>256GB (8x32GB) DDR5-4800MHz Registered ECC</td>
+                <td>Fully saturates all 8 discrete memory channels to clear bottlenecks when ingest engines load massive contexts.</td>
+              </tr>
+              <tr>
+                <td>🗄️ Storage RAID</td>
+                <td>2x 4TB Samsung 990 Pro NVMe M.2 SSDs</td>
+                <td>Configured in hardware RAID 1 (Mirrored). Total failover safety; appliance keeps running if one drive suffers failure.</td>
+              </tr>
+              <tr>
+                <td>🏗️ Chassis Shell</td>
+                <td>1x Supermicro SuperChassis 747BTQ-R2K04B</td>
+                <td>Includes heavy-duty GPU structural support brackets, internal high-static air walls, and sliding server rack rails.</td>
+              </tr>
+              <tr>
+                <td>⚡ Power Supply</td>
+                <td>2x 2000W Redundant Titanium Hot-Swap Modules</td>
+                <td>Integrated 1+1 Power Redundancy. Factory-installed inside the 747BTQ chassis shell alongside the power backplane.</td>
+              </tr>
+              <tr>
+                <td>🌪️ Cooling</td>
+                <td>4x Mid-Chassis PWM Server Fans + TR5 Active CPU Cooler</td>
+                <td>Forces high-velocity horizontal airflow across the dense GPU array to keep core temperatures strictly under 75°C.</td>
+              </tr>
+              <tr>
+                <td>💼 Turnkey price</td>
+                <td><strong>IDEAgent Unquantized 192GB Enterprise Node</strong></td>
+                <td><strong>€53,287.00 ex-VAT</strong> — final turnkey price per unit. Assembled, validated and ready to serve.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Bill of materials: 2-GPU team -->
+      <div class="doc-section">
+        <h2>Bill of materials — 2-GPU Team Node</h2>
+        <p>
+          Same validated chassis, CPU and storage platform as the flagship, populated with two GPUs
+          (96 GB VRAM) to run quantized Qwen3.5 for mid-market teams. Turnkey price:
+          <strong>€32,175 (ex-VAT)</strong>.
+        </p>
+        <div class="table-wrapper">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Component group</th>
+                <th>Component selected for team appliance</th>
+                <th>Operational engineering justification</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>🚀 Computation</td>
+                <td>2x PNY NVIDIA RTX 6000 Ada Generation (48GB GDDR6)</td>
+                <td>Yields 96 GB VRAM. Hosts quantized Qwen3.5 for a mid-market team. Features rear-exhaust blower coolers.</td>
+              </tr>
+              <tr>
+                <td>🧠 Processing</td>
+                <td>1x AMD Ryzen Threadripper PRO 7975WX (32 Cores / 64 Threads)</td>
+                <td>Provides 128 native PCIe Gen 5.0 lanes to prevent GPU data starvation during multi-user requests.</td>
+              </tr>
+              <tr>
+                <td>🔌 Motherboard</td>
+                <td>1x ASUS Pro WS WRX90E-SAGE SE (SSI-EEB Form Factor)</td>
+                <td>Server-grade PCIe lane allocation, with headroom to upgrade to the full 4-GPU flagship later.</td>
+              </tr>
+              <tr>
+                <td>📈 System RAM</td>
+                <td>256GB (8x32GB) DDR5-4800MHz Registered ECC</td>
+                <td>Fully saturates all 8 discrete memory channels to clear bottlenecks when ingest engines load massive contexts.</td>
+              </tr>
+              <tr>
+                <td>🗄️ Storage RAID</td>
+                <td>2x 4TB Samsung 990 Pro NVMe M.2 SSDs</td>
+                <td>Configured in hardware RAID 1 (Mirrored). Total failover safety; appliance keeps running if one drive suffers failure.</td>
+              </tr>
+              <tr>
+                <td>🏗️ Chassis Shell</td>
+                <td>1x Supermicro SuperChassis 747BTQ-R2K04B</td>
+                <td>Same server-grade shell as the flagship, so a 2-to-4 GPU upgrade needs no chassis change.</td>
+              </tr>
+              <tr>
+                <td>⚡ Power Supply</td>
+                <td>2x 2000W Redundant Titanium Hot-Swap Modules</td>
+                <td>Integrated 1+1 Power Redundancy. Factory-installed inside the 747BTQ chassis shell alongside the power backplane.</td>
+              </tr>
+              <tr>
+                <td>🌪️ Cooling</td>
+                <td>4x Mid-Chassis PWM Server Fans + TR5 Active CPU Cooler</td>
+                <td>Forces high-velocity horizontal airflow across the GPU array to keep core temperatures strictly under 75°C.</td>
+              </tr>
+              <tr>
+                <td>💼 Turnkey price</td>
+                <td><strong>IDEAgent Quantized 96GB Team Node</strong></td>
+                <td><strong>€32,175.00 ex-VAT</strong> — final turnkey price per unit. Assembled, validated and ready to serve.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Deployment constraints -->
+      <div class="doc-section">
+        <h2>⚠️ Final physical deployment constraints</h2>
+        <p>For your product documentation, before delivery:</p>
+        <ul>
+          <li>
+            <strong>Strict 230V requirement.</strong> The factory-installed Supermicro 2000W
+            PWS-2K04A-1R power supplies must be fed with a high-voltage 200V–240V AC power line.
+            If the system is plugged into a standard low-voltage 110V office wall outlet, the
+            modules automatically safety-throttle themselves down to 1000W output, which will
+            cause the server to crash under heavy multi-GPU compute loads.
+          </li>
+          <li>
+            <strong>Acoustic server-room isolation.</strong> Because the graphics cards are packed
+            tightly together with zero gaps, the internal high-pressure Delta fans run at high RPMs.
+            This creates a noise signature of 65dB to 72dB under load. This box cannot sit on an
+            office desk; client documentation must state that it requires deployment in an isolated
+            datacenter server rack or dedicated IT room.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Power draw -->
+      <div class="doc-section">
+        <h2>Power draw — worst-case engineering</h2>
+        <p>
+          Enterprise server architecture is always calculated using the maximum theoretical power
+          draw (TDP) under absolute worst-case synthetic workloads to guarantee stability.
+        </p>
+        <div class="table-wrapper">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Quantity</th>
+                <th>Peak watts (per unit)</th>
+                <th>Combined continuous peak</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>NVIDIA RTX 6000 Ada</td>
+                <td>4</td>
+                <td>300W</td>
+                <td>1,200W</td>
+              </tr>
+              <tr>
+                <td>AMD Threadripper PRO 7975WX</td>
+                <td>1</td>
+                <td>350W</td>
+                <td>350W</td>
+              </tr>
+              <tr>
+                <td>ASUS WRX90 Motherboard &amp; DDR5 ECC RAM</td>
+                <td>1 Setup</td>
+                <td>~100W</td>
+                <td>100W</td>
+              </tr>
+              <tr>
+                <td>RAID 1 NVMe SSDs &amp; 4x Delta Air Wall Fans</td>
+                <td>1 Setup</td>
+                <td>~80W</td>
+                <td>80W</td>
+              </tr>
+              <tr>
+                <td><strong>Total absolute max component workload</strong></td>
+                <td>—</td>
+                <td>—</td>
+                <td><strong>1,730 Watts</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TCO -->
+      <div class="doc-section">
+        <h2>Total cost of operation &amp; strategic validation</h2>
+        <p>
+          To make a €32,175 or €53,287 machine an obvious decision for a software enterprise, you frame
+          the operational costs against their current alternative: private cloud AI infrastructure.
+        </p>
+        <h3>The direct cloud comparison: AWS/Azure vs. the IDEAgent appliance</h3>
+        <p>
+          Large software enterprises that handle sensitive customer data or proprietary source code
+          are terrified of public cloud APIs. To mitigate this risk, they deploy self-hosted models
+          in their own private cloud networks (VPCs) using dedicated GPU instances. A standard cloud
+          instance running a single NVIDIA A100 or H100 card capable of handling heavy repository
+          contexts costs roughly €3.50 to €5.00 per hour to rent on AWS or Azure.
+        </p>
+        <p>The financial math over a standard 3-year corporate asset lifecycle:</p>
+        <div class="table-wrapper">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Expense category</th>
+                <th>3-year secure cloud instance (AWS/Azure)</th>
+                <th class="col-ideagent">IDEAgent 4-GPU "Elite" appliance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Upfront capital cost</td>
+                <td>€0</td>
+                <td class="col-ideagent">€53,287 (One-time asset purchase, ex-VAT)</td>
+              </tr>
+              <tr>
+                <td>Annual hosting / power</td>
+                <td>~€30,000/year (Continuous cloud compute runtime)</td>
+                <td class="col-ideagent">~€1,500/year (Local office electricity &amp; cooling)</td>
+              </tr>
+              <tr>
+                <td>3-year maintenance / SLA</td>
+                <td>Included in cloud fees</td>
+                <td class="col-ideagent">~€5,000/year (Recurring software update fee)</td>
+              </tr>
+              <tr>
+                <td><strong>Total 3-year lifecycle cost</strong></td>
+                <td><strong>~€90,000</strong></td>
+                <td class="col-ideagent"><strong>~€72,787</strong></td>
+              </tr>
+              <tr>
+                <td>The financial decision</td>
+                <td>Sunken Opex expense (Money gone forever)</td>
+                <td class="col-ideagent">Tangible corporate asset (Deductible via depreciation)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CTO drivers -->
+      <div class="doc-section">
+        <h2>🎯 Key drivers that validate the decision for software CTOs</h2>
+        <p>When selling to a software enterprise, the messaging targets their unique operational pain points:</p>
+        <ul>
+          <li>
+            <strong>Eliminating the "cloud egress" security tax.</strong> Software enterprises
+            frequently build products for highly regulated end-clients (banks, healthcare systems,
+            insurance platforms). If their developers leak a client's proprietary database schema or
+            system architecture into a cloud AI model, they violate their customer SLAs and face
+            catastrophic lawsuits. The appliance completely eliminates this liability.
+          </li>
+          <li>
+            <strong>Predictable R&amp;D overhead.</strong> Cloud API costs scale aggressively with
+            usage. If an engineering team begins running high-frequency automated multi-agent testing
+            loops or massive local repo searches, cloud token bills can spike unexpectedly. The box
+            locks their AI infrastructure cost to a completely flat, predictable curve.
+          </li>
+          <li>
+            <strong>Developer retention &amp; speed.</strong> Top-tier senior software engineers hate
+            slow tools. Running a heavy open-weights model locally across an octa-channel DDR5
+            Threadripper framework ensures near-zero token generation latency, making the developer
+            experience feel significantly cleaner than a rate-limited cloud endpoint.
+          </li>
+        </ul>
+        <p>
+          The pricing layout is designed for the software enterprise ecosystem. The 2-GPU model at
+          €32,175 acts as an ideal budget-friendly wedge for mid-market software teams, while the
+          4-GPU flagship at €53,287 provides an undeniable cost-saving alternative to private cloud
+          instance hosting for large enterprise development operations. All prices are ex-VAT.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="index.html" class="logo">IDE<span class="logo-accent">Agent</span></a>
+      <p class="footer-note">Each package carries its own license. Please refer to individual package documentation for details.</p>
+      <div class="footer-links">
+        <a href="index.html">Overview</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="plugin.html">Plugin</a>
+        <a href="mcp.html">MCP</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
