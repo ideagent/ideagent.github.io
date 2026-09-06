@@ -105,7 +105,7 @@
           <li><strong>Documentation</strong> that has been ingested for the project.</li>
         </ul>
         <p>
-          Everything here is computed and stored on your machine — the full codebase is never sent anywhere.
+          Everything here is computed and stored on infrastructure you control: the full codebase stays in your RAG instance, and the agent retrieves the chunks and embeddings it needs to work. When you configure a hosted model, that retrieved context is what gets sent to it — which is why we recommend a fully local setup (with Ollama) when you want nothing to leave infrastructure you control at all.
         </p>
       </div>
 
@@ -158,10 +158,13 @@
       <div class="doc-section">
         <h2>Privacy by construction</h2>
         <p>
-          Everything here is local: indexing runs on-device, the collections live in a store you host, and
-          retrieval returns only the small, relevant slices the agent needs. The full codebase is never
-          transmitted anywhere. Paired with a local Ollama provider on the <a href="gateway.html">Gateway</a>,
-          no code or context leaves your machine at all.
+          Everything here stays on infrastructure you control: indexing runs on your own hardware, the
+          collections live in a store you host, and retrieval returns only the small, relevant slices the
+          agent needs. The file watcher may upload a changed file to the RAG server, and that server can be
+          a different host from the editing machine — but both run inside your own infrastructure (for
+          example, our container installed in your environment), so the codebase is never transmitted to an
+          external model provider. Paired with a local Ollama provider on the
+          <a href="gateway.html">Gateway</a>, no code or context leaves infrastructure you control at all.
         </p>
         <p style="margin-top:24px"><a href="architecture.html" class="btn btn-secondary">See the full architecture →</a></p>
       </div>

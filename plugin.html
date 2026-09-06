@@ -61,7 +61,7 @@
         <p>
           Each thread carries an <strong>Auto</strong> switch for human-in-the-loop: with it off, the
           agent pauses for your approval before consequential actions. With Auto on, it proceeds on
-          its own. You are always the gate.
+          its own. You decide per thread whether consequential actions require approval.
         </p>
       </div>
 
@@ -103,8 +103,9 @@
           for each cloud provider you want to use and point the plugin at your Ollama server. Your keys
           are stored in your machine's <strong>OS keychain</strong> (via IntelliJ's
           <code>PasswordSafe</code>) — never in plaintext config and never baked into the plugin — and
-          are forwarded to the <a href="gateway.html">Gateway</a> per thread, so only the provider you
-          picked ever sees one. Leave the cloud keys blank and set only the Ollama base URL to run
+          are forwarded to the <a href="gateway.html">Gateway</a> per thread. The gateway receives the
+          selected key transiently for that request, does not persist it, and only sends credentials onward
+          to the provider you selected. Leave the cloud keys blank and set only the Ollama base URL to run
           completely offline.
         </p>
         <figure class="setup-shot">
