@@ -177,11 +177,18 @@
       </div>
 
       <div class="doc-section">
-        <h2>Privacy — redaction</h2>
+        <h2>Privacy — telemetry &amp; redaction</h2>
+        <p>
+          The plugin sends <strong>no product-usage telemetry</strong> back to us — no analytics, no
+          usage tracking, no phone-home — and neither does the rest of the stack (gateway, MCP
+          server, RAG server). It talks only to the gateway you configure, default localhost.
+        </p>
         <div class="callout warn">
-          <strong>Sensitive values never reach the agent.</strong> Optional redaction strips secrets —
-          IP addresses, emails, API keys and tokens — from tool and terminal results before they are
-          shown or sent onward. Privacy is core: everything runs locally, and going local is the point.
+          <strong>Optional redaction of tool and terminal output.</strong> When enabled, detected
+          secrets — IP addresses, emails, API keys and tokens — are replaced with placeholders in
+          tool and terminal results before that output is sent onward to the model. It filters what
+          that output contains; it does not cover text you type or paste into the chat yourself.
+          Going local is the point: with Ollama nothing leaves your infrastructure at all.
         </div>
         <p style="margin-top:24px"><a href="architecture.html" class="btn btn-secondary">See the full architecture →</a></p>
       </div>

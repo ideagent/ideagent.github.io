@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IDEAgent — AI coding for code that legally can't leave the machine</title>
-  <meta name="description" content="IDEAgent is the AI coding agent for developers under legal or contractual bans on code egress. Context is assembled on-device, optional gateway redaction strips secrets before the model ever sees them, and you can run the whole stack offline with Ollama." />
+  <title>IDEAgent — AI coding on infrastructure you control</title>
+  <meta name="description" content="IDEAgent is a PyCharm AI coding agent you host yourself. Retrieval and context assembly run on your own machine, you choose the model — fully local with Ollama or your own OpenAI, Anthropic or Google keys — and the plugin and gateway send no product-usage telemetry back to the vendor. Optional gateway redaction can filter detected secrets out of tool and terminal output." />
   <link rel="icon" type="image/png" href="ideagent_logo.png" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -18,6 +18,7 @@
     <div class="container nav-inner">
       <a href="index.html" class="logo"><img src="ideagent_logo.png" alt="" class="logo-mark" />IDE<span class="logo-accent">Agent</span></a>
       <nav class="nav-links">
+        <a href="#local">Local</a>
         <a href="#redaction">Redaction</a>
         <a href="#why-not">Why not X</a>
         <a href="architecture.html">Architecture</a>
@@ -35,14 +36,17 @@
         <img src="ideagent_logo.png" alt="" class="hero-logo" width="56" height="56" />
         <span class="hero-wordmark">IDE<span class="logo-accent">Agent</span></span>
       </div>
-      <div class="badge">For code that legally can't leave the machine</div>
-      <h1>When your contract says<br /><span class="gradient-text">the code cannot leave,</span><br />you still get an AI agent.</h1>
+      <div class="badge">AI coding on infrastructure you control</div>
+      <h1>Your code, your models,<br /><span class="gradient-text">your infrastructure</span><br />— with a real AI agent.</h1>
       <p class="hero-sub">
-        IDEAgent is built for developers under a legal or contractual ban on code egress — regulated
-        industries, client NDAs, defense, classified and air-gapped work. The context that would reach
-        a model is assembled <strong>on your own machine</strong>, and when you enable it, secrets are
-        <a href="#redaction">redacted at the gateway before the model ever sees them</a>, and with
-        <a href="server_config.html">Ollama</a> nothing leaves your infrastructure at all.
+        IDEAgent is a PyCharm coding agent you host yourself. Retrieval and context assembly run
+        <strong>on your own machine</strong>, and you choose the model — fully local with
+        <a href="server_config.html">Ollama</a>, or your own OpenAI, Anthropic or Google keys. The
+        whole stack — plugin, gateway, context engine and RAG — sends
+        <strong>no product-usage telemetry</strong> back to us. When you want
+        it, optional <a href="#redaction">gateway redaction</a> can filter detected secrets out of
+        tool and terminal output. Built for developers and teams working on confidential code,
+        including regulated fields like banking and medical software.
       </p>
       <div class="hero-showcase">
         <div class="showcase-stage">
@@ -59,7 +63,7 @@
         </div>
       </div>
       <div class="hero-cta">
-        <a href="#redaction" class="btn btn-primary">See the redaction guarantee ↓</a>
+        <a href="#local" class="btn btn-primary">See how it stays local ↓</a>
         <a href="#why-not" class="btn btn-secondary">Why not Copilot / Cursor? ↓</a>
       </div>
       <div class="hero-notice">
@@ -70,21 +74,23 @@
     </div>
   </section>
 
-  <!-- Redaction guarantee — the hero of the product -->
+  <!-- Optional redaction — secondary feature, useful when reaching for a cloud model -->
   <section class="redaction" id="redaction">
     <div class="container redaction-inner">
       <div class="redaction-copy">
-        <div class="badge">The guarantee</div>
-        <h2 class="redaction-title">Turn it on, and secrets are stripped <span class="gradient-text">before the model ever sees them.</span></h2>
+        <div class="badge">Optional feature</div>
+        <h2 class="redaction-title">Reaching for a cloud model? <span class="gradient-text">Filter secrets out first.</span></h2>
         <p class="redaction-lede">
-          Redaction is a per-thread setting you enable from the plugin. With it on, it runs at the
-          <strong>gateway</strong>, on your machine, on the path <em>out</em>: tool output and terminal
-          results are scanned and rewritten before a single token is streamed to the agent or sent to
-          any provider, so the model reasons over <code>&lt;&lt;REDACTED_*&gt;&gt;</code> placeholders —
-          never the real value.
+          Redaction is an optional per-thread setting you enable from the plugin — most useful when
+          you do use a cloud provider. With it on, it runs at the <strong>gateway</strong>, on your
+          machine, on the path <em>out</em>: <strong>tool output and terminal results</strong> are
+          scanned and rewritten before that output is streamed to the agent or sent to any provider,
+          so the model reasons over <code>&lt;&lt;REDACTED_*&gt;&gt;</code> placeholders for the
+          values it detects. It filters detected secrets in that output — it does not cover text you
+          type or paste into the chat yourself.
         </p>
         <ul class="redaction-points">
-          <li><strong>Egress-side, not trust-side.</strong> When enabled, the secret is removed before it can be reasoned over, logged, cached by a provider, or leaked — not merely promised to be discarded later.</li>
+          <li><strong>Egress-side, not trust-side.</strong> When enabled, detected secrets are replaced with placeholders before that output leaves the gateway — rather than relying on the provider to discard them afterwards.</li>
           <li><strong>IPs, emails, API keys, tokens</strong> are detected and replaced with distinctive tokens like <code>&lt;&lt;REDACTED_IP_ADDRESS&gt;&gt;</code>.</li>
           <li><strong>Enforced by the agent, too.</strong> IDEAgent will not write a redacted token back into a file verbatim, so a redacted value can't silently re-enter your codebase through an edit.</li>
         </ul>
@@ -108,23 +114,23 @@
     </div>
   </section>
 
-  <!-- Privacy pillars -->
-  <section class="pillars">
+  <!-- Local-first pillars -->
+  <section class="pillars" id="local">
     <div class="container pillars-grid">
       <div class="pillar">
-        <div class="pillar-icon">🛡️</div>
-        <h3>Redacted before egress</h3>
-        <p>Enable redaction and secrets are stripped at the gateway on the way out — the model receives placeholders, never the real values.</p>
+        <div class="pillar-icon">🖥️</div>
+        <h3>Runs on your infrastructure</h3>
+        <p>Retrieval, indexing and context assembly run on your own machine, in containers you host. The plugin talks only to the gateway you configure — default localhost.</p>
       </div>
       <div class="pillar">
-        <div class="pillar-icon">🖥️</div>
-        <h3>Context stays on-device</h3>
-        <p>Retrieval, indexing and context assembly run on your machine. Only the window you construct — after redaction — leaves it.</p>
+        <div class="pillar-icon">📡</div>
+        <h3>No product-usage telemetry</h3>
+        <p>The whole stack — plugin, gateway, context engine and RAG — sends no usage tracking, analytics or phone-home back to us. Outbound calls go only to the model provider you choose and to optional services you configure yourself. We also ship ChromaDB's built-in telemetry disabled by default.</p>
       </div>
       <div class="pillar">
         <div class="pillar-icon">✈️</div>
-        <h3>Fully air-gappable</h3>
-        <p>Point it at Ollama and nothing leaves your infrastructure at all. Provable zero egress for the strictest contracts.</p>
+        <h3>Fully local option</h3>
+        <p>Point it at Ollama and nothing leaves your infrastructure at all — no cloud provider, and nothing to redact because nothing is sent.</p>
       </div>
       <div class="pillar">
         <div class="pillar-icon">🔑</div>
@@ -138,27 +144,27 @@
   <section class="whynot" id="why-not">
     <div class="container">
       <h2 class="section-title">"Why not just use X?"</h2>
-      <p class="section-sub">If your code is allowed to leave the machine, plenty of great tools exist. IDEAgent is for when it isn't.</p>
+      <p class="section-sub">Plenty of great cloud tools exist. IDEAgent is for when you'd rather keep the whole stack — and your code — on infrastructure you control.</p>
       <div class="whynot-grid">
 
         <div class="whynot-card">
           <h3>Why not Copilot / Cursor / Windsurf?</h3>
-          <p>They send your code — or the context they build from it — to a vendor cloud to do the work. For a codebase under an egress ban, that transfer is the exact thing you're not allowed to do, no matter how good the retention policy is. IDEAgent does the retrieval on your machine and, with redaction enabled, strips what's left before anything leaves.</p>
+          <p>They typically send code — or the context they build from it — to their cloud to do the work. If you'd rather that context be assembled on your own machine, IDEAgent does the retrieval locally and lets you run fully local with Ollama; when you do use a cloud model, optional redaction can filter detected secrets out of tool and terminal output first.</p>
         </div>
 
         <div class="whynot-card">
           <h3>Why not "zero-retention" enterprise plans?</h3>
-          <p>Zero-retention is a promise about what a provider does <em>after</em> receiving your data — your code still crossed the boundary. Many contracts and regulations prohibit the transfer itself, not just the storage. Redaction-before-egress and local-only mode remove the transfer, so there's nothing to retain.</p>
+          <p>Zero-retention is a promise about what a provider does <em>after</em> receiving your data — the data still left your environment first. Running fully local with Ollama means it never leaves at all, so there's nothing to retain; and when you do use a cloud model, optional redaction can filter detected secrets out of tool and terminal output before it's sent.</p>
         </div>
 
         <div class="whynot-card">
           <h3>Why not paste into ChatGPT?</h3>
-          <p>Manual pasting is exactly the uncontrolled, unaudited egress your policy exists to stop — secrets and client identifiers go out with the snippet, and nothing enforces what you paste. IDEAgent keeps a human in the loop and, with redaction enabled, strips secrets automatically and mechanically.</p>
+          <p>Manual pasting is uncontrolled, unaudited egress — secrets and client identifiers go out with the snippet, and nothing tracks what you paste. IDEAgent keeps a human in the loop, assembles context locally, and — with redaction enabled — filters detected secrets out of tool and terminal output automatically rather than leaving it to memory and discipline.</p>
         </div>
 
         <div class="whynot-card">
           <h3>Why not a local model in a generic IDE?</h3>
-          <p>Nothing wrong with it — a truly local model keeps context on the machine, which is exactly what we enforce. But a bare local model gives you no on-device retrieval and no safety net the day you're allowed to reach for a stronger remote model like Claude or GPT. IDEAgent is the whole path: local retrieval, egress-side redaction when you do reach out, HITL, and free choice of provider — so "local" is the default, not the ceiling.</p>
+          <p>Nothing wrong with it — a truly local model keeps context on the machine, which is exactly what IDEAgent does too. But a bare local model gives you no on-device retrieval and no path to a stronger remote model like Claude or GPT the day you want one. IDEAgent is the whole stack: local retrieval, optional egress-side redaction when you do reach out, HITL, and free choice of provider — so "local" is the default, not the ceiling.</p>
         </div>
 
       </div>
@@ -170,7 +176,7 @@
     <a id="docs" class="anchor-alias" aria-hidden="true"></a>
     <div class="container">
       <h2 class="section-title">The components that keep it on your machine</h2>
-      <p class="section-sub">The redaction guarantee isn't a feature bolted onto a cloud tool — it falls out of running the whole stack in your own environment. These are the parts that make on-device context and egress-side redaction possible, and where to read how each works. Fully local works too: run Ollama for provable zero egress, though matching API-level models takes high-end hardware.</p>
+      <p class="section-sub">Local operation isn't a feature bolted onto a cloud tool — it falls out of running the whole stack in your own environment. These are the parts that make on-device context and optional egress-side redaction possible, and where to read how each works. Fully local works too: run Ollama so nothing leaves your infrastructure, though matching API-level models takes high-end hardware.</p>
 
       <div class="docs-grid">
 
@@ -213,8 +219,8 @@
   <!-- Compare -->
   <section class="compare" id="compare">
     <div class="container">
-      <h2 class="section-title">Measured against the one question that matters</h2>
-      <p class="section-sub">Does your code — or context built from it — leave the machine? For a regulated or contractual egress ban, that's the only column that counts.</p>
+      <h2 class="section-title">Measured on who controls the stack</h2>
+      <p class="section-sub">Where does the work run, and what leaves your infrastructure? If you'd rather keep the code and the context on machines you control, this is the column that counts.</p>
       <div class="table-wrapper">
         <table class="compare-table">
           <thead>
@@ -226,14 +232,14 @@
           </thead>
           <tbody>
             <tr>
-              <td>Secrets redacted <strong>before</strong> the model sees them</td>
+              <td>Runs on infrastructure you host</td>
               <td class="col-ideagent check">✅</td>
               <td class="cross">❌</td>
             </tr>
             <tr>
-              <td>Code / context never crosses the boundary</td>
+              <td>No product-usage telemetry back to the vendor (full stack)</td>
               <td class="col-ideagent check">✅</td>
-              <td class="cross">❌</td>
+              <td class="partial">Varies by vendor</td>
             </tr>
             <tr>
               <td>Context assembled on-device (self-hosted RAG)</td>
@@ -241,22 +247,22 @@
               <td class="cross">❌</td>
             </tr>
             <tr>
-              <td>Provable zero egress (fully offline via Ollama)</td>
+              <td>Can run fully offline via Ollama</td>
               <td class="col-ideagent check">✅</td>
               <td class="cross">❌</td>
             </tr>
             <tr>
-              <td>Safe under a contractual / regulatory egress ban</td>
+              <td>Optional redaction of secrets in tool / terminal output</td>
               <td class="col-ideagent check">✅</td>
               <td class="cross">❌</td>
             </tr>
             <tr>
-              <td>No dependence on vendor retention promises</td>
+              <td>No dependence on vendor retention promises (when local)</td>
               <td class="col-ideagent check">✅</td>
               <td class="partial">Trust required</td>
             </tr>
             <tr>
-              <td>Works with any LLM provider you're allowed to use</td>
+              <td>Works with any LLM provider you configure</td>
               <td class="col-ideagent check">✅</td>
               <td class="partial">Limited</td>
             </tr>
