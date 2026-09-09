@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Architecture — IDEAgent</title>
-  <meta name="description" content="A graph of how IDEAgent fits together — the IDE Gateway Plugin, the Gateway, the Project Context (MCP + RAG) and the file watchers across your machines. Privacy-first, self-hosted, single-user today with an enterprise version coming." />
+  <meta name="description" content="A graph of how IDEAgent fits together — the IDE Gateway Plugin, the Gateway, the Project Context (MCP + RAG) and the file watchers across your machines. Privacy-first, self-hosted and multi-user by design, rolling out to a limited number of users first, with an enterprise version coming." />
   <link rel="icon" type="image/png" href="ideagent_logo.png" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -122,7 +122,9 @@
         <p>
           Running locally gives you the strongest control over where your code and context are
           processed, so that's the path we build for.
-          IDEAgent is single-user today; an enterprise version is on the way. To run entirely offline
+          IDEAgent is multi-user by design, though the first release rolls out to a limited number of
+          users while our infrastructure catches up; serving several projects in parallel from separate
+          workstations is already tested. An enterprise version is on the way. To run entirely offline
           you point it at <strong>Ollama</strong> and nothing leaves infrastructure you control — see the
           <a href="server_config.html">local hardware setup</a> for what that takes.
         </p>
