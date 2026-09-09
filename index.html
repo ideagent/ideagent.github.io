@@ -81,13 +81,16 @@
         <div class="badge">Optional feature</div>
         <h2 class="redaction-title">Reaching for a cloud model? <span class="gradient-text">Filter secrets out first.</span></h2>
         <p class="redaction-lede">
-          Redaction is an optional per-thread setting you enable from the plugin — most useful when
+          Redaction keeps you sovereign over your own data by reducing what's transmitted to the
+          model. It's an optional per-thread setting you enable from the plugin — most useful when
           you do use a cloud provider. With it on, it runs at the <strong>gateway</strong>, on your
-          machine, on the path <em>out</em>: <strong>tool output and terminal results</strong> are
-          scanned and rewritten before that output is streamed to the agent or sent to any provider,
-          so the model reasons over <code>&lt;&lt;REDACTED_*&gt;&gt;</code> placeholders for the
-          values it detects. It filters detected secrets in that output — it does not cover text you
-          type or paste into the chat yourself.
+          machine, on the path <em>out</em>: it targets the <strong>read_file and terminal
+          tools</strong> specifically, because those are what surface real file contents and command
+          output into the transcript — the egress points where your data would otherwise leave your
+          machine. That output is scanned and rewritten before it's streamed to the agent or sent to
+          any provider, so the model reasons over <code>&lt;&lt;REDACTED_*&gt;&gt;</code>
+          placeholders for the values it detects. It filters detected secrets in that output — it
+          does not cover text you type or paste into the chat yourself.
         </p>
         <ul class="redaction-points">
           <li><strong>Egress-side, not trust-side.</strong> When enabled, detected secrets are replaced with placeholders before that output leaves the gateway — rather than relying on the provider to discard them afterwards.</li>
@@ -96,20 +99,8 @@
         </ul>
         <a href="gateway.html#redaction" class="btn btn-primary">How redaction works →</a>
       </div>
-      <div class="redaction-demo" aria-hidden="true">
-        <div class="redaction-pane">
-          <div class="redaction-pane-head"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span><span class="pane-label">tool output · on your machine</span></div>
-          <pre class="redaction-code before"><span class="c-key">host</span>   = <span class="c-val">10.4.19.2</span>
-<span class="c-key">email</span>  = <span class="c-val">j.chen@acme-defense.com</span>
-<span class="c-key">apikey</span> = <span class="c-val">sk-live-3f9c8a1b7e</span></pre>
-        </div>
-        <div class="redaction-arrow">redacted at the gateway ↓</div>
-        <div class="redaction-pane">
-          <div class="redaction-pane-head"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span><span class="pane-label">what the model receives</span></div>
-          <pre class="redaction-code after"><span class="c-key">host</span>   = <span class="c-red">&lt;&lt;REDACTED_IP_ADDRESS&gt;&gt;</span>
-<span class="c-key">email</span>  = <span class="c-red">&lt;&lt;REDACTED_EMAIL&gt;&gt;</span>
-<span class="c-key">apikey</span> = <span class="c-red">&lt;&lt;REDACTED_SECRET&gt;&gt;</span></pre>
-        </div>
+      <div class="redaction-demo">
+        <img src="assets/reducted.png" alt="A live IDEAgent turn: terminal and read_file tool output with secret values shown as redacted secret tokens, and a note that the agent must not write those redacted tokens back" class="redaction-shot" loading="lazy" />
       </div>
     </div>
   </section>
@@ -194,6 +185,14 @@
           <div class="doc-card-sub">Your window into the agent</div>
           <p>The in-IDE tool window — Chat, Threads, Tasks and Edits — with per-thread human-in-the-loop, the WebSocket protocol to the gateway, MCP settings and local voice. Runs the work on your machine; no code leaves except the window you construct.</p>
           <span class="doc-card-more">Read →</span>
+        </a>
+
+        <a href="gateway_plugin_setup.html" class="doc-card">
+          <div class="doc-card-icon">🚀</div>
+          <h3>Gateway Plugin Setup</h3>
+          <div class="doc-card-sub">5-minute quick start</div>
+          <p>Containers running? Connect the plugin in four simple steps — gateway IP &amp; port, the default MCP server, your provider or Ollama keys, then dedicated models. Includes an optional Whisper &amp; Piper voice guide for Mac, Linux and Windows.</p>
+          <span class="doc-card-more">Get set up →</span>
         </a>
 
         <a href="gateway.html" class="doc-card">

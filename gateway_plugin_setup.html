@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gateway Plugin Setup — IDEAgent</title>
+  <meta name="description" content="A simple step-by-step guide to connect the PyCharm IDEAgent plugin to your gateway once the containers are running: set the gateway IP and port, add the default MCP server, add your provider or Ollama API keys, restart PyCharm and pick your dedicated models. Includes an optional RAG File Watcher note and a Whisper / Piper voice setup guide for Mac, Linux and Windows." />
+  <link rel="icon" type="image/png" href="ideagent_logo.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Nav -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><img src="ideagent_logo.png" alt="" class="logo-mark" />IDE<span class="logo-accent">Agent</span></a>
+      <nav class="nav-links">
+        <a href="index.html#packages">Why IDEAgent</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="plugin.html">Plugin</a>
+        <a href="gateway.html">Gateway</a>
+        <a href="mcp.html">MCP</a>
+        <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Doc hero -->
+  <section class="doc-hero">
+    <div class="container">
+      <a href="plugin.html" class="back-link">← Back to the plugin</a>
+      <div class="badge">Gateway Plugin · Quick Setup</div>
+      <h1>Connect the plugin to your gateway</h1>
+      <p class="doc-lede">
+        Your containers are running — nice work. Now the PyCharm IDEAgent plugin just needs to know
+        <em>where</em> to find them. This is a short, five-minute setup you do once. Follow the steps
+        in order, top to bottom. Each one is a single screen in the plugin's <strong>Settings</strong>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Doc body -->
+  <section class="doc-body">
+    <div class="container">
+
+      <div class="doc-section">
+        <h2>Before you start</h2>
+        <p>
+          This guide picks up <strong>after</strong> the gateway containers are already up and running.
+          You just need two things handy:
+        </p>
+        <ul>
+          <li>The <strong>address of the machine running the containers</strong>. If Docker runs on the
+            <em>same</em> computer as PyCharm, that address is <code>localhost</code>. If Docker runs on a
+            <em>different</em> machine (like a server in another room), it's that machine's real IP
+            address — for example <code>192.168.158.59</code>.</li>
+          <li>An <strong>API key</strong> for the model provider you want to use (OpenAI, Anthropic or
+            Google) — <em>or</em> the address of your own <strong>Ollama</strong> if you want to run
+            fully offline.</li>
+        </ul>
+        <p>Now open PyCharm, go to <strong>Settings → Tools → IDEAgent</strong>, and follow along.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>Step 1 — Tell the plugin where the gateway is</h2>
+        <p>
+          On the main <strong>IDEAgent</strong> settings screen there is a <strong>Gateway URL</strong>
+          box. Type in the address of the machine running your containers, followed by the gateway port.
+        </p>
+        <ul>
+          <li>Docker on the <strong>same computer</strong> as PyCharm → use
+            <code>http://localhost:8765</code></li>
+          <li>Docker on a <strong>remote server</strong> → use that server's IP, e.g.
+            <code>http://192.168.158.59:8765</code></li>
+        </ul>
+        <p>
+          Then press <strong>Test connection</strong>. If it turns green, the plugin can see your
+          gateway and you're good to move on. If it doesn't, double-check the IP and that the containers
+          are running.
+        </p>
+        <figure class="setup-shot">
+          <img src="assets/Plugin_Main_Settings.png" alt="IDEAgent main settings with the Gateway URL box and Test connection button" loading="lazy" />
+          <figcaption><strong>Main settings.</strong> Put your gateway address in the <em>Gateway URL</em> box (server IP + port, or <code>localhost</code> if it runs on this machine), then press <em>Test connection</em>.</figcaption>
+        </figure>
+      </div>
+
+      <div class="doc-section">
+        <h2>Step 2 — Add the default MCP server</h2>
+        <p>
+          The MCP server is where the agent gets its tools — searching your code, remembering your
+          project, and more. Go to <strong>MCP Servers</strong>, press <strong>Add</strong>, and paste in
+          the block below. Change <code>&lt;Local Container IP&gt;</code> to the <em>same</em> address you
+          used in Step 1 (<code>localhost</code>, or your server's IP).
+        </p>
+        <div class="arch-diagram">{
+  "mcpServers": {
+    "mcp-server": {
+      "url": "http://&lt;Local Container IP&gt;:5820/mcp",
+      "type": "http"
+    }
+  }
+}</div>
+        <p>
+          After you add it, make sure it shows a <strong>green dot</strong> (connected). You can press
+          <strong>Refresh status</strong> to check. The <em>docs-langchain</em> and
+          <em>reference-langchain</em> servers you may see there are optional extras — the one you must
+          have is <code>mcp-server</code>.
+        </p>
+        <figure class="setup-shot">
+          <img src="assets/MCP_Servers.png" alt="MCP Servers settings page showing mcp-server connected on port 5820" loading="lazy" />
+          <figcaption><strong>MCP Servers.</strong> Add <code>mcp-server</code> with the block above, then check for the green &ldquo;connected&rdquo; dot. Note the MCP port is <code>5820</code> — different from the gateway port in Step 1.</figcaption>
+        </figure>
+      </div>
+
+      <div class="doc-section">
+        <h2>Step 3 — Add your provider keys (or your Ollama address)</h2>
+        <p>
+          Open <strong>Models &amp; API keys</strong>. Here you tell the plugin which brain to use:
+        </p>
+        <ul>
+          <li>Using a cloud provider? Paste your <strong>Anthropic</strong>, <strong>OpenAI</strong>
+            and/or <strong>Google</strong> API key into the matching box. You only need the ones you plan
+            to use.</li>
+          <li>Running fully offline with <strong>Ollama</strong>? Leave the cloud keys blank and put your
+            Ollama address in the <strong>Ollama base URL</strong> box — for example
+            <code>http://192.168.158.59:11434</code>.</li>
+        </ul>
+        <p>
+          Your keys are stored safely in your computer's own keychain — never in a plain text file. Leave
+          a box blank to let the gateway fall back to its own setting for that provider.
+        </p>
+        <figure class="setup-shot">
+          <img src="assets/API_KEYS.png" alt="Models and API keys settings with Anthropic, OpenAI, Google key fields and the Ollama base URL" loading="lazy" />
+          <figcaption><strong>Models &amp; API keys.</strong> Fill in the key(s) for the provider you want, or set the <em>Ollama base URL</em> to stay fully local. Any provider you give a key to shows up in the model picker.</figcaption>
+        </figure>
+      </div>
+
+      <div class="doc-section">
+        <h2>Step 4 — Restart PyCharm, then pick your dedicated models</h2>
+        <p>
+          Close and reopen PyCharm so all your settings load fresh. When it's back, open
+          <strong>Dedicated Models</strong>. These are two small helper models that keep things tidy:
+        </p>
+        <ul>
+          <li><strong>Title Model</strong> — writes a short name for each chat automatically. This same
+            model is also used for summarizing data in the gateway.</li>
+          <li><strong>RAG Model</strong> — used when the agent searches your project. If you set up
+            Ollama, you can pick the small local model your RAG will use here.</li>
+        </ul>
+        <p>A small, fast model is plenty for both of these.</p>
+        <figure class="setup-shot">
+          <img src="assets/Dedicated_Models.png" alt="Dedicated models settings with a Title Model and a RAG Model chosen" loading="lazy" />
+          <figcaption><strong>Dedicated models.</strong> Turn on <em>Auto-Titles</em> and pick a small Title model, then choose your RAG model. With Ollama, pick the local model your RAG should use.</figcaption>
+        </figure>
+        <div class="callout">
+          <strong>That's it — the plugin is set up.</strong> Open a new thread and say hello to the agent.
+          Everything below this line is optional and only if you want it.
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>The RAG File Watcher</h2>
+        <p>
+          The <strong>RAG File Watcher</strong> keeps your project search index up to date as you edit,
+          so the agent always sees the latest version of your code. It's a separate plugin you install
+          from the <strong>JetBrains Marketplace</strong> (search for it by name inside PyCharm's plugin
+          settings). Once installed, point it at your RAG server and let it index your project. You can
+          skip this at first and add it later.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>Optional — talk and listen: Whisper &amp; Piper</h2>
+        <p>
+          Want to <em>speak</em> to the agent and have it <em>read replies aloud</em>? That uses two free,
+          fully local tools: <strong>Whisper</strong> for speech-to-text (listening to you) and
+          <strong>Piper</strong> for text-to-speech (talking back). Nothing you say leaves your computer.
+          Install them on the machine where PyCharm runs, then the plugin can detect them.
+        </p>
+
+        <h3 style="margin-top:24px">On a Mac</h3>
+        <p>The easiest way is with <a href="https://brew.sh" target="_blank" rel="noopener">Homebrew</a>. Open the Terminal app and run:</p>
+        <div class="arch-diagram"># Whisper (speech-to-text)
+brew install whisper-cpp
+
+# Piper (text-to-speech)
+pip3 install piper-tts</div>
+
+        <h3 style="margin-top:24px">On Linux</h3>
+        <p>Open a terminal. For most distributions (Ubuntu / Debian):</p>
+        <div class="arch-diagram"># Make sure Python's package installer is available
+sudo apt update && sudo apt install -y python3-pip
+
+# Whisper (speech-to-text)
+pip3 install openai-whisper
+
+# Piper (text-to-speech)
+pip3 install piper-tts</div>
+        <p>
+          On other distributions use your own package manager (for example <code>dnf</code> on Fedora)
+          to install <code>python3-pip</code> first, then the same two <code>pip3</code> commands.
+        </p>
+
+        <h3 style="margin-top:24px">On Windows</h3>
+        <p>
+          First install <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">Python</a>
+          and tick <strong>&ldquo;Add Python to PATH&rdquo;</strong> during setup. Then open
+          <strong>PowerShell</strong> and run:
+        </p>
+        <div class="arch-diagram"># Whisper (speech-to-text)
+pip install openai-whisper
+
+# Piper (text-to-speech)
+pip install piper-tts</div>
+
+        <h3 style="margin-top:24px">Turn them on in the plugin</h3>
+        <ol class="setup-steps">
+          <li>Open the <strong>Speech-to-text</strong> settings and switch it on. Press
+            <strong>Detect</strong> so the plugin finds Whisper, then pick a model to download.</li>
+          <li>Open the <strong>Text-to-speech</strong> settings and switch it on. Press
+            <strong>Detect</strong> to find Piper, then download a voice.</li>
+        </ol>
+        <p>
+          Now you can dictate to the agent and hear its answers — all on your own machine, with no cloud
+          voice service involved.
+        </p>
+        <p style="margin-top:24px"><a href="plugin.html" class="btn btn-secondary">See all plugin settings →</a></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="index.html" class="logo">IDE<span class="logo-accent">Agent</span></a>
+      <p class="footer-note">Each package carries its own license. Please refer to individual package documentation for details.</p>
+      <div class="footer-links">
+        <a href="index.html">Overview</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="plugin.html">Plugin</a>
+        <a href="gateway.html">Gateway</a>
+        <a href="mcp.html">MCP</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -867,8 +867,16 @@ a.node:hover {
   color: var(--accent-2);
 }
 
-/* Redaction before/after demo */
+/* Redaction live-demo screenshot */
 .redaction-demo { display: grid; gap: 10px; }
+.redaction-shot {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+}
 .redaction-pane {
   background: #0d1016;
   border: 1px solid var(--border);
