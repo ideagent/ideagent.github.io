@@ -49,6 +49,11 @@
       <div class="doc-section">
         <h2>Before you start</h2>
         <p>
+          First, install the plugin from the JetBrains Marketplace — it's available directly inside
+          PyCharm / IntelliJ, or via the button below.
+        </p>
+        <div id="marketplace-install" class="marketplace-install" style="margin: 4px 0 20px"></div>
+        <p>
           This guide picks up <strong>after</strong> the gateway containers are already up and running.
           You just need two things handy:
         </p>
@@ -247,6 +252,12 @@ pip install piper-tts</div>
       </div>
     </div>
   </footer>
+
+  <!-- JetBrains Marketplace install widget -->
+  <script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+  <script>
+    MarketplaceWidget.setupMarketplaceWidget('install', 34241, "#marketplace-install");
+  </script>
 
 </body>
 </html>

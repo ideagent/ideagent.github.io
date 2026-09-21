@@ -42,6 +42,8 @@
       <p style="margin-top:16px">
         <a href="gateway_plugin_setup.html" class="btn btn-secondary">New here? Follow the 5-minute quick setup →</a>
       </p>
+      <div id="marketplace-card" class="marketplace-card" style="margin-top:16px"></div>
+      <p class="hero-marketplace-note">Available on the JetBrains Marketplace — install directly into PyCharm / IntelliJ.</p>
     </div>
   </section>
 
@@ -215,6 +217,12 @@
       </div>
     </div>
   </footer>
+
+  <!-- JetBrains Marketplace install widget -->
+  <script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+  <script>
+    MarketplaceWidget.setupMarketplaceWidget('card', 34241, "#marketplace-card");
+  </script>
 
 </body>
 </html>

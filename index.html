@@ -63,9 +63,11 @@
         </div>
       </div>
       <div class="hero-cta">
+        <div id="marketplace-install" class="marketplace-install"></div>
         <a href="#local" class="btn btn-primary">See how it stays local ↓</a>
         <a href="#why-not" class="btn btn-secondary">Why not Copilot / Cursor? ↓</a>
       </div>
+      <p class="hero-marketplace-note">Now on the JetBrains Marketplace — install the plugin straight from your IDE.</p>
       <div class="hero-notice">
         <span class="notice-icon">⚠️</span>
         This is the official commercial platform for IDEAgent (<a href="https://github.com/ideagent/IDEAgent" target="_blank" rel="noopener">ideagent/IDEAgent</a>).
@@ -327,6 +329,12 @@
         });
       });
     })();
+  </script>
+
+  <!-- JetBrains Marketplace install widget -->
+  <script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
+  <script>
+    MarketplaceWidget.setupMarketplaceWidget('install', 34241, "#marketplace-install");
   </script>
 
 </body>
