@@ -44,6 +44,16 @@
       </p>
       <div id="marketplace-card" class="marketplace-card" style="margin-top:16px"></div>
       <p class="hero-marketplace-note">Available on the JetBrains Marketplace — install directly into PyCharm / IntelliJ.</p>
+      <div class="marketplace-badges">
+        <span class="marketplace-badge">
+          <span class="marketplace-badge-label">IDEAgent</span>
+          <span id="marketplace-get-ideagent"></span>
+        </span>
+        <span class="marketplace-badge">
+          <span class="marketplace-badge-label">RAG File Watcher</span>
+          <span id="marketplace-get-watcher"></span>
+        </span>
+      </div>
     </div>
   </section>
 
@@ -69,6 +79,12 @@
           approval before consequential actions; Auto <strong>on</strong> means HITL is
           <strong>disabled</strong>, so it proceeds without pausing for individual approvals. You decide
           per thread whether consequential actions require approval.
+        </p>
+        <p>
+          A small set of high-risk shell commands is always gated, though: <code>git</code>,
+          <code>sudo</code> and <code>docker</code> commands still pause for your approval even when Auto
+          is <strong>on</strong>. This safeguard can't be turned off from the Auto switch — those
+          commands are simply too consequential to run unattended.
         </p>
       </div>
 
@@ -222,6 +238,8 @@
   <script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
   <script>
     MarketplaceWidget.setupMarketplaceWidget('card', 34241, "#marketplace-card");
+    MarketplaceWidget.setupMarketplaceWidget('install', 34241, "#marketplace-get-ideagent");
+    MarketplaceWidget.setupMarketplaceWidget('install', 34243, "#marketplace-get-watcher");
   </script>
 
 </body>

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LangAgent Gateway — IDEAgent</title>
-  <meta name="description" content="LangAgent is the self-hosted gateway that runs the IDEAgent coding agent: a FastAPI + LangGraph deep agent that streams turns to the PyCharm plugin over WebSocket, enforces human-in-the-loop, redacts secrets, and coordinates multiple agents via ACP." />
+  <title>Gateway — IDEAgent</title>
+  <meta name="description" content="The Gateway is the self-hosted service that runs the IDEAgent coding agent: a FastAPI + LangGraph deep agent that streams turns to the PyCharm plugin over WebSocket, enforces human-in-the-loop, redacts secrets, and coordinates multiple agents via ACP." />
   <link rel="icon" type="image/png" href="ideagent_logo.png" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,11 +32,11 @@
     <div class="container">
       <a href="index.html#docs" class="back-link">← Back to overview</a>
       <div class="badge">Component 02 · The Gateway</div>
-      <h1>LangAgent — the LangGraph Gateway</h1>
+      <h1>The Gateway — a LangGraph deep agent</h1>
       <p class="doc-lede">
-        LangAgent is the brain that sits between your IDE and the AI provider. It is a self-hosted
+        The Gateway is the brain that sits between your IDE and the AI provider. It is a self-hosted
         <strong>FastAPI</strong> service wrapping a <strong>LangGraph</strong> deep agent. The
-        <a href="plugin.html">PyCharm plugin</a> never talks to an LLM directly — it talks to LangAgent,
+        <a href="plugin.html">PyCharm plugin</a> never talks to an LLM directly — it talks to the Gateway,
         which runs the agent turn, uses <a href="mcp.html">MCP tools</a>, calls the model provider you
         configured, and streams every step back to the IDE in real time.
       </p>
@@ -92,6 +92,13 @@
           <strong>on</strong> disables it (the graph runs without pausing). The gateway stores that (and
           the redaction preference) on the thread's record, applied on every frame.
         </p>
+        <p>
+          One exception overrides the Auto setting: a fixed set of high-risk shell commands —
+          <code>git</code>, <code>sudo</code> and <code>docker</code> — <strong>always</strong> triggers
+          an approval interrupt, even when Auto is on. The gateway detects these commands before running
+          them and pauses the turn regardless of the thread's HITL preference, so destructive or
+          system-level actions can never run unattended.
+        </p>
       </div>
 
       <div class="doc-section">
@@ -127,7 +134,7 @@
         <h2>Multi-agent coordination (ACP)</h2>
         <p>
           Real work often spans several projects — a backend and the library it consumes, for instance.
-          LangAgent includes an <strong>Agent Coordination Protocol (ACP)</strong> so one agent can ask
+          The Gateway includes an <strong>Agent Coordination Protocol (ACP)</strong> so one agent can ask
           the agent working on another project to make a change, then continue once it reports back.
         </p>
         <ul>
@@ -183,7 +190,7 @@
         <h2>Where it fits</h2>
         <div class="arch-layer"><span class="arch-badge">IDE</span><span class="arch-text"><a href="plugin.html">PyCharm IDEAgent plugin</a> — your window into the agent</span></div>
         <div class="arch-arrow">↕ &nbsp;WebSocket frames + streamed events</div>
-        <div class="arch-layer"><span class="arch-badge">GW</span><span class="arch-text"><strong>LangAgent gateway</strong> — FastAPI + LangGraph deep agent, HITL, redaction, ACP</span></div>
+        <div class="arch-layer"><span class="arch-badge">GW</span><span class="arch-text"><strong>Gateway</strong> — FastAPI + LangGraph deep agent, HITL, redaction, ACP</span></div>
         <div class="arch-arrow">↕ &nbsp;MCP tools · RAG retrieval &nbsp;·&nbsp; ↕ your AI provider</div>
         <div class="arch-layer"><span class="arch-badge">MCP</span><span class="arch-text"><a href="mcp.html">MCP server + context engine + RAG</a> — the project's knowledge</span></div>
         <p style="margin-top:24px"><a href="architecture.html" class="btn btn-secondary">See the full architecture →</a></p>
