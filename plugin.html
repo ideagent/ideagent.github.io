@@ -235,6 +235,73 @@
   </footer>
 
   <!-- JetBrains Marketplace install widget -->
+  <script>
+    // JetBrains mp-widget.js has a bug where multiple widgets share a global
+    // window message event listener without checking e.source against their own iframe.
+    // When both plugins (34241 and 34243) are mounted, the message from the 34243 iframe
+    // overwrites the plugin link state for all widgets, causing clicks on the IDEAgent
+    // card and button to redirect to RAG File Watcher instead of IDE Agent.
+    (function () {
+      var IDEAGENT_URL = 'https://plugins.jetbrains.com/plugin/34241-ide-agent';
+      var RAG_URL = 'https://plugins.jetbrains.com/plugin/34243-rag-filewatcher';
+      var lastClickedUrl = null;
+
+      function updateTarget(e) {
+        var card = document.getElementById('marketplace-card');
+        var ideagent = document.getElementById('marketplace-get-ideagent');
+        var rag = document.getElementById('marketplace-get-rag-filewatcher');
+
+        if ((card && card.contains(e.target)) || (ideagent && ideagent.contains(e.target))) {
+          lastClickedUrl = IDEAGENT_URL;
+        } else if (rag && rag.contains(e.target)) {
+          lastClickedUrl = RAG_URL;
+        }
+      }
+
+      document.addEventListener('pointerdown', updateTarget, true);
+      document.addEventListener('mousedown', updateTarget, true);
+      document.addEventListener('click', updateTarget, true);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          updateTarget(e);
+        }
+      }, true);
+
+      // Intercept window.open calls triggered by the JetBrains widget
+      var originalOpen = window.open;
+      window.open = function (url, target, features) {
+        if (typeof url === 'string' && url.indexOf('plugins.jetbrains.com') !== -1 && lastClickedUrl) {
+          url = lastClickedUrl;
+        }
+        return originalOpen.call(window, url, target, features);
+      };
+
+      // Also attach direct capture click listeners on the widget containers so
+      // when no local IDE is running (iframe has pointer-events: none),
+      // the click immediately opens the correct marketplace link.
+      function attachCaptureListeners() {
+        function bind(id, url) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          el.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            originalOpen.call(window, url, '_blank', 'noopener');
+          }, true);
+        }
+        bind('marketplace-card', IDEAGENT_URL);
+        bind('marketplace-get-ideagent', IDEAGENT_URL);
+        bind('marketplace-get-rag-filewatcher', RAG_URL);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', attachCaptureListeners);
+      } else {
+        attachCaptureListeners();
+      }
+    })();
+  </script>
   <script src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js"></script>
   <script>
     MarketplaceWidget.setupMarketplaceWidget('card', 34241, "#marketplace-card");
