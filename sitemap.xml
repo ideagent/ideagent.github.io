@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Main Landing Page -->
   <url>
     <loc>https://ideagent.github.io/</loc>
     <lastmod>2026-10-17</lastmod>
-    <image:image>
-      <image:loc>https://ideagent.github.io/assets/chat.webp</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://ideagent.github.io/assets/threads.webp</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://ideagent.github.io/assets/tasks.webp</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://ideagent.github.io/assets/edits.webp</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://ideagent.github.io/assets/reducted.webp</image:loc>
-    </image:image>
   </url>
   <url>
     <loc>https://ideagent.github.io/pricing.html</loc>
@@ -32,18 +16,6 @@
   <url>
     <loc>https://ideagent.github.io/setup.html</loc>
     <lastmod>2026-10-17</lastmod>
-    <image:image>
-      <image:loc>https://ideagent.github.io/assets/Plugin_Main_Settings.webp</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://ideagent.github.io/assets/MCP_Servers.webp</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://ideagent.github.io/assets/API_KEYS.webp</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://ideagent.github.io/assets/RAG_Setting1.webp</image:loc>
-    </image:image>
   </url>
   <url>
     <loc>https://ideagent.github.io/gateway.html</loc>
@@ -52,9 +24,6 @@
   <url>
     <loc>https://ideagent.github.io/mcp.html</loc>
     <lastmod>2026-10-05</lastmod>
-    <image:image>
-      <image:loc>https://ideagent.github.io/assets/MCP_WEB_GUI.webp</image:loc>
-    </image:image>
   </url>
   <url>
     <loc>https://ideagent.github.io/server_config.html</loc>
