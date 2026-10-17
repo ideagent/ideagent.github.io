@@ -196,6 +196,55 @@
     </div>
   </section>
 
+  <!-- Architectural Truth: IDEAgent vs. Standard Open-Source Extensions -->
+  <section id="competitive-matrix" style="padding: 3rem 2rem; background-color: #0f0f14; color: #e4e4e7; font-family: sans-serif;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <h2 style="font-size: 2.25rem; color: #ffffff; text-align: center; margin-bottom: 1rem;">Architectural Reality: Why IDEAgent is Not Just Another Chat Extension</h2>
+      <p style="text-align: center; color: #a1a1aa; max-width: 800px; margin: 0 auto 3rem auto; line-height: 1.6;">
+        Standard open-source plugins execute directly inside your IDE process thread, choking application memory during dense context assembly. IDEAgent provides a fully decoupled, multi-tier self-hosted infrastructure built for zero-telemetry environments.
+      </p>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; background-color: #18181b; border: 1px solid #27272a;">
+          <thead>
+            <tr style="background-color: #27272a; color: #ffffff;">
+              <th style="padding: 1rem 1.5rem; font-size: 1.1rem; border-bottom: 2px solid #3f3f46;">Engineering Layer</th>
+              <th style="padding: 1rem 1.5rem; font-size: 1.1rem; border-bottom: 2px solid #3f3f46; color: #60a5fa;">IDEAgent ($14 - $20/mo)</th>
+              <th style="padding: 1rem 1.5rem; font-size: 1.1rem; border-bottom: 2px solid #3f3f46; color: #f87171;">Standard In-IDE Extensions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #27272a;">
+              <td style="padding: 1.25rem 1.5rem; font-weight: 600;"><strong>Execution Topology</strong></td>
+              <td style="padding: 1.25rem 1.5rem; color: #e4e4e7;"><strong style="color: #34d399;">Decoupled Gateway:</strong> Runs as a standalone multi-container backend (FastAPI + LangGraph). Keeps PyCharm ultra-lightweight.</td>
+              <td style="padding: 1.25rem 1.5rem; color: #a1a1aa;"><strong>In-Process Threading:</strong> Runs entirely on Java/IDE lifecycle threads, resource-throttling the active editor.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #27272a; background-color: #202024;">
+              <td style="padding: 1.25rem 1.5rem; font-weight: 600;"><strong>Data Leak Prevention</strong></td>
+              <td style="padding: 1.25rem 1.5rem; color: #e4e4e7;"><strong style="color: #34d399;">Egress Secret Redaction:</strong> Automatically intercept & scrub IP addresses, API keys, and credentials on the container side *before* network delivery.</td>
+              <td style="padding: 1.25rem 1.5rem; color: #a1a1aa;"><strong>Direct Transmissions:</strong> Sends local file buffers, logs, and sensitive terminal strings straight to external endpoints as-is.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #27272a;">
+              <td style="padding: 1.25rem 1.5rem; font-weight: 600;"><strong>RAG Indexing Compute</strong></td>
+              <td style="padding: 1.25rem 1.5rem; color: #e4e4e7;"><strong style="color: #34d399;">Isolated Engine & FileWatcher:</strong> Indexing, embedding generation, and directory tree state processing run entirely on dedicated background server nodes.</td>
+              <td style="padding: 1.25rem 1.5rem; color: #a1a1aa;"><strong>Local Thread Hashing:</strong> Processes large-scale codebase vector indexing loops directly within your core active application space.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #27272a; background-color: #202024;">
+              <td style="padding: 1.25rem 1.5rem; font-weight: 600;"><strong>Multi-Project Automation</strong></td>
+              <td style="padding: 1.25rem 1.5rem; color: #e4e4e7;"><strong style="color: #34d399;">Agentic Coding Protocol (ACP):</strong> Orchestrates safe cross-project and cross-machine agent calls via async handshakes and non-disruptive peer availability validation.</td>
+              <td style="padding: 1.25rem 1.5rem; color: #a1a1aa;"><strong>Single Project Scope:</strong> Incapable of bridging or synchronizing actions securely across separated microservice or dependency workspaces.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #27272a;">
+              <td style="padding: 1.25rem 1.5rem; font-weight: 600;"><strong>Privacy & Telemetry Default</strong></td>
+              <td style="padding: 1.25rem 1.5rem; color: #e4e4e7;"><strong style="color: #34d399;">Hardened Air-Gapped Cleanliness:</strong> Zero product telemetry tracking. ChromaDB background analytics telemetry is fully deactivated out-of-the-box.</td>
+              <td style="padding: 1.25rem 1.5rem; color: #a1a1aa;"><strong>Opt-In/Hidden Tracking:</strong> Frequently collections anonymous analytics, prompt histories, or interaction tracking statistics by default.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container footer-inner">

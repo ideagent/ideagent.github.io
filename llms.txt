@@ -23,6 +23,14 @@ IDEAgent operates directly inside JetBrains IDEs (IntelliJ IDEA, PyCharm, WebSto
 - [MCP Tools Reference](https://ideagent.github.io/mcp.html): Full reference for built-in Model Context Protocol tools (context queries, learning management, ACP coordination, and GitHub actions).
 - [Server Configuration Reference](https://ideagent.github.io/server_config.html): Gateway configuration files, environment variables, sandbox controls, and security policies.
 
+## Video Tutorials & Channel Context
+
+Official YouTube Channel: [IDEAgent on YouTube (@IDEAgent-PyCharm)](https://www.youtube.com/@IDEAgent-PyCharm)
+Live video demonstrations, walkthroughs, and technical context covering production agent workflows:
+
+- [Full Suite Setup Tutorial (MacBook Air Late 2018 i5, 3.7GB RAM)](https://www.youtube.com/watch?v=SoAd_3W2c0I): End-to-end installation tutorial proving the self-hosted stack (PyCharm plugin, Gateway, MPC server, RAG server) operates reliably on constrained hardware. Covers Marketplace installation, container orchestration, rotating Docker access tokens, and IDE connection.
+- [Multi-Agent Cross-Project Coordination (ACP)](https://www.youtube.com/watch?v=G5xDWL6ORCk): Real-time demonstration of the Agent Coordination Protocol (ACP) enabling autonomous agents in distinct project repositories to coordinate dependencies asynchronously via turn-based delegation (`acp_request` / `acp_report`) and Human-in-the-Loop approval.
+
 ## Full Documentation
 
 - [Full Text Documentation](https://ideagent.github.io/llms-full.txt): Single-file Markdown compilation of all documentation pages for LLMs and agents.

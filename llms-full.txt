@@ -10,6 +10,7 @@ Table of Contents:
 5. Model Context Protocol (MCP) Tools
 6. JetBrains Plugin Settings
 7. Server Configuration & Security Boundaries
+8. Video Tutorials & YouTube Channel Context (@IDEAgent-PyCharm)
 
 ---
 
@@ -143,3 +144,38 @@ The plugin provides dedicated configuration panes inside the IDE:
 - **Confirmation Boundaries**: Git commits, pushes, file deletions, and container deployments require explicit confirmation before execution.
 - **Redaction Protection**: Sensitive tokens matching `<<REDACTED_*>>` are never echoed back to files or tools.
 - **No Blind Overrides**: Before non-trivial changes, agents state their plan and ground reasoning in verified code context.
+
+---
+
+## 8. Video Tutorials & YouTube Channel Context (@IDEAgent-PyCharm)
+
+Official YouTube Channel: [IDEAgent on YouTube](https://www.youtube.com/@IDEAgent-PyCharm) (`@IDEAgent-PyCharm`)
+
+The official channel publishes hands-on demonstrations, architecture walkthroughs, and deployment tutorials for developers and LLMs seeking practical context on how IDEAgent functions in real production environments.
+
+### Video Index & Context Breakdown:
+
+1. **Full Suite Setup Tutorial (MacBook Air Late 2018 i5, 3.7GB RAM)**
+   - **URL**: https://www.youtube.com/watch?v=SoAd_3W2c0I
+   - **Embed**: https://www.youtube.com/embed/SoAd_3W2c0I
+   - **Target Hardware**: Intel Core i5 (dual-core), 3.7 GB RAM, macOS.
+   - **Demonstrated Workflow**:
+     - Installing *IDE Agent* (tool window) and *RAG File Watcher* from JetBrains Marketplace.
+     - Onboarding flow with rotating temporary Docker Hub authentication tokens.
+     - Automated shell script creating `ideagent-network` bridge and spinning up `gateway` (port 8765), `mpc-server` (port 5820), and `rag-server`.
+     - In-IDE configuration (Gateway URL `http://127.0.0.1:8765`, MCP server using physical host machine IP).
+     - Live execution in Chat window verifying local reasoning and file watcher indexing without memory saturation.
+   - **Reference Documentation**: `https://ideagent.github.io/setup.html`
+
+2. **Multi-Agent Cross-Project Coordination (Agent Coordination Protocol / ACP)**
+   - **URL**: https://www.youtube.com/watch?v=G5xDWL6ORCk
+   - **Embed**: https://www.youtube.com/embed/G5xDWL6ORCk
+   - **Architecture Focus**: Turn-based, non-blocking inter-agent collaboration across repositories.
+   - **Demonstrated Workflow**:
+     - Agent A operating in a consumer project discovers missing functionality or schema changes in an upstream dependency.
+     - Agent A invokes `acp_request` to delegate the necessary refactoring to Agent B managing the library repository.
+     - Agent A's turn cleanly completes without hanging or suspending execution graphs.
+     - Agent B runs in its own context, edits files, and returns `acp_report` with diffs and test results.
+     - Agent A wakes on report delivery, verifies the upstream changes, and completes the consumer task.
+     - In-editor Human-in-the-Loop (HITL) checkpoints before changes are committed to disk.
+   - **Reference Documentation**: `https://ideagent.github.io/gateway.html#acp`
