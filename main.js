@@ -1,10 +1,108 @@
 /**
- * IDEAgent Documentation - Navigation & Interactivity
+ * IDEAgent Documentation - Smart Navigation & Interactivity
  */
 (function () {
   'use strict';
 
-  // Mobile menu toggle
+  /**
+   * Site Navigation Configuration
+   * Single source of truth for site-wide navigation.
+   * Edit this list to easily add, hide, or remove pages.
+   */
+  var NAV_CONFIG = {
+    // Mode: 'exclude' (Option A: omit current page, GSC-safe & cleanest mobile/desktop UX)
+    //       'mark'    (Option B: show current page marked with '*' and aria-current)
+    mode: 'exclude',
+    items: [
+      { id: 'index', label: 'Overview', href: 'index.html', aliases: ['', '/', 'index.html', 'index.htm'] },
+      { id: 'pricing', label: 'Pricing', href: 'pricing.html', highlight: true },
+      { id: 'architecture', label: 'Architecture', href: 'architecture.html' },
+      { id: 'setup', label: 'Setup Guide', href: 'setup.html', aliases: ['setup.html', 'plugin.html', 'gateway_plugin_setup.html'] },
+      { id: 'gateway', label: 'Gateway', href: 'gateway.html' },
+      { id: 'mcp', label: 'MCP & RAG', href: 'mcp.html' },
+      { id: 'server_config', label: 'Server Config', href: 'server_config.html' },
+      { id: 'github', label: 'GitHub ↗', href: 'https://github.com/ideagent', external: true, isButton: true }
+    ]
+  };
+
+  /**
+   * Detect currently loaded page filename (lowercased)
+   */
+  function getCurrentPageFilename() {
+    var path = (window.location && window.location.pathname) || '';
+    var rawName = path.split('/').pop() || '';
+    rawName = rawName.toLowerCase();
+    if (!rawName || rawName === 'index.html' || rawName === 'index.htm') {
+      return 'index.html';
+    }
+    return rawName;
+  }
+
+  /**
+   * Build and render the smart navigation bar
+   */
+  function renderSmartNav() {
+    var nav = document.getElementById('main-nav');
+    if (!nav) return;
+
+    var currentFilename = getCurrentPageFilename();
+    var mode = nav.getAttribute('data-nav-mode') || NAV_CONFIG.mode || 'exclude';
+    var frag = document.createDocumentFragment();
+
+    NAV_CONFIG.items.forEach(function (item) {
+      if (item.hidden) return;
+
+      var isCurrent = false;
+      if (!item.external) {
+        var itemFile = (item.href || '').split('#')[0].toLowerCase();
+        if (item.aliases && item.aliases.indexOf(currentFilename) !== -1) {
+          isCurrent = true;
+        } else if (itemFile === currentFilename) {
+          isCurrent = true;
+        }
+      }
+
+      // Option A: Exclude current page
+      if (isCurrent && mode === 'exclude') {
+        return;
+      }
+
+      var el;
+      if (isCurrent && mode === 'mark') {
+        // Option B: Mark current page with *
+        el = document.createElement('span');
+        el.className = 'nav-current';
+        el.setAttribute('aria-current', 'page');
+        el.textContent = '* ' + item.label;
+        if (item.highlight) {
+          el.classList.add('nav-highlight');
+        }
+      } else {
+        el = document.createElement('a');
+        el.href = item.href;
+        el.textContent = item.label;
+        if (item.external) {
+          el.target = '_blank';
+          el.rel = 'noopener';
+        }
+        if (item.isButton) {
+          el.className = 'btn btn-ghost';
+        } else if (item.highlight) {
+          el.className = 'nav-highlight';
+        }
+      }
+
+      frag.appendChild(el);
+    });
+
+    nav.innerHTML = '';
+    nav.appendChild(frag);
+  }
+
+  // Render smart navigation
+  renderSmartNav();
+
+  // Mobile menu toggle & interactions
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.getElementById('main-nav');
 
@@ -21,11 +119,11 @@
       setMenuState(!isCurrentlyOpen);
     });
 
-    // Close when clicking any nav link
-    nav.querySelectorAll('a').forEach(function (link) {
-      link.addEventListener('click', function () {
+    // Close when clicking any navigation link (event delegation)
+    nav.addEventListener('click', function (e) {
+      if (e.target && e.target.tagName.toLowerCase() === 'a') {
         setMenuState(false);
-      });
+      }
     });
 
     // Close on outside click
@@ -98,6 +196,7 @@
         execute: function () {
           return JSON.stringify([
             { title: 'IDEAgent Home', url: 'https://ideagent.github.io/', description: 'Product overview, privacy features, and download' },
+            { title: 'Pricing & Plans', url: 'https://ideagent.github.io/pricing.html', description: 'Plugin pricing, 30-day free trial, volume discounts, and complimentary licenses' },
             { title: 'Architecture', url: 'https://ideagent.github.io/architecture.html', description: 'System design, plugin-gateway architecture, and security layers' },
             { title: 'Gateway', url: 'https://ideagent.github.io/gateway.html', description: 'Multi-agent gateway setup, remote hosts, and ACP daemon' },
             { title: 'Gateway Plugin Setup', url: 'https://ideagent.github.io/gateway_plugin_setup.html', description: 'Step-by-step IDE pairing and token authentication' },

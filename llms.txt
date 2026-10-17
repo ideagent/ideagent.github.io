@@ -16,11 +16,11 @@ IDEAgent operates directly inside JetBrains IDEs (IntelliJ IDEA, PyCharm, WebSto
 ## Documentation
 
 - [IDEAgent Home](https://ideagent.github.io/): Product overview, key features, screenshot showcase (Chat, Composer, Diff), and installation links.
+- [Pricing & Plans](https://ideagent.github.io/pricing.html): Production Release 26.3.0 pricing ($14/mo individual, $20/mo organization with 5% discount on 10+ copies), 30-day free trial on JetBrains Marketplace, and complimentary licenses.
 - [Architecture Overview](https://ideagent.github.io/architecture.html): Detailed system architecture diagram and explanation of the JetBrains Plugin, Gateway, Context Engine, and Agent execution loop.
+- [Setup Guide](https://ideagent.github.io/setup.html): Complete step-by-step setup guide: JetBrains Marketplace installation, onboarding registration, Docker container orchestration, PyCharm plugin configuration, and new release features.
 - [Gateway Setup & Configuration](https://ideagent.github.io/gateway.html): Setup guide for the multi-agent gateway, secure networking, and ACP daemon communication.
-- [Gateway Plugin Setup](https://ideagent.github.io/gateway_plugin_setup.html): Step-by-step instructions for pairing the JetBrains plugin with local or remote gateway backends.
 - [MCP Tools Reference](https://ideagent.github.io/mcp.html): Full reference for built-in Model Context Protocol tools (context queries, learning management, ACP coordination, and GitHub actions).
-- [JetBrains Plugin Settings](https://ideagent.github.io/plugin.html): Complete walkthrough of plugin preferences (API keys, dedicated models, RAG watcher, speech-to-text, and text-to-speech).
 - [Server Configuration Reference](https://ideagent.github.io/server_config.html): Gateway configuration files, environment variables, sandbox controls, and security policies.
 
 ## Full Documentation

@@ -40,12 +40,16 @@
         <span class="nav-toggle-bar"></span>
         <span class="nav-toggle-bar"></span>
       </button>
-      <nav id="main-nav" class="nav-links">
-        <a href="index.html#packages">Why IDEAgent</a>
-        <a href="architecture.html">Architecture</a>
-        <a href="plugin.html">Plugin</a>
-        <a href="gateway.html">Gateway</a>
-        <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
+      <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
+        <noscript>
+          <a href="index.html">Overview</a>
+          <a href="pricing.html" style="color: var(--accent-2); font-weight: 600;">Pricing</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="setup.html">Setup Guide</a>
+          <a href="gateway.html">Gateway</a>
+          <a href="server_config.html">Server Config</a>
+          <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
+        </noscript>
       </nav>
     </div>
   </header>
@@ -211,7 +215,7 @@
         </div>
         <p>
           For complete instructions on connecting the RAG server to your IDE, follow the
-          <a href="gateway_plugin_setup.html">Gateway &amp; Plugin Setup Guide</a>.
+          <a href="setup.html">Setup Guide</a>.
         </p>
       </div>
 
@@ -227,7 +231,7 @@
           model. Paired with a local Ollama provider on the
           <a href="gateway.html">Gateway</a>, no code or context leaves infrastructure you control at all.
         </p>
-        <p style="margin-top:24px"><a href="architecture.html" class="btn btn-secondary">See the full architecture →</a></p>
+        <p style="margin-top:20px; font-size:0.95rem; color:var(--text-muted)">Explore the overall system layout in the <a href="architecture.html">full architecture documentation →</a></p>
       </div>
 
     </div>
@@ -240,9 +244,12 @@
       <p class="footer-note">Each package carries its own license. Please refer to individual package documentation for details.</p>
       <div class="footer-links">
         <a href="index.html">Overview</a>
+        <a href="pricing.html">Pricing</a>
         <a href="architecture.html">Architecture</a>
-        <a href="plugin.html">Plugin</a>
+        <a href="setup.html">Setup Guide</a>
         <a href="gateway.html">Gateway</a>
+        <a href="mcp.html">MCP &amp; RAG</a>
+        <a href="server_config.html">Server Config</a>
         <a href="llms.txt">llms.txt</a>
       </div>
     </div>
