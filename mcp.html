@@ -28,6 +28,23 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" />
   </noscript>
   <link rel="describedby" href="llms.txt" />
+
+  <!-- Google Search Console Video Indexing -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": "How the Context for Agents is created.",
+    "description": "A tour of the IDEAgent MCP server web interface: registering projects and their specs, correlating projects, browsing learnings and recorded changes, the context engine, RAG collections, MCP tools and parameters, and logs.",
+    "thumbnailUrl": [
+      "https://i.ytimg.com/vi/Xo-UacEu38w/maxresdefault.jpg",
+      "https://i.ytimg.com/vi/Xo-UacEu38w/hqdefault.jpg"
+    ],
+    "uploadDate": "2026-10-26T16:00:30-07:00",
+    "contentUrl": "https://www.youtube.com/watch?v=Xo-UacEu38w",
+    "embedUrl": "https://www.youtube.com/embed/Xo-UacEu38w"
+  }
+  </script>
 </head>
 <body>
 
@@ -82,67 +99,218 @@
         <ol class="setup-steps">
           <li>Point your browser at the container, for example <code>http://localhost/ui</code>.</li>
           <li>You land on <strong>Projects</strong> — the list of everything the agent knows about.</li>
-          <li>The tabs across the top take you to the rest: Settings, Tools, Context Engine, RAG Collections and Logs.</li>
+          <li>The sidebar on the left takes you to the rest, grouped as
+            <strong>Projects</strong> (New Project, Select Project, Context Engine),
+            <strong>Tools</strong> (MCP Tools),
+            <strong>RAG</strong> (Settings, Collections) and
+            <strong>Settings</strong> (Parameters, Logs).</li>
         </ol>
-        <figure class="setup-shot">
-          <img width="1119" height="500" src="assets/MCP_WEB_GUI.webp" alt="Project Context web GUI showing the Projects list with registered projects" loading="lazy" decoding="async" />
-          <figcaption><strong>The web GUI.</strong> Each project card shows its path, type and when it was registered. From a card you can open its <em>Learnings</em>, review <em>Changes</em>, <em>Edit</em> its details or remove it — and <em>Refresh</em> re-reads the list.</figcaption>
-        </figure>
+        <div class="video-wrapper">
+          <iframe
+            src="https://www.youtube.com/embed/Xo-UacEu38w"
+            title="How the Context for Agents is created."
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
+        </div>
+        <p class="marketplace-embed-note">
+          <a href="https://www.youtube.com/watch?v=Xo-UacEu38w" target="_blank" rel="noopener">Watch on YouTube: How the Context for Agents is created ↗</a>
+        </p>
       </div>
 
       <div class="doc-section">
         <h2>Projects</h2>
         <p>
-          A project is a folder the agent is allowed to understand and work in. The <strong>Projects</strong>
-          tab is where you register them and keep them tidy:
+          A project is a folder the agent is allowed to understand and work in. The start page of the GUI
+          lists every project currently registered with the server.
+        </p>
+        <figure class="setup-shot">
+          <img width="1363" height="642" src="assets/ui_main_view.webp" alt="Start page of the MCP server GUI listing all registered projects" loading="lazy" decoding="async" />
+          <figcaption><strong>Start page.</strong> Every project currently registered is listed here.</figcaption>
+        </figure>
+
+        <h3>Select a project</h3>
+        <p>
+          Pick the project you want to work with either by clicking its card or from the selection list.
+        </p>
+        <figure class="setup-shot">
+          <img width="1361" height="618" src="assets/ui_select_project.webp" alt="Selecting a project from its card or from the selection list" loading="lazy" decoding="async" />
+          <figcaption><strong>Select a project</strong> from its card or from the selection list.</figcaption>
+        </figure>
+
+        <h3>Register a new project</h3>
+        <p>
+          Registering a folder makes it part of the agent's memory. Along with the project itself you
+          define its <strong>specs</strong> — a description of what the project is — which the agent reads
+          as context before it works in that project.
+        </p>
+        <figure class="setup-shot">
+          <img width="1362" height="631" src="assets/ui_new_project.webp" alt="Form for registering a new project and describing its specs" loading="lazy" decoding="async" />
+          <figcaption><strong>New project.</strong> Register a project and describe it in its specs.</figcaption>
+        </figure>
+
+        <h3>Edit a project and its specs</h3>
+        <p>
+          Everything you set at registration can be changed later. Editing a project lets you redefine:
         </p>
         <ul>
-          <li><strong>Register</strong> a folder so it becomes part of the agent's memory.</li>
-          <li><strong>Edit</strong> a project's details, or <strong>Delete</strong> it when you no longer want it indexed.</li>
-          <li><strong>Learnings</strong> shows the notes the agent has saved about that project over time.</li>
-          <li><strong>Changes</strong> lists the file changes recorded for it, so you can see its recent history.</li>
+          <li>the <strong>project path</strong>,</li>
+          <li>the <strong>Git repository</strong>,</li>
+          <li>the <strong>correlations</strong> with other projects (see below),</li>
+          <li>the <strong>specs</strong> — Markdown is allowed.</li>
         </ul>
+        <figure class="setup-shot">
+          <img width="1366" height="625" src="assets/ui_edit_project_and_specs.webp" alt="Editing a project's path, Git repository, correlations and Markdown specs" loading="lazy" decoding="async" />
+          <figcaption><strong>Edit project.</strong> Path, Git repository, correlations and Markdown specs.</figcaption>
+        </figure>
+
+        <h3>Correlate projects</h3>
+        <p>
+          When one project is part of other projects — a library used by a backend, for example — you can
+          correlate them. Correlations give the agents a <strong>map of the other places worth looking</strong>,
+          so an agent working in one project knows which related projects may hold the rest of the answer,
+          and which peers to coordinate with over <a href="gateway.html">ACP</a>.
+        </p>
+        <figure class="setup-shot">
+          <img width="259" height="191" src="assets/ui_projects_correlations.webp" alt="Project correlations linking a project to the projects it belongs to" loading="lazy" decoding="async" />
+          <figcaption><strong>Correlations</strong> map which projects belong together.</figcaption>
+        </figure>
+      </div>
+
+      <div class="doc-section">
+        <h2>Learnings</h2>
+        <p>
+          Learnings are the notes agents save about a project as they work — decisions, pitfalls, verified
+          workflows. Search all recorded learnings by keyword and filter them by category.
+        </p>
+        <figure class="setup-shot">
+          <img width="710" height="521" src="assets/ui_search_learnings.webp" alt="Searching recorded learnings by keyword and filtering by category" loading="lazy" decoding="async" />
+          <figcaption><strong>Learnings.</strong> Search by keyword, filter by category.</figcaption>
+        </figure>
+      </div>
+
+      <div class="doc-section">
+        <h2>Recorded changes</h2>
+        <p>
+          Every edit an agent records is kept as a change. The last 250 changes can be listed, filtered by
+          category or searched by keyword — so you can see a project's recent history without opening Git.
+        </p>
+        <figure class="setup-shot">
+          <img width="576" height="529" src="assets/ui_recorded_changes.webp" alt="List of recorded changes filtered by category or searched by keyword" loading="lazy" decoding="async" />
+          <figcaption><strong>Recorded changes.</strong> Up to the last 250, filterable and searchable.</figcaption>
+        </figure>
       </div>
 
       <div class="doc-section">
         <h2>Context Engine</h2>
         <p>
-          The <strong>Context Engine</strong> tab lets you look at, and try, what the agent uses on every
-          task — an indexed model of the project rather than a blind file read. From here you can browse a
-          project's symbols and run a retrieval query yourself to see exactly what the agent would get back.
+          The <strong>Context Engine</strong> is what the agent consults first on every task — an indexed
+          model of the project's structure rather than a blind file read. It knows the project's symbols
+          (functions, classes, methods), where each one lives, how they relate, and which changes were
+          recorded recently. Here you can run the same lookups the agent does — find a symbol or ask a
+          question about the code — and see exactly what the agent would get back: the file, the line range
+          and the relevant source excerpt.
         </p>
+        <figure class="setup-shot">
+          <img width="769" height="423" src="assets/ui_context_engine.webp" alt="Context Engine view showing a query against a project's indexed symbols" loading="lazy" decoding="async" />
+          <figcaption><strong>Context Engine.</strong> See what the agent sees before it edits.</figcaption>
+        </figure>
         <div class="callout">
           The context engine is the <strong>source of truth</strong> for a project's structure. It is how
           the agent understands how pieces fit together <em>before</em> it edits anything — which keeps its
-          changes grounded in the real codebase rather than guesses.
+          changes grounded in the real codebase rather than guesses. Each recorded change re-syncs the
+          index, so the next answer reflects what was actually edited.
         </div>
       </div>
 
       <div class="doc-section">
-        <h2>RAG Collections</h2>
+        <h2>RAG Settings</h2>
         <p>
-          Retrieval is backed by a self-hosted store, and the <strong>RAG Collections</strong> tab is your
-          window into it. Each project's indexed code and knowledge lives in its own collection, and it
-          holds more than source:
+          Retrieval is backed by a self-hosted RAG server. Your project's code is indexed into it with chunks
+          built around whole symbols, so a search result is a complete function or class rather than an
+          arbitrary range of lines. Edits are stored as before/after snapshots. On top of your own code, the RAG
+          can hold external documentation, so the agent looks up the real docs for a framework instead of
+          relying on what it remembers.
         </p>
+        <p>
+          <strong>RAG → Settings</strong> opens <em>RAG Sources &amp; Configuration</em>, an editor for the
+          RAG server's <code>config/sources.yaml</code>. This file lists the documentation sources the RAG
+          crawls on a schedule (every 6 hours by default).
+        </p>
+        <figure class="setup-shot">
+          <img width="1352" height="425" src="assets/ui_rag_settings.webp" alt="RAG Sources &amp; Configuration: the sources.yaml editor with github and urls entries" loading="lazy" decoding="async" />
+          <figcaption><strong>RAG Sources &amp; Configuration.</strong> Edit, validate and save the sources the RAG crawls.</figcaption>
+        </figure>
+        <p>Only two top-level keys are accepted. If the file contains anything else, the RAG server rejects it:</p>
         <ul>
-          <li><strong>Code</strong>, chunked around whole symbols so a result is a meaningful unit — a full function or class, not an arbitrary line range.</li>
-          <li><strong>Learnings</strong> the agent has saved about the project.</li>
-          <li><strong>Change history</strong> — before/after snapshots of edits.</li>
-          <li><strong>Documentation</strong> that has been ingested for the project.</li>
+          <li><strong><code>github</code></strong> — a list of repositories to index:
+            <ul>
+              <li><code>repo</code> (required) — the repository as <code>owner/name</code>, for example <code>home-assistant/developers.home-assistant.io</code>.</li>
+              <li><code>file_types</code> — the file extensions to pull from the repository. Default: <code>md</code> and <code>py</code>.</li>
+              <li><code>collection</code> — the collection the content is stored in. Default: <code>github</code>.</li>
+            </ul>
+          </li>
+          <li><strong><code>urls</code></strong> — a list of web pages to crawl:
+            <ul>
+              <li><code>url</code> (required) — the page the crawl starts from.</li>
+              <li><code>depth</code> — how many levels of links the crawler follows from that page. Default: <code>1</code>. Each extra level can add many more pages, so raise it only for documentation sites where the useful content is a few clicks deep.</li>
+              <li><code>collection</code> — the collection the content is stored in. Default: <code>web_docs</code>.</li>
+            </ul>
+          </li>
         </ul>
+        <p>
+          Collection names are up to you. A collection is created the first time something is stored in it, so
+          grouping sources by topic (for example <code>ha_docs</code>, <code>python_docs</code>) keeps each set
+          of docs separate. A fresh install starts with an empty <code>sources.yaml</code>.
+        </p>
+        <p>To change the sources:</p>
+        <ol>
+          <li><strong>Reload from RAG</strong> loads the file currently on the RAG server.</li>
+          <li>Edit the YAML, then click <strong>Validate YAML</strong>. <strong>Save to RAG</strong> stays disabled until the file passes validation.</li>
+          <li>Tick <strong>Re-scan all sources after saving</strong> if you want the new sources crawled right away instead of at the next scheduled scan. This is slower.</li>
+        </ol>
+        <p>
+          <strong>RAG → Collections</strong> is in the menu but not live yet. It will list the collections and
+          what each one holds.
+        </p>
         <p>
           Everything here is computed and stored on infrastructure you control: the full codebase stays in your RAG instance, and the agent retrieves the chunks and embeddings it needs to work. When you configure a hosted model, that retrieved context is what gets sent to it — which is why we recommend a fully local setup (with Ollama) when you want nothing to leave your environment at all.
         </p>
       </div>
 
       <div class="doc-section">
-        <h2>Tools &amp; Settings</h2>
+        <h2>MCP Tools</h2>
         <p>
-          The <strong>Tools</strong> tab lists the actions the Project Context makes available to the agent
-          through the <a href="gateway.html">Gateway</a> — searching the context engine, reading a project's
-          learnings and history, recording changes. The <strong>Settings</strong> tab holds the
-          server's own configuration.
+          Enable or disable each tool the MCP server exposes. Only enabled tools are shown to the agent when
+          it first invokes the server through the <a href="gateway.html">Gateway</a> — so you decide exactly
+          which actions an agent can see and use.
+        </p>
+        <figure class="setup-shot">
+          <img width="1228" height="291" src="assets/ui_mcp_tools.webp" alt="List of MCP tools with toggles to enable or disable each one" loading="lazy" decoding="async" />
+          <figcaption><strong>MCP tools.</strong> Toggle which tools the agent sees.</figcaption>
+        </figure>
+
+        <h3>MCP parameters</h3>
+        <p>
+          Under <strong>Settings → Parameters</strong> you set the server's environment. Values are saved to
+          <code>settings.json</code> in the persistent data volume and take precedence over environment
+          variables, which in turn override the built-in defaults. Restart the MCP container after saving
+          so every service picks up the new values.
+        </p>
+        <figure class="setup-shot">
+          <img width="1335" height="292" src="assets/ui_mcp_parameters.webp" alt="MCP server configuration parameters" loading="lazy" decoding="async" />
+          <figcaption><strong>MCP parameters.</strong> The server's environment, saved to <code>settings.json</code>.</figcaption>
+        </figure>
+        <ul>
+          <li><strong>PyCharm RAG FileWatcher URL</strong> (<code>MPC_FILEWATCHER_URL</code>) — where the server notifies the file watcher after a recorded change, so the file is re-indexed right away. Normally the live watcher is found automatically; this is the fallback.</li>
+          <li><strong>Host projects root</strong> (<code>MPC_HOST_PROJECTS_ROOT</code>) — the folder on the host that holds your projects, mounted read-only into the container so the server can read and index them. Changing the mount itself means recreating the container.</li>
+          <li><strong>RAG server base URL</strong> (<code>RAG_BASE_URL</code>) — the RAG backend used for search, the Context Engine, ingestion and snapshots. If it's wrong, the Context Engine and semantic search stop working.</li>
+          <li><strong>HA with Samba</strong> — server IP, share (default <code>config</code>), username, password, component name and port (default <code>445</code>) used by the Home Assistant tools to deploy, back up and read a custom component over SMB. The component name can be overridden per project.</li>
+        </ul>
+        <p>
+          Secrets such as the Samba password are shown masked; leaving the mask in place keeps the stored
+          value, so saving the form never wipes or exposes a secret.
         </p>
       </div>
 
@@ -174,6 +342,10 @@
           indexing activity and queries — so when something looks off, you can see why without leaving the
           browser.
         </p>
+        <figure class="setup-shot">
+          <img width="1364" height="436" src="assets/ui_mcp_logs.webp" alt="MCP server logs view" loading="lazy" decoding="async" />
+          <figcaption><strong>Logs.</strong> What the server is doing, in real time.</figcaption>
+        </figure>
       </div>
 
       <div class="doc-section">
