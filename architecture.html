@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Architecture — IDEAgent</title>
-  <meta name="description" content="A graph of how IDEAgent fits together — the IDE Gateway Plugin, the Gateway, the Project Context (MCP + RAG) and the file watchers across your machines. Privacy-first, self-hosted and multi-user by design, rolling out to a limited number of users first, with an enterprise version coming." />
+  <meta name="description" content="A graph of how IDEAgent fits together — the IDE Gateway Plugin, the Gateway, the Project Context (MCP + RAG) and the file watchers across your machines. Privacy-first and self-hosted: one gateway serves one developer across several machines and projects, with a shared team hub and an enterprise version on the roadmap." />
   <link rel="canonical" href="https://ideagent.github.io/architecture.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="IDEAgent" />
   <meta property="og:title" content="Architecture — IDEAgent" />
-  <meta property="og:description" content="How IDEAgent fits together — the IDE Gateway Plugin, the Gateway, the Project Context (MCP + RAG) and the file watchers across your machines. Privacy-first, self-hosted and multi-user by design." />
+  <meta property="og:description" content="How IDEAgent fits together — the IDE Gateway Plugin, the Gateway, the Project Context (MCP + RAG) and the file watchers across your machines. Privacy-first and self-hosted, across several machines and projects." />
   <meta property="og:url" content="https://ideagent.github.io/architecture.html" />
-  <meta property="og:image" content="https://ideagent.github.io/assets/chat.png" />
+  <meta property="og:image" content="https://ideagent.github.io/assets/chat.webp" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/webp" sizes="32x32" href="assets/ideagent_logo.webp" />
@@ -41,15 +41,14 @@
         <span class="nav-toggle-bar"></span>
       </button>
       <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
-        <noscript>
-          <a href="index.html">Overview</a>
-          <a href="pricing.html" style="color: var(--accent-2); font-weight: 600;">Pricing</a>
-          <a href="setup.html">Setup Guide</a>
-          <a href="gateway.html">Gateway</a>
-          <a href="mcp.html">MCP &amp; RAG</a>
-          <a href="server_config.html">Server Config</a>
-          <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
-        </noscript>
+        <a href="index.html">Overview</a>
+        <a href="pricing.html" class="nav-highlight">Pricing</a>
+        <a href="setup.html">Setup Guide</a>
+        <a href="gateway.html">Gateway</a>
+        <a href="mcp.html">MCP &amp; RAG</a>
+        <a href="server_config.html">Server Config</a>
+        <a href="about.html">About</a>
+        <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
       </nav>
     </div>
   </header>
@@ -149,9 +148,9 @@
         <p>
           Running locally gives you the strongest control over where your code and context are
           processed, so that's the path we build for.
-          IDEAgent is multi-user by design, though the first release rolls out to a limited number of
-          users while our infrastructure catches up; serving several projects in parallel from separate
-          workstations is already tested. An enterprise version is on the way. To run entirely offline
+          Today one self-hosted gateway serves one developer's IDE instances across several machines
+          and projects at once. A shared multi-user team hub with gateway authentication is on the
+          roadmap, and so is an enterprise version. To run entirely offline
           you point it at <strong>Ollama</strong> and nothing leaves infrastructure you control — see the
           <a href="server_config.html">local hardware setup</a> for what that takes.
         </p>
@@ -258,6 +257,7 @@
         <a href="gateway.html">Gateway</a>
         <a href="mcp.html">MCP &amp; RAG</a>
         <a href="server_config.html">Server Config</a>
+        <a href="about.html">About</a>
         <a href="llms.txt">llms.txt</a>
       </div>
     </div>

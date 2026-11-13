@@ -15,11 +15,11 @@
   <meta property="og:title" content="Pricing &amp; Plans — IDEAgent Plugin for JetBrains PyCharm" />
   <meta property="og:description" content="Now in full production release 26.3.0. 30-day free trial on JetBrains Marketplace. $14/mo for single developers, $20/mo for organizations with volume discounts." />
   <meta property="og:url" content="https://ideagent.github.io/pricing.html" />
-  <meta property="og:image" content="https://ideagent.github.io/assets/chat.png" />
+  <meta property="og:image" content="https://ideagent.github.io/assets/chat.webp" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Pricing &amp; Plans — IDEAgent Plugin for JetBrains PyCharm" />
   <meta name="twitter:description" content="Full production release 26.3.0. 30-day free trial, $14/mo individual, $20/mo organizations with 5% off on 10+ copies." />
-  <meta name="twitter:image" content="https://ideagent.github.io/assets/chat.png" />
+  <meta name="twitter:image" content="https://ideagent.github.io/assets/chat.webp" />
 
   <!-- DNS prefetch & preconnect -->
   <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
@@ -86,6 +86,62 @@
     ]
   }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does the 30-day free trial work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Both Individual and Organization plans include a full-featured 30-day free trial directly on JetBrains Marketplace, with no credit card required to start. Your team can test all features across all seats risk-free before any subscription charges occur, and you can cancel anytime."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does billing and currency work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "All transactions, invoices, renewals, and taxes are handled directly by JetBrains Marketplace. In Europe, prices are €14/mo (single) and €20/mo (organization). In the US and international markets, billing is in USD or your local converted currency."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I qualify for the 5% volume discount?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When an organization orders 10 or more licenses in a single transaction on JetBrains Marketplace, the 5% discount is applied automatically during checkout."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I still need to pay for LLM API keys?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you run fully local models with Ollama, there are zero additional costs. If you choose to connect cloud providers (OpenAI, Anthropic, or Google), you use your own API keys directly, with optional secret redaction enabled."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I transfer licenses between developers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Commercial licenses purchased for an organization can be reassigned freely between developers via your JetBrains Account administrator dashboard."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does the plugin send my code or telemetry?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. IDEAgent has zero telemetry tracking. All retrieval, context engine indexing, and secret redaction run locally or within the infrastructure you control."
+        }
+      }
+    ]
+  }
+  </script>
   <link rel="describedby" href="llms.txt" />
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18501328668"></script>
@@ -108,15 +164,14 @@
         <span class="nav-toggle-bar"></span>
       </button>
       <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
-        <noscript>
-          <a href="index.html">Overview</a>
-          <a href="architecture.html">Architecture</a>
-          <a href="setup.html">Setup Guide</a>
-          <a href="gateway.html">Gateway</a>
-          <a href="mcp.html">MCP &amp; RAG</a>
-          <a href="server_config.html">Server Config</a>
-          <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
-        </noscript>
+        <a href="index.html">Overview</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="setup.html">Setup Guide</a>
+        <a href="gateway.html">Gateway</a>
+        <a href="mcp.html">MCP &amp; RAG</a>
+        <a href="server_config.html">Server Config</a>
+        <a href="about.html">About</a>
+        <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
       </nav>
     </div>
   </header>
@@ -127,7 +182,7 @@
       <div class="badge">Production Release 26.3.0 · JetBrains Marketplace</div>
       <h1 class="pricing-title">Simple, transparent pricing<br /><span class="gradient-text">for developers and teams</span></h1>
       <p class="pricing-sub">
-        IDEAgent is officially live in full production mode. Start with a <strong>30-day free trial</strong> directly on JetBrains Marketplace — available for both <strong>individuals and organizations</strong>. Cancel anytime during the trial.
+        IDEAgent is officially live in full production mode. Start with a <strong>30-day free trial</strong> directly on JetBrains Marketplace — available for both <strong>individuals and organizations</strong>, no credit card required. Cancel anytime during the trial. Sold through JetBrains Marketplace by a <strong>verified vendor</strong>.
       </p>
     </div>
   </section>
@@ -149,7 +204,7 @@
           </div>
 
           <div class="pricing-trial-pill">
-            <span>🎁 30-day free trial included</span>
+            <span>🎁 30-day free trial · no credit card required</span>
           </div>
 
           <ul class="pricing-features-list">
@@ -170,7 +225,7 @@
 
         <!-- Organization Card (Featured) -->
         <div class="pricing-card featured">
-          <span class="pricing-card-badge">Organizations &amp; Teams</span>
+          <span class="pricing-card-badge">Recommended for teams</span>
           <h2 class="pricing-tier-name">For Organizations</h2>
           <p class="pricing-tier-desc">For companies, startups, and engineering teams requiring centralized management and invoicing.</p>
 
@@ -179,9 +234,10 @@
             <span class="price-number">20</span>
             <span class="price-period">/ user / month</span>
           </div>
+          <p class="pricing-anchor">Per seat, per month. Pair it with Ollama and no code leaves your network.</p>
 
           <div class="pricing-trial-pill">
-            <span>🎁 30-day free trial included for every seat</span>
+            <span>🎁 30-day free trial for every seat · no credit card required</span>
           </div>
 
           <div class="pricing-discount-note">
@@ -280,7 +336,7 @@
       <div class="faq-grid">
         <div class="faq-card">
           <h3>How does the 30-day free trial work?</h3>
-          <p>Both Individual and Organization plans include a full-featured 30-day free trial directly on JetBrains Marketplace. Your team can test all features across all seats risk-free before any subscription charges occur, and you can cancel anytime.</p>
+          <p>Both Individual and Organization plans include a full-featured 30-day free trial directly on JetBrains Marketplace, with no credit card required to start. Your team can test all features across all seats risk-free before any subscription charges occur, and you can cancel anytime.</p>
         </div>
 
         <div class="faq-card">
@@ -324,6 +380,7 @@
         <a href="gateway.html">Gateway</a>
         <a href="mcp.html">MCP &amp; RAG</a>
         <a href="server_config.html">Server Config</a>
+        <a href="about.html">About</a>
       </div>
       <div class="footer-links">
         <a href="https://plugins.jetbrains.com/plugin/34241-ide-agent/pricing?noRedirect=true" target="_blank" rel="noopener">JetBrains Marketplace</a>

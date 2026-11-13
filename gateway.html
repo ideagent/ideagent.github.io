@@ -11,7 +11,7 @@
   <meta property="og:title" content="Gateway — IDEAgent" />
   <meta property="og:description" content="The self-hosted service that runs the IDEAgent coding agent: a FastAPI + LangGraph deep agent that streams turns to the PyCharm plugin over WebSocket, enforces human-in-the-loop, redacts secrets, and coordinates multiple agents via ACP." />
   <meta property="og:url" content="https://ideagent.github.io/gateway.html" />
-  <meta property="og:image" content="https://ideagent.github.io/assets/chat.png" />
+  <meta property="og:image" content="https://ideagent.github.io/assets/chat.webp" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/webp" sizes="32x32" href="assets/ideagent_logo.webp" />
@@ -58,15 +58,14 @@
         <span class="nav-toggle-bar"></span>
       </button>
       <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
-        <noscript>
-          <a href="index.html">Overview</a>
-          <a href="pricing.html" style="color: var(--accent-2); font-weight: 600;">Pricing</a>
-          <a href="architecture.html">Architecture</a>
-          <a href="setup.html">Setup Guide</a>
-          <a href="mcp.html">MCP &amp; RAG</a>
-          <a href="server_config.html">Server Config</a>
-          <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
-        </noscript>
+        <a href="index.html">Overview</a>
+        <a href="pricing.html" class="nav-highlight">Pricing</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="setup.html">Setup Guide</a>
+        <a href="mcp.html">MCP &amp; RAG</a>
+        <a href="server_config.html">Server Config</a>
+        <a href="about.html">About</a>
+        <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
       </nav>
     </div>
   </header>
@@ -156,10 +155,9 @@
         </p>
         <p>
           Routing is purely by <code>thread_id</code> against a single gateway hub, which is what makes
-          multi-user and multi-machine setups work: two agents on different machines are just two
-          threads on the same hub. Serving several projects in parallel from separate workstations is
-          already tested; the first release rolls out to a limited number of users while our
-          infrastructure scales to a full multi-user deployment.
+          multi-machine setups work: two agents on different machines are just two threads on the same
+          hub. Today one gateway serves one developer's IDE instances across several machines and
+          projects at once; a shared multi-user hub with gateway authentication is on the roadmap.
         </p>
       </div>
 
@@ -174,7 +172,7 @@
         </div>
       </div>
 
-      <div class="doc-section">
+      <div class="doc-section" id="acp">
         <h2>Multi-agent coordination (ACP)</h2>
         <p>
           Real work often spans several projects — a backend and the library it consumes, for instance.
@@ -268,6 +266,7 @@
         <a href="gateway.html">Gateway</a>
         <a href="mcp.html">MCP &amp; RAG</a>
         <a href="server_config.html">Server Config</a>
+        <a href="about.html">About</a>
         <a href="llms.txt">llms.txt</a>
       </div>
     </div>
