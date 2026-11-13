@@ -29,7 +29,16 @@ jobs:
         uses: cicirello/generate-sitemap@v1.10.4
         with:
           base-url-path: https://ideagent.github.io/
-          exclude-paths: /.github /.idea /googlef77404b084f15ab9.html
+          exclude-paths: >-
+            /.github
+            /.idea
+            /googlef77404b084f15ab9.html
+            /plugin.html
+            /gateway_plugin_setup.html
+            /security.html
+          date-only: true
+          include-pdf: false
+          drop-html-extension: false
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact

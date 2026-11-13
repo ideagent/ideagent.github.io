@@ -21,6 +21,7 @@
       { id: 'gateway', label: 'Gateway', href: 'gateway.html' },
       { id: 'mcp', label: 'MCP & RAG', href: 'mcp.html' },
       { id: 'server_config', label: 'Server Config', href: 'server_config.html' },
+      { id: 'about', label: 'About', href: 'about.html' },
       { id: 'github', label: 'GitHub ↗', href: 'https://github.com/ideagent', external: true, isButton: true }
     ]
   };
