@@ -199,6 +199,7 @@ The official channel publishes hands-on demonstrations, architecture walkthrough
 ### Video Index & Context Breakdown:
 
 1. **Full Suite Setup Tutorial (MacBook Air Late 2018 i5, 3.7GB RAM)**
+   - **Watch Page**: https://ideagent.github.io/videos/setup.html
    - **URL**: https://www.youtube.com/watch?v=SoAd_3W2c0I
    - **Embed**: https://www.youtube.com/embed/SoAd_3W2c0I
    - **Target Hardware**: Intel Core i5 (dual-core), 3.7 GB RAM, macOS.
