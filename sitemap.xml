@@ -33,4 +33,22 @@
     <loc>https://ideagent.github.io/about.html</loc>
     <lastmod>2026-11-13</lastmod>
   </url>
+  <url>
+    <loc>https://ideagent.github.io/security.html</loc>
+    <lastmod>2026-11-15</lastmod>
+  </url>
+  <url>
+    <loc>https://ideagent.github.io/acp.html</loc>
+    <lastmod>2026-11-15</lastmod>
+  </url>
+  <url>
+    <loc>https://ideagent.github.io/ide-integration.html</loc>
+    <lastmod>2026-11-15</lastmod>
+  </url>
+
+  <url>
+    <loc>https://ideagent.github.io/redaction.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

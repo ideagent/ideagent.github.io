@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security &amp; Network Transparency — IDEAgent</title>
+  <meta name="description" content="No telemetry is a fact, not a promise. Every outbound connection the IDEAgent package makes — plugin, gateway, MCP server, RAG server and ChromaDB — captured on Debian 12, explained, and reproducible, with public Docker Scout reports and dependencies." />
+  <link rel="canonical" href="https://ideagent.github.io/security.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="IDEAgent" />
+  <meta property="og:title" content="Security &amp; Network Transparency — IDEAgent" />
+  <meta property="og:description" content="No telemetry is a fact, not a promise. Every outbound connection of the IDEAgent package, captured, explained and reproducible." />
+  <meta property="og:url" content="https://ideagent.github.io/security.html" />
+  <meta property="og:image" content="https://ideagent.github.io/assets/chat.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/webp" sizes="32x32" href="assets/ideagent_logo.webp" />
+  <link rel="apple-touch-icon" sizes="32x32" href="assets/ideagent_logo.png" />
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="styles.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" />
+  </noscript>
+  <link rel="describedby" href="llms.txt" />
+</head>
+<body>
+
+  <!-- Nav -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><img src="assets/ideagent_logo.webp" alt="IDEAgent Logo" class="logo-mark" width="24" height="24" decoding="async" />IDE<span class="logo-accent">Agent</span></a>
+            <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <nav id="main-nav" class="nav-links" aria-label="Main Navigation">
+        <a href="index.html">Overview</a>
+        <a href="pricing.html" class="nav-highlight">Pricing</a>
+        <a href="setup.html">Setup Guide</a>
+        <a href="gateway.html">Gateway</a>
+        <a href="mcp.html">MCP &amp; RAG</a>
+        <a href="server_config.html">Server Config</a>
+        <a href="about.html">About</a>
+        <a href="security.html">Security</a>
+        <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 1. Hero -->
+  <section class="doc-hero">
+    <div class="container">
+      <a href="index.html#docs" class="back-link">← Back to overview</a>
+      <div class="badge">Security &amp; Transparency</div>
+      <h1>No telemetry — don't take our word for it</h1>
+      <p class="doc-lede">
+        "No telemetry" is easy to write and hard to check. So we checked it the way you would:
+        we recorded every packet on a Debian&nbsp;12 laptop running the IDEAgent package,
+        once with the plugins disabled and once while using the agent, and traced each
+        connection to the component that opened it. The script, the cleaned logs and the
+        code that cleaned them are published below, so you can check our work or run the
+        same test yourself.
+      </p>
+      <p class="node-sub">Scope: the IDEAgent package — IDE Gateway Plugin, RAG File Watcher, Gateway, MCP Server, RAG Server and ChromaDB.</p>
+
+      <div class="spec-list">
+        <div class="spec-item">
+          <div class="spec-k">Telemetry endpoints identified</div>
+          <div class="spec-v">None.</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-k">Internet traffic from the containers</div>
+          <div class="spec-v">Expected proxy traffic to LLM providers, initialization pings for local models, and dynamic web search fallback.</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-k">Tested on</div>
+          <div class="spec-v">November 2026 · Debian&nbsp;12</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Doc body -->
+  <section class="doc-body">
+    <div class="container">
+
+      <!-- 2. Outbound destinations -->
+            <div class="doc-section" id="outbound">
+        <h2>What leaves your machine, and why</h2>
+        <p>
+          The IDEAgent environment consists of three primary containers. Here is every outbound connection they make, and why:
+        </p>
+        <div class="table-wrapper">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>IP Address</th>
+                <th>Destination</th>
+                <th>What it is</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Gateway</strong></td>
+                <td><code>172.18.0.2</code></td>
+                <td>Google LLC (e.g., generativelanguage.googleapis.com)</td>
+                <td>Expected proxy traffic to external LLM providers. The Gateway container acts as the designated proxy for external LLM inference. Use Ollama and this goes away.</td>
+              </tr>
+              <tr>
+                <td><strong>MPC-Server</strong></td>
+                <td><code>172.18.0.3</code></td>
+                <td>HuggingFace (Cloudfront)</td>
+                <td>A brief initialization ping for ETag/metadata checks for the local <code>all-MiniLM-L6-v2</code> model. No user data or prompts are transmitted. Can be air-gapped by setting <code>HF_HUB_OFFLINE=1</code> and <code>TRANSFORMERS_OFFLINE=1</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>RAG-Server</strong></td>
+                <td><code>172.18.0.4</code></td>
+                <td>Dynamic external domains (e.g., webawere.nl)</td>
+                <td>Web Search Fallback Mechanism. Queries DuckDuckGo and scrapes top URLs to ingest missing context when local retrieval confidence is low. Not hardcoded telemetry.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          The traffic footprint is deterministic and entirely explainable by its architectural design. By applying the provided hardening flags, organizations can enforce strict data residency and network isolation.
+        </p>
+      </div>
+
+      <!-- 3. The proof -->
+            <div class="doc-section" id="capture">
+        <h2>The proof: a capture you can repeat</h2>
+        <div class="spec-list">
+          <div class="spec-item">
+            <div class="spec-k">Machine</div>
+            <div class="spec-v">Debian&nbsp;12 laptop on a home network, IDEAgent containers in Docker, PyCharm on the host</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-k">Method</div>
+            <div class="spec-v"><code>tshark</code> and shell scripts to capture network logs, docker network data, and system logs.</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-k">Script</div>
+            <div class="spec-v"><a href="assets/audit_v2/local_audit.sh">local_audit.sh</a> — the exact script we ran</div>
+          </div>
+        </div>
+
+        <h3>Destinations by Domain</h3>
+        <p>
+          Visualizes the top external IP/Domain destinations contacted by the containers.
+        </p>
+        <figure class="setup-shot">
+          <picture>
+            <source srcset="assets/audit_v2/top_destinations.webp" type="image/webp">
+            <img width="1000" src="assets/audit_v2/top_destinations.png" alt="Top destinations chart" loading="lazy" decoding="async" style="max-width: 100%; height: auto;" />
+          </picture>
+        </figure>
+
+        <h3>Traffic by Container</h3>
+        <p>
+          Visualizes the volume and distribution of outbound network traffic originating from each specific container.
+        </p>
+        <figure class="setup-shot">
+          <picture>
+            <source srcset="assets/audit_v2/traffic_by_container.webp" type="image/webp">
+            <img width="800" src="assets/audit_v2/traffic_by_container.png" alt="Traffic by container chart" loading="lazy" decoding="async" style="max-width: 100%; height: auto;" />
+          </picture>
+        </figure>
+
+        <h3>Raw data</h3>
+        <p>
+          The original logs and analysis data collected during the test are available as a single archive for easy download and scanning.
+        </p>
+        <div style="margin-top: 1.5rem; margin-bottom: 2rem;">
+          <a href="assets/audit_v2/ideagent_audit_v2_logs.zip" class="btn btn-primary" download>Download test logs (.zip)</a>
+        </div>
+      </div>
+
+      <!-- 4. ChromaDB -->
+      <div class="doc-section" id="chromadb">
+        <h2>ChromaDB</h2>
+        <p>
+          The RAG Server stores the local index of your code, learnings and docs in ChromaDB.
+          ChromaDB is a third-party database, and it ships with its own anonymized product
+          telemetry (sent to PostHog), controlled by the <code>ANONYMIZED_TELEMETRY</code> setting.
+          This section shows what ChromaDB does on the network inside the IDEAgent package.
+        </p>
+        <div class="spec-list">
+          <div class="spec-item">
+            <div class="spec-k">How we configure it</div>
+            <div class="spec-v">Telemetry is disabled. The RAG Server connects to ChromaDB locally over the Docker network on port 8000.</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-k">What the capture shows</div>
+            <div class="spec-v">
+              ChromaDB made zero external connections during the capture. All its traffic was local communication with the RAG Server.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Video -->
+      <div class="doc-section" id="video">
+        <h2>Watch the test</h2>
+        
+        <p>The recorded test run, edited.</p>
+        <div class="video-wrapper" style="position: relative; display: block; max-width: 100%; overflow: hidden; border-radius: 8px; border: 1px solid var(--border);">
+          <a href="https://youtu.be/SKl7J_8qPVo" target="_blank" rel="noopener" class="video-thumb-wrap" aria-label="Watch the IDEAgent security test run on YouTube" style="display: block; position: relative;">
+            <img src="https://i.ytimg.com/vi/SKl7J_8qPVo/maxresdefault.jpg" alt="IDEAgent security test run" style="width: 100%; height: auto; display: block; aspect-ratio: 16/9; object-fit: cover;" loading="lazy">
+            <div class="play-button-overlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 68px; height: 48px; background-color: #ff0000; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </a>
+        </div>
+        <p class="marketplace-embed-note">
+          <a href="https://youtu.be/SKl7J_8qPVo" target="_blank" rel="noopener">Watch on YouTube: IDEAgent security test run ↗</a>
+        </p>
+      </div>
+
+      <!-- 6. Supply chain -->
+      <div class="doc-section" id="supply-chain">
+        <h2>What's inside the containers</h2>
+        <p>For each image: the exact version and digest, the Docker Scout findings and what we decided about each one, and the full dependency list.</p>
+        <div class="table-wrapper">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Version · digest</th>
+                <th>Scout findings (C / H / M / L)</th>
+                <th>Decisions</th>
+                <th>Dependencies / SBOM</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- DATA: one row per image from the Docker Scout reports -->
+              <tr>
+                <td>Gateway</td>
+                <td><code>latest</code> (Nov 2026)</td>
+                <td><span style="color: var(--green);">0C</span> / 0H / 0M / 0L</td>
+                <td>No vulnerable packages detected</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>MCP Server</td>
+                <td><code>latest</code><br><span style="font-size: 0.85em; color: var(--text-muted);">digest: 2a118346aae0</span></td>
+                <td><span style="color: var(--green);">0C</span> / 0H / 0M / 0L</td>
+                <td>No vulnerable packages detected</td>
+                <td>218 packages</td>
+              </tr>
+              <tr>
+                <td>RAG Server</td>
+                <td><code>latest</code> (Sep 2026)</td>
+                <td><span style="color: var(--red);">3C</span> / 14H / 47M / 7L</td>
+                <td>Work in progress (pending base image update)</td>
+                <td>-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 7. Data handling -->
+      <div class="doc-section" id="data-handling">
+        <h2>How your data is handled</h2>
+        <ul>
+          <li><strong>API keys</strong> stay in your operating system's keystore. The plugin sends them only to the Gateway you run, which presents them only to the provider you selected. <a href="gateway.html">Gateway →</a></li>
+          <li><strong>Your code</strong> is indexed into the RAG Server on infrastructure you control. Only the pieces the agent retrieves are sent to a hosted model, and only if you configure one. With Ollama, nothing leaves. <a href="mcp.html">MCP &amp; RAG →</a></li>
+          <li><strong>Secrets in tool results</strong> can be redacted before they reach the model. <a href="gateway.html#redaction">How redaction works →</a></li>
+          <li><strong>Risky actions</strong> wait for your approval. <code>git</code>, <code>sudo</code> and <code>docker</code> commands always ask, even in Auto mode. <a href="gateway.html">Human-in-the-loop →</a></li>
+        </ul>
+      </div>
+
+      <!-- 8. Known limits -->
+            <div class="doc-section" id="limits">
+        <h2>Known limits</h2>
+        <p>What this capture proves, and what it doesn't:</p>
+        <ul>
+          <li><strong>It proves</strong> which internet addresses the IDEAgent containers contacted over TCP during these runs, when, and how much data went each way, on every interface.</li>
+          <li><strong>Docker images change.</strong> The result holds for the versions we tested.</li>
+        </ul>
+      </div>
+
+      <!-- 9. Report a vulnerability -->
+      <div class="doc-section" id="report">
+        <h2>Report a vulnerability</h2>
+        <!-- CONTENT: contact for security reports -->
+        <div class="callout warn"><strong>Pending.</strong> Security contact to be confirmed.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="index.html" class="logo">IDE<span class="logo-accent">Agent</span></a>
+      <p class="footer-note">Each package carries its own license. Please refer to individual package documentation for details.</p>
+      <div class="footer-links">
+        <a href="index.html">Overview</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="setup.html">Setup Guide</a>
+        <a href="gateway.html">Gateway</a>
+        <a href="mcp.html">MCP &amp; RAG</a>
+        <a href="server_config.html">Server Config</a>
+        <a href="about.html">About</a>
+        <a href="security.html">Security</a>
+        <a href="llms.txt">llms.txt</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>
+

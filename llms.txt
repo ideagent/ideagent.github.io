@@ -23,6 +23,8 @@ IDEAgent operates directly inside JetBrains IDEs (IntelliJ IDEA, PyCharm, WebSto
 - [MCP Tools Reference](https://ideagent.github.io/mcp.html): Full reference for built-in Model Context Protocol tools (context queries, learning management, ACP coordination, and GitHub actions).
 - [Server Configuration Reference](https://ideagent.github.io/server_config.html): Gateway configuration files, environment variables, sandbox controls, and security policies.
 - [About IDEAgent](https://ideagent.github.io/about.html): Background, developer journey, and mission behind IDEAgent.
+- [IDE Integration](https://ideagent.github.io/ide-integration.html): The IDE tools the agent uses inside PyCharm (symbol lookup, references, inspections, quick fixes, safe rename and delete, test runs, VCS changes), how IDEAgent differs from CLI agents and JetBrains Air, and data sovereignty by design.
+- [Security & Supply Chain](https://ideagent.github.io/security.html): Docker Scout vulnerability scans, network traffic audit logs, and security policies.
 
 ## Video Tutorials & Channel Context
 

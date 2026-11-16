@@ -74,32 +74,7 @@
           ]
         }
       },
-      {
-        "@type": "VideoObject",
-        "@id": "https://ideagent.github.io/#video-setup",
-        "name": "IDEAgent full suite setup tutorial on MacBook Air Late 2018 i5",
-        "description": "Step-by-step video demonstration of setting up the complete IDEAgent suite on a MacBook Air Late 2018 (Intel Core i5, 3.7 GB RAM) from JetBrains Marketplace to Docker container orchestration.",
-        "thumbnailUrl": [
-          "https://i.ytimg.com/vi/SoAd_3W2c0I/maxresdefault.jpg",
-          "https://i.ytimg.com/vi/SoAd_3W2c0I/hqdefault.jpg"
-        ],
-        "uploadDate": "2026-10-06T19:27:00+01:00",
-        "contentUrl": "https://www.youtube.com/watch?v=SoAd_3W2c0I",
-        "embedUrl": "https://www.youtube.com/embed/SoAd_3W2c0I"
-      },
-      {
-        "@type": "VideoObject",
-        "@id": "https://ideagent.github.io/#video-acp",
-        "name": "IDEAgent cross projects ACP",
-        "description": "Live demonstration of the Agent Coordination Protocol (ACP) enabling multi-agent cross-project coordination with human-in-the-loop review across separate codebases.",
-        "thumbnailUrl": [
-          "https://i.ytimg.com/vi/G5xDWL6ORCk/maxresdefault.jpg",
-          "https://i.ytimg.com/vi/G5xDWL6ORCk/hqdefault.jpg"
-        ],
-        "uploadDate": "2026-10-13T10:00:09-07:00",
-        "contentUrl": "https://www.youtube.com/watch?v=G5xDWL6ORCk",
-        "embedUrl": "https://www.youtube.com/embed/G5xDWL6ORCk"
-      },
+
       {
         "@type": "SoftwareApplication",
         "@id": "https://ideagent.github.io/#software",
@@ -170,6 +145,8 @@
         <a href="mcp.html">MCP &amp; RAG</a>
         <a href="server_config.html">Server Config</a>
         <a href="about.html">About</a>
+        <a href="ide-integration.html">IDE Integration</a>
+        <a href="security.html">Security</a>
         <a href="https://github.com/ideagent" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>
       </nav>
     </div>
@@ -188,12 +165,12 @@
       <h1>Your code, your models,<br /><span class="gradient-text">your infrastructure</span><br />— with a real AI agent.</h1>
       <p class="hero-sub">
         IDEAgent is a PyCharm coding agent you host yourself. Retrieval and context assembly run
-        <strong>on your own machine</strong> (see <a href="#local">how it stays local</a>), and you choose the model — fully local with
+        <strong>on your own machine</strong> (see <a href="architecture.html">how it stays local</a>), and you choose the model — fully local with
         <a href="server_config.html">Ollama</a>, or your own OpenAI, Anthropic or Google keys. The
         whole stack — plugin, gateway, context engine and RAG — sends
         <strong>no product-usage telemetry</strong> back to us. When you want
-        it, optional <a href="#redaction">gateway redaction</a> can filter detected secrets out of
-        tool and terminal output (or compare with <a href="#why-not">Copilot and Cursor</a>). Built for developers and teams working on confidential code,
+        it, optional <a href="redaction.html">gateway redaction</a> can filter detected secrets out of
+        tool and terminal output (unlike cloud-only assistants). Built for developers and teams working on confidential code,
         including regulated fields like banking and medical software.
       </p>
       <div class="hero-showcase">
@@ -214,7 +191,7 @@
            an accepted multi-file diff in Edits, or redacted-secret tokens in a terminal transcript.
            Needs a real capture from the owner; add the <img> above and a matching dot when ready. -->
       <p class="hero-differentiators">
-        Self-hosted, with <a href="#redaction">optional secret redaction before tool output reaches a model</a>
+        Self-hosted, with <a href="redaction.html">optional secret redaction before tool output reaches a model</a>
         and <a href="gateway.html#acp">agents that hand work to each other across your projects (ACP)</a>.
       </p>
       <div class="hero-cta">
@@ -226,349 +203,74 @@
       <p class="hero-marketplace-note">Now in full production (Release 26.3.0) on the <a href="https://plugins.jetbrains.com/plugin/34241-ide-agent/pricing?noRedirect=true" target="_blank" rel="noopener" style="color: var(--accent-2); font-weight: 600;">JetBrains Marketplace</a> — 30-day free trial, no credit card required. Sold by a verified vendor.</p>
       <div class="hero-notice">
         <span class="notice-icon">⚠️</span>
-        This is the official commercial platform for IDEAgent (<a href="https://github.com/ideagent/IDEAgent" target="_blank" rel="noopener">ideagent/IDEAgent</a>).
-        We are not affiliated with the academic research paper or the repository hosted by declare-lab.
+        <strong>IDEAgent PyCharm Plugin</strong> is an independent commercial AI coding assistant.
+        We are not affiliated with the "IDEAgent" academic research paper or the open-source repository hosted by declare-lab.
       </div>
     </div>
   </section>
 
-  <!-- Optional redaction — secondary feature, useful when reaching for a cloud model -->
-  <section class="redaction" id="redaction">
-    <div class="container redaction-inner">
-      <div class="redaction-copy">
-        <div class="badge">Optional feature</div>
-        <h2 class="redaction-title">Reaching for a cloud model? <span class="gradient-text">Filter secrets out first.</span></h2>
-        <p class="redaction-lede">
-          Redaction keeps you sovereign over your own data by reducing what's transmitted to the
-          model. It's an optional per-thread setting you enable from the plugin — most useful when
-          you do use a cloud provider.
-        </p>
-        <p class="redaction-lede">
-          With it on, it runs at the <strong>gateway</strong>, on your
-          machine, on the path <em>out</em>: it targets the <strong>read_file and terminal
-          tools</strong> specifically, because those are what surface real file contents and command
-          output into the transcript — the egress points where your data would otherwise leave your
-          machine. That output is scanned and rewritten before it's streamed to the agent or sent to
-          any provider, so the model reasons over <code>&lt;&lt;REDACTED_*&gt;&gt;</code>
-          placeholders for the values it detects. It filters detected secrets in that output — it
-          does not cover text you type or paste into the chat yourself.
-        </p>
-        <ul class="redaction-points">
-          <li><strong>Egress-side, not trust-side.</strong> When enabled, detected secrets are replaced with placeholders before that output leaves the gateway — rather than relying on the provider to discard them afterwards.</li>
-          <li><strong>IPs, emails, API keys, tokens</strong> are detected and replaced with distinctive tokens like <code>&lt;&lt;REDACTED_IP_ADDRESS&gt;&gt;</code>.</li>
-          <li><strong>Enforced by the agent, too.</strong> IDEAgent will not write a redacted token back into a file verbatim, so a redacted value can't silently re-enter your codebase through an edit.</li>
-        </ul>
-        <a href="gateway.html#redaction" class="btn btn-primary">How redaction works →</a>
-      </div>
-      <div class="redaction-demo">
-        <img width="539" height="166" src="assets/reducted.webp" alt="A live IDEAgent turn: terminal and read_file tool output with secret values shown as redacted secret tokens, and a note that the agent must not write those redacted tokens back" class="redaction-shot" loading="lazy" decoding="async" />
-      </div>
-    </div>
-  </section>
-
-  <!-- Local-first pillars -->
-  <section class="pillars" id="local">
-    <div class="container pillars-grid">
-      <div class="pillar">
-        <div class="pillar-icon">🖥️</div>
-        <h3>Runs on your infrastructure</h3>
-        <p>Retrieval, indexing and context assembly run on your own machine, in containers you host. The plugin talks only to the gateway you configure — default localhost.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-icon">📡</div>
-        <h3>No product-usage telemetry</h3>
-        <p>The whole stack — plugin, gateway, context engine and RAG — sends no usage tracking, analytics or phone-home back to us. Outbound calls go only to the model provider you choose and to optional services you configure yourself. We also ship ChromaDB's built-in telemetry disabled by default.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-icon">✈️</div>
-        <h3>Fully local option</h3>
-        <p>Point it at Ollama and nothing leaves your infrastructure at all — no cloud provider, and nothing to redact because nothing is sent. Memory needs depend on the model and context size you pick — see the <a href="server_config.html">hardware guide</a>.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-icon">🔑</div>
-        <h3>Keys in your OS keystore</h3>
-        <p>Provider API keys live in your machine's native keystore — not in config, not in the plugin binary, never persisted by the gateway.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Why not X -->
-  <section class="whynot" id="why-not">
+  <!-- Core Functionalities -->
+  <section class="features" id="features" style="padding: 80px 0; background: var(--bg);">
     <div class="container">
-      <h2 class="section-title">"Why not just use X?"</h2>
-      <p class="section-sub">Plenty of great cloud tools exist. IDEAgent is for when you'd rather keep the whole stack — and your code — on infrastructure you control. It's not for you if you're happy sending your code to a cloud assistant and don't want to run a gateway yourself.</p>
-      <div class="whynot-grid">
-
-        <div class="whynot-card">
-          <h3>Why not Copilot / Cursor / Windsurf?</h3>
-          <p>They typically send code — or the context they build from it — to their cloud to do the work. If you'd rather that context be assembled on your own machine, IDEAgent does the retrieval locally and lets you run fully local with Ollama; when you do use a cloud model, optional redaction can filter detected secrets out of tool and terminal output first.</p>
-        </div>
-
-        <div class="whynot-card">
-          <h3>Why not "zero-retention" enterprise plans?</h3>
-          <p>Zero-retention is a promise about what a provider does <em>after</em> receiving your data — the data still left your environment first. Running fully local with Ollama means it never leaves at all, so there's nothing to retain; and when you do use a cloud model, optional redaction can filter detected secrets out of tool and terminal output before it's sent.</p>
-        </div>
-
-        <div class="whynot-card">
-          <h3>Why not paste into ChatGPT?</h3>
-          <p>Manual pasting is uncontrolled, unaudited egress — secrets and client identifiers go out with the snippet, and nothing tracks what you paste. IDEAgent keeps a human in the loop, assembles context locally, and — with redaction enabled — filters detected secrets out of tool and terminal output automatically rather than leaving it to memory and discipline.</p>
-        </div>
-
-        <div class="whynot-card">
-          <h3>Why not a local model in a generic IDE?</h3>
-          <p>Nothing wrong with it — a truly local model keeps context on the machine, which is exactly what IDEAgent does too. But a bare local model doesn't bring its own retrieval stack, and no single path to a stronger remote model like Claude or GPT the day you want one. IDEAgent's advantage is the integrated self-hosted stack: local retrieval, optional egress-side redaction when you do reach out, HITL, and free choice of provider — so "local" is the default, not the ceiling.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- PENDING (D3.2 / D3.1): testimonials — needs 3 real customer quotes before this ships.
-       Per quote: first name + photo, role (and industry, e.g. banking/medical), one concrete
-       outcome, seat count if they'll share it. Uncomment and fill in; do not use invented quotes.
-  <section class="testimonials" id="testimonials">
-    <div class="container">
-      <h2 class="section-title">What teams on confidential code say</h2>
-      <div class="whynot-grid">
-        <figure class="whynot-card">
-          <blockquote><p>QUOTE</p></blockquote>
-          <figcaption>NAME · ROLE, INDUSTRY</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-  -->
-
-  <!-- Why IDEAgent / Packages + Docs (merged) -->
-  <section class="docs" id="packages">
-    <a id="docs" class="anchor-alias" aria-hidden="true"></a>
-    <div class="container">
-      <h2 class="section-title">The components that keep it on infrastructure you control</h2>
-      <p class="section-sub">Local operation isn't a feature bolted onto a cloud tool — it falls out of running the whole stack in your own environment. These are the parts that make on-device context and optional egress-side redaction possible, and where to read how each works. Fully local works too: run Ollama so nothing leaves your infrastructure, though matching API-level models takes high-end hardware.</p>
-
+      <h2 class="section-title">Core Functionalities</h2>
+      <p class="section-sub">Everything you need for a secure, context-aware AI coding assistant on your own infrastructure.</p>
+      
       <div class="docs-grid">
-
-        <a href="architecture.html" class="doc-card">
-          <div class="doc-card-icon">🗺️</div>
-          <h3>Architecture</h3>
-          <div class="doc-card-sub">The big picture — start here</div>
-          <p>How the plugin, gateway, context engine and RAG fit together into one self-hosted, privacy-first agentic stack — with an end-to-end request walkthrough.</p>
-          <span class="doc-card-more">Start here →</span>
+        <a href="redaction.html" class="doc-card">
+          <div class="doc-card-icon">🛡️</div>
+          <h3>Egress Secret Redaction</h3>
+          <p>Filter API keys, IPs, and emails out of tool and terminal output before they ever reach a cloud LLM.</p>
         </a>
 
-        <a href="setup.html" class="doc-card">
-          <div class="doc-card-icon">🚀</div>
-          <h3>Setup Guide</h3>
-          <div class="doc-card-sub">Marketplace to Full Stack Agent</div>
-          <p>Complete end-to-end setup: install from JetBrains Marketplace, onboarding registration, Docker orchestration with rotating tokens, PyCharm plugin settings, and new release features (Chat, Threads, Tasks, Edits, and Voice).</p>
-          <span class="doc-card-more">Get set up →</span>
-        </a>
-
-        <a href="gateway.html" class="doc-card">
-          <div class="doc-card-icon">🧠</div>
-          <h3>Gateway</h3>
-          <div class="doc-card-sub">The reasoning engine</div>
-          <p>The FastAPI + LangGraph deep agent that runs each turn, streams it to your IDE, enforces HITL, redacts secrets, coordinates peer agents (ACP) and calls the model provider <em>you</em> configure — OpenAI, Anthropic, Google or fully offline Ollama.</p>
-          <span class="doc-card-more">Read →</span>
+        <a href="acp.html" class="doc-card">
+          <div class="doc-card-icon">🤖</div>
+          <h3>Agent Coordination (ACP)</h3>
+          <p>Agents that hand work to each other across your different projects, coordinating complex multi-repository changes.</p>
         </a>
 
         <a href="mcp.html" class="doc-card">
-          <div class="doc-card-icon">📚</div>
-          <h3>Context Engine — MCP ↔ RAG + File Watcher</h3>
-          <div class="doc-card-sub">Where the agent's knowledge lives</div>
-          <p>The context engine is the relationship between the <strong>MCP server</strong> and the self-hosted <strong>RAG</strong>: symbol-aware retrieval (find_symbol / get_context / sync_rag) over local embeddings. It stays accurate because the <strong>file watcher</strong> re-syncs your files into the index on every <span class="code">record_change</span>. Includes a local web GUI.</p>
-          <span class="doc-card-more">Read →</span>
+          <div class="doc-card-icon">🔌</div>
+          <h3>MCP Interface</h3>
+          <p>Model Context Protocol integration providing the agent with file-system, terminal, and symbol-aware codebase retrieval.</p>
         </a>
 
-      </div>
-    </div>
-  </section>
-
-  <!-- Video Tutorials & Channel Context -->
-  <section class="videos" id="tutorials">
-    <div class="container">
-      <div style="text-align: center; max-width: 820px; margin: 0 auto 36px;">
-        <div class="badge" style="margin-bottom: 14px;">Official Video Tutorials &amp; Demonstrations</div>
-        <h2 class="section-title">See IDEAgent in Action on YouTube</h2>
-        <p class="section-sub" style="margin-bottom: 20px;">
-          Watch real-time walkthroughs covering low-resource hardware deployment, autonomous cross-project agent coordination,
-          and self-hosted privacy architecture.
-        </p>
-        <div class="video-header-cta">
-          <a href="https://www.youtube.com/@IDEAgent-PyCharm?sub_confirmation=1" target="_blank" rel="noopener" class="btn-youtube">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            Subscribe on YouTube (@IDEAgent-PyCharm) ↗
-          </a>
-        </div>
-      </div>
-
-      <div class="video-grid">
-
-        <!-- Video 1: Full Suite Setup Tutorial -->
-        <div class="video-card">
-          <div class="video-card-badge">Setup &amp; Deployment Tutorial</div>
-          <h3><a href="https://www.youtube.com/watch?v=SoAd_3W2c0I" target="_blank" rel="noopener">Full Suite Setup on MacBook Air (Late 2018 i5, 3.7GB RAM) ↗</a></h3>
-          <p>
-            A comprehensive, end-to-end installation walkthrough demonstrating that the entire self-hosted IDEAgent stack runs smoothly even on highly constrained hardware.
-          </p>
-          <a href="https://www.youtube.com/watch?v=SoAd_3W2c0I" target="_blank" rel="noopener" class="video-thumb-wrap" aria-label="Watch Full Suite Setup tutorial on YouTube">
-            <img src="https://i.ytimg.com/vi/SoAd_3W2c0I/hqdefault.jpg" alt="IDEAgent full suite setup tutorial on MacBook Air Late 2018 i5" class="video-thumb" width="480" height="360" loading="lazy" decoding="async" />
-            <span class="video-play-btn" aria-hidden="true">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-            </span>
-          </a>
-          <div class="video-context-box">
-            <h4>Context &amp; Key Topics Covered</h4>
-            <ul>
-              <li><strong>Environment Tested:</strong> Dual-core Intel Core i5 with only 3.7 GB of usable RAM running macOS.</li>
-              <li><strong>Marketplace Installation:</strong> Installing the <em>IDE Agent</em> and <em>RAG File Watcher</em> plugins inside PyCharm / IntelliJ.</li>
-              <li><strong>Onboarding Registration:</strong> Authenticating via JetBrains Marketplace and acquiring Docker container access with rotating security tokens.</li>
-              <li><strong>Container Orchestration:</strong> Automatically bootstrapping the internal Docker bridge network and starting <code>gateway</code>, <code>mpc-server</code>, and <code>rag-server</code>.</li>
-              <li><strong>IDE Plugin Configuration:</strong> Pointing the Gateway URL to <code>http://127.0.0.1:8765</code> and binding the MCP server to the physical host IP on port <code>5820</code>.</li>
-              <li><strong>Real-time Verification:</strong> Executing live agent queries in the Chat window and verifying responsive background index sync.</li>
-            </ul>
-          </div>
-          <div class="video-card-links">
-            <a href="https://www.youtube.com/watch?v=SoAd_3W2c0I" target="_blank" rel="noopener">Watch on YouTube (1080p HD) ↗</a>
-            <a href="setup.html">Read Setup Documentation →</a>
-          </div>
-        </div>
-
-        <!-- Video 2: Cross Projects ACP -->
-        <div class="video-card">
-          <div class="video-card-badge">Multi-Agent Protocol Demo</div>
-          <h3><a href="https://www.youtube.com/watch?v=G5xDWL6ORCk" target="_blank" rel="noopener">Multi-Agent Cross-Project Coordination (ACP) ↗</a></h3>
-          <p>
-            A live demonstration of the Agent Coordination Protocol (ACP) orchestrating autonomous coding agents across distinct repositories and projects without graph suspension.
-          </p>
-          <a href="https://www.youtube.com/watch?v=G5xDWL6ORCk" target="_blank" rel="noopener" class="video-thumb-wrap" aria-label="Watch Multi-Agent Cross-Project Coordination (ACP) on YouTube">
-            <img src="https://i.ytimg.com/vi/G5xDWL6ORCk/hqdefault.jpg" alt="IDEAgent cross projects ACP demonstration" class="video-thumb" width="480" height="360" loading="lazy" decoding="async" />
-            <span class="video-play-btn" aria-hidden="true">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-            </span>
-          </a>
-          <div class="video-context-box">
-            <h4>Context &amp; Key Topics Covered</h4>
-            <ul>
-              <li><strong>Cross-Repository Workflows:</strong> How an agent in a consumer application safely requests API or schema updates in an independent library repository.</li>
-              <li><strong>Turn-Based Delegation (<code>acp_request</code>):</strong> Delivering masked requests that execute an independent turn on the peer agent without blocking the primary thread.</li>
-              <li><strong>Asynchronous Reporting (<code>acp_report</code>):</strong> Receiving completion reports and seamlessly resuming the primary task without replaying graph nodes.</li>
-              <li><strong>Human-in-the-Loop (HITL) Safety:</strong> In-IDE visual diffs and explicit confirmation before destructive disk edits or Git commits are performed.</li>
-              <li><strong>Cache-Until-Idle Routing:</strong> Queuing requests when target agents are busy or remote machines are temporarily unreachable.</li>
-            </ul>
-          </div>
-          <div class="video-card-links">
-            <a href="https://www.youtube.com/watch?v=G5xDWL6ORCk" target="_blank" rel="noopener">Watch on YouTube (1080p HD) ↗</a>
-            <a href="gateway.html#acp">Read ACP Documentation →</a>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Channel Context Banner -->
-      <div class="channel-callout">
-        <div class="channel-callout-info">
-          <h3>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#cc0000" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            @IDEAgent-PyCharm on YouTube
-          </h3>
-          <p>
-            Stay up to date with new feature releases, deep architectural breakdowns, PyCharm agentic tips, and tutorials.
-            All tutorials showcase actual production builds with zero hidden telemetry and self-hosted local infrastructure.
-          </p>
-        </div>
-        <a href="https://www.youtube.com/@IDEAgent-PyCharm?sub_confirmation=1" target="_blank" rel="noopener" class="btn-youtube">
-          Subscribe @IDEAgent-PyCharm ↗
+        <a href="setup.html" class="doc-card">
+          <div class="doc-card-icon">🧩</div>
+          <h3>PyCharm Plugin</h3>
+          <p>Native JetBrains IDE integration with Chat, Threads, Tasks, and Edits directly in your PyCharm workspace.</p>
         </a>
-      </div>
 
-    </div>
-  </section>
-
-    </div>
-  </section>
-
-  <!-- Compare -->
-  <section class="compare" id="compare">
-    <div class="container">
-      <h2 class="section-title">Measured on who controls the stack</h2>
-      <p class="section-sub">Where does the work run, and what leaves your infrastructure? If you'd rather keep the code and the context on machines you control, this is the column that counts.</p>
-      <div class="table-wrapper">
-        <table class="compare-table">
-          <thead>
-            <tr>
-              <th>Feature</th>
-              <th class="col-ideagent">IDEAgent</th>
-              <th>Cloud-only assistants</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Runs on infrastructure you host</td>
-              <td class="col-ideagent check">✅</td>
-              <td class="cross">❌</td>
-            </tr>
-            <tr>
-              <td>No product-usage telemetry back to the vendor (full stack)</td>
-              <td class="col-ideagent check">✅</td>
-              <td class="partial">Varies by vendor</td>
-            </tr>
-            <tr>
-              <td>Context assembled on-device (self-hosted RAG)</td>
-              <td class="col-ideagent check">✅</td>
-              <td class="cross">❌</td>
-            </tr>
-            <tr>
-              <td>Can run fully offline via Ollama</td>
-              <td class="col-ideagent check">✅</td>
-              <td class="cross">❌</td>
-            </tr>
-            <tr>
-              <td>Optional redaction of secrets in tool / terminal output</td>
-              <td class="col-ideagent check">✅</td>
-              <td class="cross">❌</td>
-            </tr>
-            <tr>
-              <td>No dependence on vendor retention promises (when local)</td>
-              <td class="col-ideagent check">✅</td>
-              <td class="partial">Trust required</td>
-            </tr>
-            <tr>
-              <td>OpenAI, Anthropic, Google + local Ollama</td>
-              <td class="col-ideagent check">✅</td>
-              <td class="partial">Limited</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- Issues / Support -->
-  <section class="issues" id="issues">
-    <div class="container">
-      <h2 class="section-title">Issues &amp; Feature Requests</h2>
-      <p class="section-sub">The platform operates in customer-hosted environments, and certain implementation details are intentionally withheld for security reasons. This includes internal prompts, infrastructure topology, encryption mechanisms, and container communication patterns. We provide high-level architectural information where appropriate, but do not publish details that could compromise the security of customer deployments. If you have questions, discover a bug, or would like to request a feature, please use the templates below and we'll route your report to the appropriate team.</p>
-      <div class="issues-grid">
-        <a href="https://github.com/ideagent/.github/issues/new?template=bug_report.yml" class="issue-card" target="_blank" rel="noopener">
-          <span class="issue-icon">🐛</span>
-          <span class="issue-label">Bug Report</span>
-          <span class="issue-arrow">→</span>
-        </a>
-        <a href="https://github.com/ideagent/.github/issues/new?template=feature_request.yml" class="issue-card" target="_blank" rel="noopener">
-          <span class="issue-icon">💡</span>
-          <span class="issue-label">Feature Request</span>
-          <span class="issue-arrow">→</span>
-        </a>
-        <a href="https://github.com/ideagent/.github/issues/new?template=question.yml" class="issue-card" target="_blank" rel="noopener">
-          <span class="issue-icon">❓</span>
-          <span class="issue-label">Question / Support</span>
-          <span class="issue-arrow">→</span>
+        <a href="ide-integration.html" class="doc-card">
+          <div class="doc-card-icon">⌨️</div>
+          <h3>IDE Integration</h3>
+          <p>Execute tests, fix linter errors, and safely rename symbols using native PyCharm IDE commands driven by the agent. See the full tool list.</p>
         </a>
       </div>
     </div>
   </section>
   </main>
+
+
+  <!-- Channel Context Banner -->
+  <section class="videos" id="tutorials" style="padding: 4rem 0; background: var(--bg-card); border-top: var(--border);">
+    <div class="container">
+      <div class="channel-callout" style="display: flex; flex-direction: column; gap: 1.5rem; align-items: center; text-align: center; max-width: 600px; margin: 0 auto;">
+        <div class="channel-callout-info">
+          <h2 style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="#cc0000" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            @IDEAgent-PyCharm on YouTube
+          </h2>
+          <p style="color: var(--text-muted); line-height: 1.6;">
+            Stay up to date with new feature releases, deep architectural breakdowns, PyCharm agentic tips, and tutorials.
+            All tutorials showcase actual production builds with zero hidden telemetry and self-hosted local infrastructure.
+          </p>
+        </div>
+        <a href="https://www.youtube.com/@IDEAgent-PyCharm?sub_confirmation=1" target="_blank" rel="noopener" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+          Subscribe @IDEAgent-PyCharm ↗
+        </a>
+      </div>
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer class="footer">
@@ -583,6 +285,8 @@
         <a href="mcp.html">MCP &amp; RAG</a>
         <a href="server_config.html">Server Config</a>
         <a href="about.html">About</a>
+        <a href="ide-integration.html">IDE Integration</a>
+        <a href="security.html">Security</a>
       </div>
       <div class="footer-links">
         <a href="https://github.com/ideagent" target="_blank" rel="noopener">GitHub</a>

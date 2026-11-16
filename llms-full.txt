@@ -8,9 +8,10 @@ Table of Contents:
 3. Gateway Server & Deployment
 4. Gateway Plugin Pairing
 5. Model Context Protocol (MCP) Tools
-6. JetBrains Plugin Settings
-7. Server Configuration & Security Boundaries
-8. Video Tutorials & YouTube Channel Context (@IDEAgent-PyCharm)
+6. IDE Integration (PyCharm Tools, HITL Review & Data Sovereignty)
+7. JetBrains Plugin Settings
+8. Server Configuration & Security Boundaries
+9. Video Tutorials & YouTube Channel Context (@IDEAgent-PyCharm)
 
 ---
 
@@ -124,7 +125,49 @@ IDEAgent utilizes standard MCP tools for interacting with the environment:
 
 ---
 
-## 6. JetBrains Plugin Settings
+## 6. IDE Integration (PyCharm Tools, HITL Review & Data Sovereignty)
+
+IDEAgent is built to work inside the IDE, not beside it. Its agent uses the IDE's own code intelligence, inspections, refactorings and test runner, and it keeps code on infrastructure you control. Public page: https://ideagent.github.io/ide-integration.html
+
+### IDE Tools Used by the Agent
+- `find_symbol(name, kind)`: Locates where a class, function, method or variable is defined, using the IDE's symbol index.
+- `find_references(path, line, name)`: Lists usages of a symbol across the project, resolved by the IDE's index (not text search).
+- `get_file_problems(path, min_severity)`: Runs the IDE's inspections on a file and returns errors, warnings and available quick fixes. Used to check the agent's own edits.
+- `apply_quick_fix(path, line, fix)`: Applies an IDE quick fix, such as adding a missing import. The change stays unsaved until the developer saves it.
+- `rename_symbol(new_name, path, line, name)`: Renames a symbol and all usages through the IDE's rename refactoring. If conflicts exist, nothing changes and the conflicts are listed.
+- `safe_delete(path, line, name)`: Deletes an unused symbol. The IDE refuses if the symbol still has usages. The delete is recorded in Local History.
+- `run_tests(path, line, configuration, timeout_seconds)`: Runs tests inside the IDE with the project's interpreter and test runner, and returns per-test results and failure messages. Before a run, the IDE saves all open unsaved documents, including the developer's own edits.
+- `vcs_changes()`: Lists uncommitted changes as the IDE sees them (added, modified, deleted, moved, unversioned files, and unsaved editor buffers).
+
+Cross-project coordination uses `acp_list_agents`, `acp_request` and `acp_report` (see section 4 and the ACP page).
+
+### Human-in-the-Loop (HITL) Review
+- The agent proposes; the developer decides. Destructive operations and Git actions require explicit confirmation.
+- Developers can monitor the agent's work live in the IDE: edits, test runs and inspection results appear next to the code.
+- Each change can be compared in the IDE's side-by-side Diff Viewer, then accepted or rejected before it is staged or committed.
+- Local History records agent edits, so earlier states can be compared and restored even without a VCS commit.
+- Unsaved changes stay in the editor until saved.
+
+### Comparison with CLI Agents and JetBrains Air
+- CLI coding agents run in a terminal next to the editor and mostly rely on file reads and text search.
+- JetBrains Air is a layer inside PyCharm 2026.3 and other JetBrains IDEs. Its Air Context service computes embeddings of code on a JetBrains cloud server and stores them in a vector database; storage location depends on the account and repository size. Product data handling is governed by JetBrains' terms for AI features.
+- IDEAgent runs as a plugin with its own tool window, uses the IDE's symbol index directly, and performs retrieval and the vector index on the customer's infrastructure through the RAG server. It collects no product-usage telemetry.
+- The comparison reflects published JetBrains documentation at the time of writing and may change. Check current terms before deciding.
+
+### Data Sovereignty
+- The gateway, MCP server, RAG server and vector database run in containers the customer hosts.
+- Model choice: local models through Ollama (prompts and code stay on the machine), or a cloud provider through the customer's own key.
+- No product telemetry. The network capture on https://ideagent.github.io/security.html shows which connections the package makes.
+- Optional egress secret redaction replaces detected secrets with placeholders before tool and terminal output reaches a cloud model. See https://ideagent.github.io/redaction.html.
+- Outbound connections the package can make:
+  1. The chosen LLM provider, only when a cloud model is configured.
+  2. A one-time model metadata check for the local embedding model (no prompts or code sent). Disable with `HF_HUB_OFFLINE=1` and `TRANSFORMERS_OFFLINE=1`.
+  3. Web search fallback in the RAG server, used when local retrieval confidence is low. Can be disabled.
+- Fully air-gapped setup: use Ollama and disable the metadata check and web search fallback.
+
+---
+
+## 7. JetBrains Plugin Settings
 
 The plugin provides dedicated configuration panes inside the IDE:
 - **Main Settings**: Configure default model, provider, temperature, and agent persona.
@@ -137,7 +180,7 @@ The plugin provides dedicated configuration panes inside the IDE:
 
 ---
 
-## 7. Server Configuration & Security Boundaries
+## 8. Server Configuration & Security Boundaries
 
 ### Security Principles
 - **Sandbox Isolation**: Shell execution runs in an isolated workspace container.
@@ -147,7 +190,7 @@ The plugin provides dedicated configuration panes inside the IDE:
 
 ---
 
-## 8. Video Tutorials & YouTube Channel Context (@IDEAgent-PyCharm)
+## 9. Video Tutorials & YouTube Channel Context (@IDEAgent-PyCharm)
 
 Official YouTube Channel: [IDEAgent on YouTube](https://www.youtube.com/@IDEAgent-PyCharm) (`@IDEAgent-PyCharm`)
 
