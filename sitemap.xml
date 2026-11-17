@@ -2,57 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Main Landing Page -->
   <url>
-    <loc>https://ideagent.github.io/</loc>
+    <loc>https://ideagent.eu</loc>
     <lastmod>2026-10-17</lastmod>
   </url>
   <url>
-    <loc>https://ideagent.github.io/pricing.html</loc>
+    <loc>https://ideagent.eu/pricing.html</loc>
     <lastmod>2026-10-17</lastmod>
   </url>
   <url>
-    <loc>https://ideagent.github.io/architecture.html</loc>
+    <loc>https://ideagent.eu/architecture.html</loc>
     <lastmod>2026-10-04</lastmod>
   </url>
   <url>
-    <loc>https://ideagent.github.io/setup.html</loc>
+    <loc>https://ideagent.eu/setup.html</loc>
     <lastmod>2026-11-16</lastmod>
   </url>
   <url>
-    <loc>https://ideagent.github.io/videos/setup.html</loc>
+    <loc>https://ideagent.eu/videos/setup.html</loc>
     <lastmod>2026-11-16</lastmod>
   </url>
   <url>
-    <loc>https://ideagent.github.io/gateway.html</loc>
+    <loc>https://ideagent.eu/gateway.html</loc>
     <lastmod>2026-10-05</lastmod>
   </url>
   <url>
-    <loc>https://ideagent.github.io/mcp.html</loc>
+    <loc>https://ideagent.eu/mcp.html</loc>
     <lastmod>2026-10-05</lastmod>
   </url>
   <url>
-    <loc>https://ideagent.github.io/server_config.html</loc>
+    <loc>https://ideagent.eu/server_config.html</loc>
     <lastmod>2026-10-05</lastmod>
   </url>
   <url>
-    <loc>https://ideagent.github.io/about.html</loc>
+    <loc>https://ideagent.eu/about.html</loc>
     <lastmod>2026-11-13</lastmod>
   </url>
   <url>
-    <loc>https://ideagent.github.io/security.html</loc>
+    <loc>https://ideagent.eu/security.html</loc>
     <lastmod>2026-11-15</lastmod>
   </url>
   <url>
-    <loc>https://ideagent.github.io/acp.html</loc>
+    <loc>https://ideagent.eu/acp.html</loc>
     <lastmod>2026-11-15</lastmod>
   </url>
   <url>
-    <loc>https://ideagent.github.io/ide-integration.html</loc>
+    <loc>https://ideagent.eu/ide-integration.html</loc>
     <lastmod>2026-11-15</lastmod>
   </url>
-
   <url>
-    <loc>https://ideagent.github.io/redaction.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://ideagent.eu/redaction.html</loc>
+    <lastmod>2026-11-17</lastmod>
   </url>
 </urlset>
