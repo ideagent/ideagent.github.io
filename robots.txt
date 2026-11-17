@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ideagent.github.io/sitemap.xml
+Sitemap: https://ideagent.eu/sitemap.xml
