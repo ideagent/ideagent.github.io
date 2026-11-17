@@ -197,15 +197,15 @@
         },
         execute: function () {
           return JSON.stringify([
-            { title: 'IDEAgent Home', url: 'https://ideagent.github.io/', description: 'Product overview, privacy features, and download' },
-            { title: 'Pricing & Plans', url: 'https://ideagent.github.io/pricing.html', description: 'Plugin pricing, 30-day free trial, volume discounts, and complimentary licenses' },
-            { title: 'Architecture', url: 'https://ideagent.github.io/architecture.html', description: 'System design, plugin-gateway architecture, and security layers' },
-            { title: 'Gateway', url: 'https://ideagent.github.io/gateway.html', description: 'Multi-agent gateway setup, remote hosts, and ACP daemon' },
-            { title: 'Gateway Plugin Setup', url: 'https://ideagent.github.io/gateway_plugin_setup.html', description: 'Step-by-step IDE pairing and token authentication' },
-            { title: 'MCP Tools Reference', url: 'https://ideagent.github.io/mcp.html', description: 'Catalog of built-in Model Context Protocol tools' },
-            { title: 'JetBrains Plugin Settings', url: 'https://ideagent.github.io/plugin.html', description: 'API keys, models, RAG watcher, and speech tools' },
-            { title: 'Server Configuration', url: 'https://ideagent.github.io/server_config.html', description: 'Gateway config files, environment variables, and sandbox limits' },
-            { title: 'LLM Specification', url: 'https://ideagent.github.io/llms.txt', description: 'Structured machine-readable site overview' }
+            { title: 'IDEAgent Home', url: 'https://ideagent.eu/', description: 'Product overview, privacy features, and download' },
+            { title: 'Pricing & Plans', url: 'https://ideagent.eu/pricing.html', description: 'Plugin pricing, 30-day free trial, volume discounts, and complimentary licenses' },
+            { title: 'Architecture', url: 'https://ideagent.eu/architecture.html', description: 'System design, plugin-gateway architecture, and security layers' },
+            { title: 'Gateway', url: 'https://ideagent.eu/gateway.html', description: 'Multi-agent gateway setup, remote hosts, and ACP daemon' },
+            { title: 'Gateway Plugin Setup', url: 'https://ideagent.eu/gateway_plugin_setup.html', description: 'Step-by-step IDE pairing and token authentication' },
+            { title: 'MCP Tools Reference', url: 'https://ideagent.eu/mcp.html', description: 'Catalog of built-in Model Context Protocol tools' },
+            { title: 'JetBrains Plugin Settings', url: 'https://ideagent.eu/plugin.html', description: 'API keys, models, RAG watcher, and speech tools' },
+            { title: 'Server Configuration', url: 'https://ideagent.eu/server_config.html', description: 'Gateway config files, environment variables, and sandbox limits' },
+            { title: 'LLM Specification', url: 'https://ideagent.eu/llms.txt', description: 'Structured machine-readable site overview' }
           ], null, 2);
         }
       });

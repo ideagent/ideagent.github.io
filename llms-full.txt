@@ -127,7 +127,7 @@ IDEAgent utilizes standard MCP tools for interacting with the environment:
 
 ## 6. IDE Integration (PyCharm Tools, HITL Review & Data Sovereignty)
 
-IDEAgent is built to work inside the IDE, not beside it. Its agent uses the IDE's own code intelligence, inspections, refactorings and test runner, and it keeps code on infrastructure you control. Public page: https://ideagent.github.io/ide-integration.html
+IDEAgent is built to work inside the IDE, not beside it. Its agent uses the IDE's own code intelligence, inspections, refactorings and test runner, and it keeps code on infrastructure you control. Public page: https://ideagent.eu/ide-integration.html
 
 ### IDE Tools Used by the Agent
 - `find_symbol(name, kind)`: Locates where a class, function, method or variable is defined, using the IDE's symbol index.
@@ -157,8 +157,8 @@ Cross-project coordination uses `acp_list_agents`, `acp_request` and `acp_report
 ### Data Sovereignty
 - The gateway, MCP server, RAG server and vector database run in containers the customer hosts.
 - Model choice: local models through Ollama (prompts and code stay on the machine), or a cloud provider through the customer's own key.
-- No product telemetry. The network capture on https://ideagent.github.io/security.html shows which connections the package makes.
-- Optional egress secret redaction replaces detected secrets with placeholders before tool and terminal output reaches a cloud model. See https://ideagent.github.io/redaction.html.
+- No product telemetry. The network capture on https://ideagent.eu/security.html shows which connections the package makes.
+- Optional egress secret redaction replaces detected secrets with placeholders before tool and terminal output reaches a cloud model. See https://ideagent.eu/redaction.html.
 - Outbound connections the package can make:
   1. The chosen LLM provider, only when a cloud model is configured.
   2. A one-time model metadata check for the local embedding model (no prompts or code sent). Disable with `HF_HUB_OFFLINE=1` and `TRANSFORMERS_OFFLINE=1`.
@@ -199,7 +199,7 @@ The official channel publishes hands-on demonstrations, architecture walkthrough
 ### Video Index & Context Breakdown:
 
 1. **Full Suite Setup Tutorial (MacBook Air Late 2018 i5, 3.7GB RAM)**
-   - **Watch Page**: https://ideagent.github.io/videos/setup.html
+   - **Watch Page**: https://ideagent.eu/videos/setup.html
    - **URL**: https://www.youtube.com/watch?v=SoAd_3W2c0I
    - **Embed**: https://www.youtube.com/embed/SoAd_3W2c0I
    - **Target Hardware**: Intel Core i5 (dual-core), 3.7 GB RAM, macOS.
@@ -209,7 +209,7 @@ The official channel publishes hands-on demonstrations, architecture walkthrough
      - Automated shell script creating `ideagent-network` bridge and spinning up `gateway` (port 8765), `mpc-server` (port 5820), and `rag-server`.
      - In-IDE configuration (Gateway URL `http://127.0.0.1:8765`, MCP server using physical host machine IP).
      - Live execution in Chat window verifying local reasoning and file watcher indexing without memory saturation.
-   - **Reference Documentation**: `https://ideagent.github.io/setup.html`
+   - **Reference Documentation**: `https://ideagent.eu/setup.html`
 
 2. **Multi-Agent Cross-Project Coordination (Agent Coordination Protocol / ACP)**
    - **URL**: https://www.youtube.com/watch?v=G5xDWL6ORCk
@@ -222,4 +222,4 @@ The official channel publishes hands-on demonstrations, architecture walkthrough
      - Agent B runs in its own context, edits files, and returns `acp_report` with diffs and test results.
      - Agent A wakes on report delivery, verifies the upstream changes, and completes the consumer task.
      - In-editor Human-in-the-Loop (HITL) checkpoints before changes are committed to disk.
-   - **Reference Documentation**: `https://ideagent.github.io/gateway.html#acp`
+   - **Reference Documentation**: `https://ideagent.eu/gateway.html#acp`
