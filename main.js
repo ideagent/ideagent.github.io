@@ -28,16 +28,24 @@
   };
 
   /**
-   * Detect currently loaded page filename (lowercased)
+   * Site root URL, derived from this script's own location.
+   * main.js lives in the site root, so nav hrefs resolve against it and
+   * work from pages in any sub-folder (e.g. /videos/) and over file://.
    */
-  function getCurrentPageFilename() {
-    var path = (window.location && window.location.pathname) || '';
-    var rawName = path.split('/').pop() || '';
-    rawName = rawName.toLowerCase();
-    if (!rawName || rawName === 'index.html' || rawName === 'index.htm') {
+  var SITE_ROOT = new URL('./', document.currentScript.src);
+
+  /**
+   * Detect current page path relative to the site root (lowercased),
+   * e.g. 'setup.html' or 'videos/setup.html'.
+   */
+  function getCurrentPagePath() {
+    var rootPath = SITE_ROOT.pathname.toLowerCase();
+    var path = window.location.pathname.toLowerCase();
+    var relPath = path.indexOf(rootPath) === 0 ? path.slice(rootPath.length) : path;
+    if (!relPath || relPath === 'index.htm') {
       return 'index.html';
     }
-    return rawName;
+    return relPath;
   }
 
   /**
@@ -47,7 +55,7 @@
     var nav = document.getElementById('main-nav');
     if (!nav) return;
 
-    var currentFilename = getCurrentPageFilename();
+    var currentPath = getCurrentPagePath();
     var mode = nav.getAttribute('data-nav-mode') || NAV_CONFIG.mode || 'exclude';
     var frag = document.createDocumentFragment();
 
@@ -57,9 +65,9 @@
       var isCurrent = false;
       if (!item.external) {
         var itemFile = (item.href || '').split('#')[0].toLowerCase();
-        if (item.aliases && item.aliases.indexOf(currentFilename) !== -1) {
+        if (item.aliases && item.aliases.indexOf(currentPath) !== -1) {
           isCurrent = true;
-        } else if (itemFile === currentFilename) {
+        } else if (itemFile === currentPath) {
           isCurrent = true;
         }
       }
@@ -81,7 +89,7 @@
         }
       } else {
         el = document.createElement('a');
-        el.href = item.href;
+        el.href = item.external ? item.href : new URL(item.href, SITE_ROOT).href;
         el.textContent = item.label;
         if (item.external) {
           el.target = '_blank';

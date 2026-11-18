@@ -28,7 +28,7 @@ jobs:
       - name: generate-sitemap
         uses: cicirello/generate-sitemap@v1.10.4
         with:
-          base-url-path: https://ideagent.github.io/
+          base-url-path: https://ideagent.eu/
           exclude-paths: >-
             /.github
             /.idea

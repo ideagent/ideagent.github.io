@@ -2,55 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Main Landing Page -->
   <url>
-    <loc>https://ideagent.eu</loc>
-    <lastmod>2026-10-17</lastmod>
+    <loc>https://ideagent.eu/</loc>
+    <lastmod>2026-11-18</lastmod>
   </url>
   <url>
     <loc>https://ideagent.eu/pricing.html</loc>
-    <lastmod>2026-10-17</lastmod>
+    <lastmod>2026-11-17</lastmod>
   </url>
   <url>
     <loc>https://ideagent.eu/architecture.html</loc>
-    <lastmod>2026-10-04</lastmod>
+    <lastmod>2026-11-17</lastmod>
   </url>
   <url>
     <loc>https://ideagent.eu/setup.html</loc>
-    <lastmod>2026-11-16</lastmod>
+    <lastmod>2026-11-17</lastmod>
   </url>
   <url>
     <loc>https://ideagent.eu/videos/setup.html</loc>
-    <lastmod>2026-11-16</lastmod>
+    <lastmod>2026-11-17</lastmod>
   </url>
   <url>
     <loc>https://ideagent.eu/gateway.html</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-11-18</lastmod>
   </url>
   <url>
     <loc>https://ideagent.eu/mcp.html</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-11-18</lastmod>
   </url>
   <url>
     <loc>https://ideagent.eu/server_config.html</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-11-17</lastmod>
   </url>
   <url>
     <loc>https://ideagent.eu/about.html</loc>
-    <lastmod>2026-11-13</lastmod>
+    <lastmod>2026-11-17</lastmod>
   </url>
   <url>
     <loc>https://ideagent.eu/security.html</loc>
-    <lastmod>2026-11-15</lastmod>
+    <lastmod>2026-11-18</lastmod>
   </url>
   <url>
     <loc>https://ideagent.eu/acp.html</loc>
-    <lastmod>2026-11-15</lastmod>
+    <lastmod>2026-11-18</lastmod>
   </url>
   <url>
     <loc>https://ideagent.eu/ide-integration.html</loc>
-    <lastmod>2026-11-15</lastmod>
+    <lastmod>2026-11-17</lastmod>
   </url>
   <url>
     <loc>https://ideagent.eu/redaction.html</loc>
     <lastmod>2026-11-17</lastmod>
+  </url>
+  <url>
+    <loc>https://ideagent.eu/videos/acp.html</loc>
+    <lastmod>2026-11-18</lastmod>
+  </url>
+  <url>
+    <loc>https://ideagent.eu/videos/context.html</loc>
+    <lastmod>2026-11-18</lastmod>
+  </url>
+  <url>
+    <loc>https://ideagent.eu/videos/security.html</loc>
+    <lastmod>2026-11-18</lastmod>
   </url>
 </urlset>
