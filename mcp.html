@@ -369,6 +369,18 @@
             <div class="spec-v"><code>latest-amd</code></div>
           </div>
         </div>
+        <div class="callout">
+          <p>
+            <strong>From 0.6.3, the RAG server uses Qdrant instead of ChromaDB.</strong> The pinned tags are
+            <code>0.6.3</code>, <code>0.6.3-nvidia</code> and <code>0.6.3-amd</code>. Versions 0.6.0 to 0.6.2
+            don't have an AMD variant. Download and start Qdrant before you set up the RAG server:
+          </p>
+          <pre><code>sudo docker pull qdrant/qdrant:v1.20.2</code></pre>
+          <p>
+            Qdrant telemetry is disabled. All three 0.6.3 variants report 0 vulnerabilities in Docker Scout, see
+            <a href="security.html#announcement">Security</a>.
+          </p>
+        </div>
         <p>
           For complete instructions on connecting the RAG server to your IDE, follow the
           <a href="setup.html">Setup Guide</a>.

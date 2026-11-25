@@ -200,6 +200,9 @@
         </p>
         <ol class="setup-steps">
           <li><strong>Authenticate Docker Hub:</strong> Confirm that the terminal displays a successful Docker Hub login.</li>
+          <li><strong>Download and start Qdrant:</strong> From RAG Server 0.6.3, the vector store is Qdrant (ChromaDB is no longer used). Pull the image and start it before you set up the RAG Server. Qdrant telemetry is disabled.
+            <div class="arch-diagram">sudo docker pull qdrant/qdrant:v1.20.2</div>
+          </li>
           <li><strong>Execute the setup script:</strong> Run the generated orchestration command. The script automatically:
             <ul>
               <li>Creates the isolated internal Docker bridge network (<code>ideagent-network</code>).</li>
