@@ -91,6 +91,26 @@
   <section class="doc-body">
     <div class="container">
 
+      <!-- Announcement: RAG Server 0.6.3 -->
+      <div class="doc-section" id="announcement">
+        <h2>Update: RAG Server 0.6.3 and Qdrant</h2>
+        <div class="callout">
+          <p>
+            <strong>The RAG Server has been rebuilt the same way as the Gateway and MCP Server, and ChromaDB has been replaced by Qdrant.</strong>
+            All three 0.6.3 variants (CPU, NVIDIA and AMD) report 0 vulnerabilities in Docker Scout. See
+            <a href="#supply-chain">What's inside the containers</a>.
+          </p>
+          <p>
+            Before you set up the RAG Server 0.6.3, download and start Qdrant:
+          </p>
+          <pre><code>sudo docker pull qdrant/qdrant:v1.20.2</code></pre>
+          <p>
+            Use 0.6.3. Versions 0.6.0 to 0.6.2 don't have an AMD variant. 0.6.3 comes in CPU, NVIDIA and AMD variants,
+            all with the same security results.
+          </p>
+        </div>
+      </div>
+
       <!-- 2. Outbound destinations -->
             <div class="doc-section" id="outbound">
         <h2>What leaves your machine, and why</h2>
@@ -186,6 +206,7 @@
       <!-- 4. ChromaDB -->
       <div class="doc-section" id="chromadb">
         <h2>ChromaDB</h2>
+        <div class="callout"><strong>Note:</strong> This capture was recorded before the switch to Qdrant. From RAG Server 0.6.3, ChromaDB has been replaced by Qdrant (<code>qdrant/qdrant:v1.20.2</code>).</div>
         <p>
           The RAG Server stores the local index of your code, learnings and docs in ChromaDB.
           ChromaDB is a third-party database, and it ships with its own anonymized product
@@ -257,11 +278,25 @@
                 <td>218 packages</td>
               </tr>
               <tr>
-                <td>RAG Server</td>
-                <td><code>latest</code> (Sep 2026)</td>
-                <td><span style="color: var(--red);">3C</span> / 14H / 47M / 7L</td>
-                <td>Work in progress (pending base image update)</td>
-                <td>-</td>
+                <td>RAG Server (CPU)</td>
+                <td><code>0.6.3</code> · <code>latest</code><br><span style="font-size: 0.85em; color: var(--text-muted);">digest: 3c6be3488c46</span></td>
+                <td><span style="color: var(--green);">0C</span> / 0H / 0M / 0L</td>
+                <td>No vulnerable packages detected</td>
+                <td>186 packages</td>
+              </tr>
+              <tr>
+                <td>RAG Server (NVIDIA)</td>
+                <td><code>0.6.3-nvidia</code> · <code>latest-nvidia</code><br><span style="font-size: 0.85em; color: var(--text-muted);">digest: 9bbef1e63787</span></td>
+                <td><span style="color: var(--green);">0C</span> / 0H / 0M / 0L</td>
+                <td>No vulnerable packages detected</td>
+                <td>200 packages</td>
+              </tr>
+              <tr>
+                <td>RAG Server (AMD)</td>
+                <td><code>0.6.3-amd</code> · <code>latest-amd</code><br><span style="font-size: 0.85em; color: var(--text-muted);">digest: 381ec8ae3344</span></td>
+                <td><span style="color: var(--green);">0C</span> / 0H / 0M / 0L</td>
+                <td>No vulnerable packages detected</td>
+                <td>182 packages</td>
               </tr>
             </tbody>
           </table>
@@ -293,7 +328,7 @@
       <div class="doc-section" id="report">
         <h2>Report a vulnerability</h2>
         <!-- CONTENT: contact for security reports -->
-        <div class="callout warn"><strong>Pending.</strong> Security contact to be confirmed.</div>
+        <p>Found a security issue? Email <strong>gsca075(at)gmail.com</strong> (replace <code>(at)</code> with <code>@</code>).</p>
       </div>
 
     </div>
