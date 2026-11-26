@@ -257,6 +257,7 @@
                 <th>Image</th>
                 <th>Version · digest</th>
                 <th>Scout findings (C / H / M / L)</th>
+                <th>Last scanned</th>
                 <th>Decisions</th>
                 <th>Dependencies / SBOM</th>
               </tr>
@@ -267,6 +268,7 @@
                 <td>Gateway</td>
                 <td><code>latest</code> (Nov 2026)</td>
                 <td><span style="color: var(--green);">0C</span> / 0H / 0M / 0L</td>
+                <td>Nov 16, 2026</td>
                 <td>No vulnerable packages detected</td>
                 <td>-</td>
               </tr>
@@ -274,6 +276,7 @@
                 <td>MCP Server</td>
                 <td><code>latest</code><br><span style="font-size: 0.85em; color: var(--text-muted);">digest: 2a118346aae0</span></td>
                 <td><span style="color: var(--green);">0C</span> / 0H / 0M / 0L</td>
+                <td>Nov 16, 2026</td>
                 <td>No vulnerable packages detected</td>
                 <td>218 packages</td>
               </tr>
@@ -281,6 +284,7 @@
                 <td>RAG Server (CPU)</td>
                 <td><code>0.6.3</code> · <code>latest</code><br><span style="font-size: 0.85em; color: var(--text-muted);">digest: 3c6be3488c46</span></td>
                 <td><span style="color: var(--green);">0C</span> / 0H / 0M / 0L</td>
+                <td>Nov 16, 2026</td>
                 <td>No vulnerable packages detected</td>
                 <td>186 packages</td>
               </tr>
@@ -288,6 +292,7 @@
                 <td>RAG Server (NVIDIA)</td>
                 <td><code>0.6.3-nvidia</code> · <code>latest-nvidia</code><br><span style="font-size: 0.85em; color: var(--text-muted);">digest: 9bbef1e63787</span></td>
                 <td><span style="color: var(--green);">0C</span> / 0H / 0M / 0L</td>
+                <td>Nov 16, 2026</td>
                 <td>No vulnerable packages detected</td>
                 <td>200 packages</td>
               </tr>
@@ -295,11 +300,21 @@
                 <td>RAG Server (AMD)</td>
                 <td><code>0.6.3-amd</code> · <code>latest-amd</code><br><span style="font-size: 0.85em; color: var(--text-muted);">digest: 381ec8ae3344</span></td>
                 <td><span style="color: var(--green);">0C</span> / 0H / 0M / 0L</td>
+                <td>Nov 16, 2026</td>
                 <td>No vulnerable packages detected</td>
                 <td>182 packages</td>
               </tr>
             </tbody>
           </table>
+        </div>
+        <div class="callout">
+          <p>
+            <strong>Keep your images up to date.</strong>
+            We take keeping our images up to date seriously, both for CVEs discovered in the packages of the base image and in our own implementation.
+            Our effort doesn't guarantee that an updated image will stay at 0 findings over time, because new CVEs are published continuously.
+            Findings reflect the Docker Scout scan on the date shown in the <em>Last scanned</em> column.
+            Please update your setup as soon as a new release is announced.
+          </p>
         </div>
       </div>
 
